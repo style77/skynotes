@@ -28,7 +28,7 @@ services:
       - database
       # - redis
     volumes:
-      - .:/app
+      - ./skynotes:/code
     
   migrations:
     build:
