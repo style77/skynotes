@@ -6,6 +6,7 @@ help:
 	@echo `make run-api` - run api server
 	@echo `make run-web` - run web server
 
+# Running
 
 run-api:
 	@echo "Running api server"
