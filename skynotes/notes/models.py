@@ -1,6 +1,6 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from notes.utils import generate_id
-from django.contrib.postgres.fields import ArrayField
 
 
 class BaseModel(models.Model):
@@ -26,10 +26,7 @@ class Group(BaseModel):
     )
 
     name = models.CharField(max_length=128)
-    icon = models.CharField(
-        choices=ICON_CHOICES,
-        default="default"
-    )
+    icon = models.CharField(choices=ICON_CHOICES, default="default")
     description = models.CharField(max_length=512)
 
     class Meta:
@@ -45,9 +42,7 @@ class File(BaseModel):
     description = models.CharField(max_length=1024, blank=True, null=True)
     # thumbnail = models.ImageField()  # todo
     tags = ArrayField(
-        models.CharField(max_length=16),
-        size=6,  # Max tags count
-        blank=True, null=True
+        models.CharField(max_length=16), size=6, blank=True, null=True  # Max tags count
     )
 
     class Meta:

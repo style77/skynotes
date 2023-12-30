@@ -10,18 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import environ
 import os
 from pathlib import Path
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+import environ
+
+env = environ.Env(DEBUG=(bool, False))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 try:
-    environ.Env.read_env(os.path.join(BASE_DIR, '../.env'))
+    environ.Env.read_env(os.path.join(BASE_DIR, "../.env"))
 except Exception as e:
     print(e)
 
@@ -43,13 +42,9 @@ CORE_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "rest_framework"
-]
+THIRD_PARTY_APPS = ["rest_framework"]
 
-APPLICATIONS = [
-    "notes"
-]
+APPLICATIONS = ["notes"]
 
 INSTALLED_APPS = CORE_APPS + APPLICATIONS + THIRD_PARTY_APPS
 
@@ -87,9 +82,7 @@ WSGI_APPLICATION = "skynotes.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    "default": env.db()
-}
+DATABASES = {"default": env.db()}
 
 
 # Password validation
