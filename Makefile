@@ -22,9 +22,9 @@ lint: lint-api lint-web
 
 lint-api:
 	@echo "Linting api server"
-	flake8 .
-	black . --check
-	isort . --check-only
+	flake8 skynotes
+	black skynotes --check
+	isort skynotes --check-only
 
 lint-web:
 	@echo "Linting web server"
@@ -36,8 +36,8 @@ format: format-api format-web
 
 format-api:
 	@echo "Formatting api server"
-	black .
-	isort .
+	black skynotes
+	isort skynotes
 
 format-web:
 	@echo "Formatting web server"
