@@ -44,7 +44,7 @@ CORE_APPS = [
 
 THIRD_PARTY_APPS = ["rest_framework", "drf_spectacular"]
 
-APPLICATIONS = ["notes"]
+APPLICATIONS = ["notes", "authorization"]
 
 INSTALLED_APPS = CORE_APPS + APPLICATIONS + THIRD_PARTY_APPS
 
@@ -57,6 +57,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+AUTH_USER_MODEL = "authorization.CustomUser"
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
