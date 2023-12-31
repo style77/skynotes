@@ -1,9 +1,13 @@
+from authorization.serializers import (
+    CustomTokenObtainPairSerializer,
+    InActiveUser,
+    UserSerializer,
+)
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import get_user_model
-from authorization.serializers import UserSerializer
-
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import (
@@ -16,10 +20,6 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
     TokenViewBase,
 )
-
-from authorization.serializers import CustomTokenObtainPairSerializer, InActiveUser
-
-from django.conf import settings
 
 User = get_user_model()
 
