@@ -25,8 +25,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
-      # - redis
+      database:
+        condition: service_healthy
     volumes:
       - ./skynotes:/code
     
@@ -38,7 +38,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - database
-      - app
+      database:
+        condition: service_healthy
+      app:
+        condition: service_started
     volumes:
       - .:/app
