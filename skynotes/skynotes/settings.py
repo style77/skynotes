@@ -64,58 +64,36 @@ AUTH_USER_MODEL = "authorization.CustomUser"
 ACCESS_TOKEN_LIFETIME = timedelta(minutes=5)
 REFRESH_TOKEN_LIFETIME = timedelta(days=15)
 
+AUTH_COOKIE = "access_token"
+REFRESH_COOKIE = "refresh_token"
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": ACCESS_TOKEN_LIFETIME,
     "REFRESH_TOKEN_LIFETIME": REFRESH_TOKEN_LIFETIME,
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
 
-    "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
-    "VERIFYING_KEY": "",
-    "AUDIENCE": None,
-    "ISSUER": None,
-    "JSON_ENCODER": None,
-    "JWK_URL": None,
-    "LEEWAY": 0,
+    "AUTH_COOKIE_DOMAIN": None,
+    "AUTH_COOKIE_SECURE": False if DEBUG else True,
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_PATH": "/",
+    "AUTH_COOKIE_SAMESITE": "Lax",
 
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
-    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "TOKEN_TYPE_CLAIM": "token_type",
-    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
-
-    "JTI_CLAIM": "jti",
-
-    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": ACCESS_TOKEN_LIFETIME,
-    "SLIDING_TOKEN_REFRESH_LIFETIME": REFRESH_TOKEN_LIFETIME,
-
-    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
-    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
-    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
-    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
-    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
-    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "authorization.serializers.CustomTokenObtainSerializer",
+    # "TOKEN_REFRESH_SERIALIZER": "authorization.serializers.CustomTokenRefreshSerializer",
+    "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
+    "TOKEN_VERIFY_SERIALIZER": "authorization.serializers.CustomTokenVerifySerializer",
+    "USER_AUTHENTICATION_RULE": "authorization.utils.user_authentication_rule",
 }
 
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
-    ],
-    "DEFAULT_PARSER_CLASSES": [
-        "rest_framework.parsers.JSONParser",
-    ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "authorization.authentication.JWTCookiesAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
@@ -125,7 +103,7 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Transfer your notes to the realm of the clouds.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny" if DEBUG else "rest_framework.permissions.IsAdminUser"],
 }
 
 ROOT_URLCONF = "skynotes.urls"
