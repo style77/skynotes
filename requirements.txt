@@ -1,11 +1,14 @@
 asgiref==3.7.2
 attrs==23.1.0
 black==23.12.1
+cffi==1.16.0
 click==8.1.7
 colorama==0.4.6
+cryptography==41.0.7
 Django==5.0
 django-environ==0.11.2
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
 drf-spectacular==0.27.0
 flake8==6.1.0
 inflection==0.5.1
@@ -19,7 +22,9 @@ pathspec==0.12.1
 platformdirs==4.1.0
 psycopg2-binary==2.9.9
 pycodestyle==2.11.1
+pycparser==2.21
 pyflakes==3.1.0
+PyJWT==2.8.0
 pytz==2023.3.post1
 PyYAML==6.0.1
 referencing==0.32.0
