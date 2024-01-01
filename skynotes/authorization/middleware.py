@@ -1,8 +1,8 @@
-from rest_framework_simplejwt.tokens import AccessToken
-from django.http import JsonResponse
-from rest_framework.status import HTTP_401_UNAUTHORIZED
 from authorization.views import CustomTokenRefreshView
 from django.conf import settings
+from django.http import JsonResponse
+from rest_framework.status import HTTP_401_UNAUTHORIZED
+from rest_framework_simplejwt.tokens import AccessToken
 
 
 class JWTRefreshMiddleware:
