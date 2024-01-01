@@ -6,7 +6,7 @@ from authorization.serializers import (
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,11 +30,13 @@ class UserCreateView(CreateAPIView):
     permission_classes = [AllowAny]
 
 
-class UserDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+class UserMeView(RetrieveAPIView):
     serializer_class = UserSerializer
     lookup_field = "id"
     permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 
 # Cookie JWT
