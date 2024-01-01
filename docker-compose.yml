@@ -43,4 +43,4 @@ services:
       app:
         condition: service_started
     volumes:
-      - .:/app
+      - ./skynotes:/code
