@@ -12,7 +12,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { LoginInput } from "@/components/loginInput"
-import { Fingerprint, HelpCircle } from "lucide-react"
+import { HelpCircle } from "lucide-react"
 
 import {
     Tooltip,
