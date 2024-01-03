@@ -18,15 +18,10 @@ const formSchema = z.object({
     email: z.string().min(6, {
         message: "Email must be at least 6 characters.",
     }).email("This is not valid email."),
-    password: z.string().min(8, {
-        message: "Password must be at least 8 characters.",
-    }).refine(
-        (value) => /^[A-Z0-9]|[^A-Za-z0-9]+$/.test(value), "Password does not match requirements."
-    ),
+    password: z.string(),
 })
 
 export function LoginForm() {
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
