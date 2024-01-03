@@ -167,16 +167,6 @@ export function RegisterForm() {
                             )
                         }
                     </div>
-                    <div className="w-full h-6 justify-center items-center gap-2.5 inline-flex">
-                        <div className="w-full h-px border border-primary border-opacity-75"></div>
-                        <div className="text-primary text-base font-sans leading-normal">or</div>
-                        <div className="w-full h-px border border-primary border-opacity-75"></div>
-                    </div>
-                    <Button className="bg-white text-black border border-zinc-300 w-full hover:text-white" type="submit">
-                        <div className="flex flex-row items-center gap-2">
-                            <Fingerprint className="w-4" /> Sign in with Code
-                        </div>
-                    </Button>
                     <div className="flex flex-row text-center justify-center space-x-1">
                         <p className="text-sm text-[#667085]">Already created account?</p><a href="/login" className="text-sm text-primary font-bold hover:scale-105 transition">Sign in!</a>
                     </div>
