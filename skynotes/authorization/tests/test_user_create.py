@@ -1,10 +1,7 @@
 import json
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
-
-from authorization.views import UserCreateView
+from rest_framework.test import APITestCase
 
 from django.contrib.auth import get_user_model
 
@@ -12,16 +9,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class UserCreateViewTests(TestCase):
-    def setUp(self):
-        self.api_client = APIClient()
-
+class UserCreateViewTests(APITestCase):
     def test_create_user_success(self):
         data = {
             "email": "test@test.com",
             "password": "VeryHardPassword123",
         }
-        response = self.api_client.post(
+        response = self.client.post(
             reverse("user-create"),
             data=json.dumps(data),
             content_type="application/json",
@@ -35,7 +29,7 @@ class UserCreateViewTests(TestCase):
         data = {
             "email": "test@test.com",
         }
-        response = self.api_client.post(
+        response = self.client.post(
             reverse("user-create"),
             data=json.dumps(data),
             content_type="application/json",
@@ -48,7 +42,7 @@ class UserCreateViewTests(TestCase):
             "email": "test@test.com",
             "password": "weak",
         }
-        response = self.api_client.post(
+        response = self.client.post(
             reverse("user-create"),
             data=json.dumps(data),
             content_type="application/json",
