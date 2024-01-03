@@ -24,35 +24,55 @@ jobs:
     lint:
         name: ⬣ ESLint
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node-version: [16]
 
         steps:
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v4
-      
-            - name: ⎔ Setup node
+              
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                version: 8
+
+            - name: ⎔ Setup node ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
-                node-version: 16
-      
+                node-version: ${{ matrix.node-version }}
+                cache: 'pnpm'
+
             - name: 📥 Download deps
-              run: npm ci
+              run: pnpm install
+
             - name: 🔬 Lint
-              run: npm run lint
+              run: pnpm run lint
 
     typecheck:
         name: ʦ TypeScript
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node-version: [16]
+
         steps:
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v4
+              
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                version: 8
 
-            - name: ⎔ Setup node
+            - name: ⎔ Setup node ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
-                node-version: 16
+                node-version: ${{ matrix.node-version }}
+                cache: 'pnpm'
 
             - name: 📥 Download deps
-              run: npm ci
+              run: pnpm install
 
             - name: 🔎 Type check
-              run: npm run typecheck
+              run: pnpm run typecheck
