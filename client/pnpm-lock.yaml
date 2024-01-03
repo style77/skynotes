@@ -26,9 +26,6 @@ dependencies:
   async-mutex:
     specifier: ^0.4.0
     version: 0.4.0
-  ci:
-    specifier: ^2.3.0
-    version: 2.3.0
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -2885,11 +2882,6 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
-
-  /ci@2.3.0:
-    resolution: {integrity: sha512-0MGXkzJKkwV3enG7RUxjJKdiAkbaZ7visCjitfpCN2BQjv02KGRMxCHLv4RPokkjJ4xR33FLMAXweS+aQ0pFSQ==}
-    hasBin: true
-    dev: false
 
   /class-variance-authority@0.7.0:
     resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
