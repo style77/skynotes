@@ -10,6 +10,7 @@ import ErrorPage from "./error-page";
 import LoginPage from "./routes/login";
 import RegisterPage from "./routes/register";
 import CustomProvider from "@/store/provider";
+import { Toaster } from "@/components/ui/toaster";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <CustomProvider>
       <RouterProvider router={router}>
       </RouterProvider>
+      <Toaster />
     </CustomProvider>
   </React.StrictMode>
 );
