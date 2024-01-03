@@ -55,10 +55,15 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "authorization.middleware.JWTRefreshMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(
+        5,  # After AuthenticationMiddleware
+        "authorization.middleware.JWTRefreshMiddleware",
+    )
 
 AUTH_USER_MODEL = "authorization.CustomUser"
 
