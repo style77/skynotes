@@ -24,6 +24,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRegisterMutation } from "@/store/features/authApiSlice"
 import { useState } from "react"
 
+import { useNavigate } from "react-router-dom";
+
 const formSchema = z.object({
     email: z.string().min(6, {
         message: "Email must be at least 6 characters.",
@@ -42,6 +44,7 @@ type RegisterFormSchemaType = z.infer<typeof formSchema>;
 export function RegisterForm() {
     const [register, { isLoading }] = useRegisterMutation();
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState<string[]>([])
 
@@ -54,6 +57,10 @@ export function RegisterForm() {
     })
 
     const onSubmit = async (data: RegisterFormSchemaType) => {
+
+        // cleanup
+        setErrors([])
+
         const { email, password } = data;
         try {
             await register({ email, password }).unwrap()
@@ -61,6 +68,8 @@ export function RegisterForm() {
             toast({
                 title: "Your account was succesfully created!",
             });
+
+            navigate("/login")
 
         } catch (error: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
             toast({
@@ -151,7 +160,7 @@ export function RegisterForm() {
                                 <div className="flex flex-col items-center justify-center space-y-2 mx-2 mt-1">
                                     {
                                         errors.map((error) => (
-                                            <p className="text-sm text-red-500">{error}</p>
+                                            <p className="text-sm text-red-500" key={error}>{error}</p>
                                         ))
                                     }
                                 </div>
