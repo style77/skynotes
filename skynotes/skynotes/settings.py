@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["http://127.0.0.1:5173"]
+ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -67,7 +67,7 @@ MIDDLEWARE = [
 
 if DEBUG:
     MIDDLEWARE.insert(
-        5,  # After AuthenticationMiddleware
+        6,  # After AuthenticationMiddleware
         "authorization.middleware.JWTRefreshMiddleware",
     )
 
@@ -136,7 +136,12 @@ SPECTACULAR_SETTINGS = {
 
 # Cors
 
-CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5173", ...]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # ---
 
