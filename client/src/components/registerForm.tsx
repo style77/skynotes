@@ -20,6 +20,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useToast } from "@/components/ui/use-toast"
+import { useRegisterMutation } from "@/store/features/authApiSlice"
 
 const formSchema = z.object({
     email: z.string().min(6, {
@@ -27,16 +29,18 @@ const formSchema = z.object({
     }).email("This is not valid email."),
     password: z.string().min(8, {
         message: "Password must be at least 8 characters.",
-    }).refine(
-        (value) => /^[A-Z0-9]|[^A-Za-z0-9]+$/.test(value), "Password does not match requirements."
-    ),
+    }),
     confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"], // path of error
 });
 
+type RegisterFormSchemaType = z.infer<typeof formSchema>;
+
 export function RegisterForm() {
+    const [register, { isLoading }] = useRegisterMutation();
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,10 +48,26 @@ export function RegisterForm() {
             email: "",
             password: ""
         },
+        mode: "onBlur",
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    const onSubmit = async (data: RegisterFormSchemaType) => {
+        const { email, password } = data;
+        try {
+            await register({ email, password }).unwrap()
+
+            toast({
+                title: "Your account was succesfully created!",
+            });
+
+        } catch (error) {
+            console.log(error)
+            toast({
+                variant: "destructive",
+                title: "Failed to sign up!",
+                description: error.data.message,
+            });
+        }
     }
 
     return (
@@ -75,20 +95,20 @@ export function RegisterForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    <div className="flex flex-row items-center gap-4">
-                                    Password
-                                    <TooltipProvider delayDuration={100}>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <HelpCircle className="w-4" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>*8 minimum characters</p>
-                                                <p>*No common passwords</p>
-                                                <p>*1 uppercase, 1 lowercase, 1 number, 1 special character</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
+                                    <div className="flex flex-row items-center gap-2">
+                                        Password
+                                        <TooltipProvider delayDuration={100}>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <HelpCircle className="w-4" />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>* 8 minimum characters</p>
+                                                    <p>* No common passwords</p>
+                                                    <p>* 1 uppercase, 1 lowercase, 1 number, 1 special character</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </FormLabel>
                                 <FormControl>
@@ -115,8 +135,8 @@ export function RegisterForm() {
                     />
                 </div>
                 <div className="space-y-4">
-                    <Button className="bg-primary w-full" type="submit">Sign in</Button>
-                    <div className="w-full h-6 flex justify-center items-center gap-2.5 inline-flex">
+                    <Button className="bg-primary w-full" type="submit" isLoading={isLoading}>Sign in</Button>
+                    <div className="w-full h-6 justify-center items-center gap-2.5 inline-flex">
                         <div className="w-full h-px border border-primary border-opacity-75"></div>
                         <div className="text-primary text-base font-sans leading-normal">or</div>
                         <div className="w-full h-px border border-primary border-opacity-75"></div>
