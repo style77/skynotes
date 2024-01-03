@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -43,7 +43,12 @@ CORE_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["rest_framework", "drf_spectacular", "rest_framework_simplejwt"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "drf_spectacular",
+    "rest_framework_simplejwt",
+    "corsheader",
+]
 
 APPLICATIONS = ["notes", "authorization"]
 
@@ -52,6 +57,7 @@ INSTALLED_APPS = CORE_APPS + APPLICATIONS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -73,6 +79,8 @@ REFRESH_TOKEN_LIFETIME = timedelta(days=15)
 AUTH_COOKIE = "access_token"
 REFRESH_COOKIE = "refresh_token"
 
+# JWT
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": ACCESS_TOKEN_LIFETIME,
     "REFRESH_TOKEN_LIFETIME": REFRESH_TOKEN_LIFETIME,
@@ -92,6 +100,8 @@ SIMPLE_JWT = {
     "USER_AUTHENTICATION_RULE": "authorization.utils.user_authentication_rule",
 }
 
+# REST
+
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -110,6 +120,8 @@ REST_FRAMEWORK = {
     },  # TODO Consider
 }
 
+# Spectacular
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "SkyNotes API",
     "DESCRIPTION": "Transfer your notes to the realm of the clouds.",
@@ -121,6 +133,10 @@ SPECTACULAR_SETTINGS = {
         else "rest_framework.permissions.IsAdminUser"
     ],
 }
+
+# Cors
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = "skynotes.urls"
 
