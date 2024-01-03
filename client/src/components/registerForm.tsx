@@ -135,7 +135,7 @@ export function RegisterForm() {
                     />
                 </div>
                 <div className="space-y-4">
-                    <Button className="bg-primary w-full" type="submit" isLoading={isLoading}>Sign in</Button>
+                    <Button className="bg-primary w-full" type="submit" isloading={isLoading}>Sign in</Button>
                     <div className="w-full h-6 justify-center items-center gap-2.5 inline-flex">
                         <div className="w-full h-px border border-primary border-opacity-75"></div>
                         <div className="text-primary text-base font-sans leading-normal">or</div>
