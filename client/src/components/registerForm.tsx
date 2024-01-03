@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/tooltip"
 import { useToast } from "@/components/ui/use-toast"
 import { useRegisterMutation } from "@/store/features/authApiSlice"
+import { useState } from "react"
 
 const formSchema = z.object({
     email: z.string().min(6, {
@@ -42,13 +43,14 @@ export function RegisterForm() {
     const [register, { isLoading }] = useRegisterMutation();
     const { toast } = useToast();
 
+    const [errors, setErrors] = useState<string[]>([])
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: ""
         },
-        mode: "onBlur",
     })
 
     const onSubmit = async (data: RegisterFormSchemaType) => {
@@ -60,13 +62,20 @@ export function RegisterForm() {
                 title: "Your account was succesfully created!",
             });
 
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
             toast({
                 variant: "destructive",
-                title: "Failed to sign up!",
-                description: error.data.message,
+                title: "Failed to sign up.",
+                description: error.error,
             });
+
+            // check if error.data is dict
+            if (typeof error.data === "object") {
+                const errorMessages = Object.values(error.data).flat() as string[]
+                setErrors(errorMessages)
+            } else {
+                setErrors([error.data])
+            }
         }
     }
 
@@ -135,7 +144,20 @@ export function RegisterForm() {
                     />
                 </div>
                 <div className="space-y-4">
-                    <Button className="bg-primary w-full" type="submit" isloading={isLoading}>Sign in</Button>
+                    <div>
+                        <Button className="bg-primary w-full" type="submit" isloading={isLoading}>Sign in</Button>
+                        {
+                            errors.length > 0 && (
+                                <div className="flex flex-col items-center justify-center space-y-2 mx-2 mt-1">
+                                    {
+                                        errors.map((error) => (
+                                            <p className="text-sm text-red-500">{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            )
+                        }
+                    </div>
                     <div className="w-full h-6 justify-center items-center gap-2.5 inline-flex">
                         <div className="w-full h-px border border-primary border-opacity-75"></div>
                         <div className="text-primary text-base font-sans leading-normal">or</div>
