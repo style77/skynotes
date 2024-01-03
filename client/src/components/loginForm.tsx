@@ -13,6 +13,10 @@ import {
 } from "@/components/ui/form"
 import { LoginInput } from "@/components/loginInput"
 import { Fingerprint } from "lucide-react"
+import { useLoginMutation } from "@/store/features/authApiSlice"
+import { useToast } from "./ui/use-toast"
+// import { useNavigate } from "react-router-dom"
+import { useState } from "react"
 
 const formSchema = z.object({
     email: z.string().min(6, {
@@ -21,7 +25,15 @@ const formSchema = z.object({
     password: z.string(),
 })
 
+type LoginFormSchemaType = z.infer<typeof formSchema>;
+
 export function LoginForm() {
+    const [login, { isLoading }] = useLoginMutation();
+    const { toast } = useToast();
+    // const navigate = useNavigate();
+
+    const [errors, setErrors] = useState<string[]>([])
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -30,8 +42,27 @@ export function LoginForm() {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    const onSubmit = async (data: LoginFormSchemaType) => {
+        const { email, password } = data;
+        try {
+            await login({ email, password }).unwrap()
+
+            // navigate("/dashboard")
+        } catch (error: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
+            toast({
+                variant: "destructive",
+                title: "Failed to sign in.",
+                description: error.error,
+            });
+
+            // check if error.data is dict
+            if (typeof error.data === "object") {
+                const errorMessages = Object.values(error.data).flat() as string[]
+                setErrors(errorMessages)
+            } else {
+                setErrors([error.data])
+            }
+        }
     }
 
     return (
@@ -68,8 +99,21 @@ export function LoginForm() {
                     />
                 </div>
                 <div className="space-y-4">
-                    <Button className="bg-primary w-full" type="submit">Sign in</Button>
-                    <div className="w-full h-6 flex justify-center items-center gap-2.5 inline-flex">
+                    <div>
+                        <Button className="bg-primary w-full" type="submit">Sign in</Button>
+                        {
+                            errors.length > 0 && (
+                                <div className="flex flex-col items-center justify-center space-y-2 mx-2 mt-1">
+                                    {
+                                        errors.map((error) => (
+                                            <p className="text-sm text-red-500" key={error}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="w-full h-6 justify-center items-center gap-2.5 inline-flex">
                         <div className="w-full h-px border border-primary border-opacity-75"></div>
                         <div className="text-primary text-base font-sans leading-normal">or</div>
                         <div className="w-full h-px border border-primary border-opacity-75"></div>
@@ -83,7 +127,7 @@ export function LoginForm() {
                         <p className="text-sm text-[#667085]">Don't have an account?</p><a href="/register" className="text-sm text-primary font-bold hover:scale-105 transition">Sign up!</a>
                     </div>
                     <div className="flex flex-row text-center justify-between">
-                        <Button className="text-sm bg-transparent text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Talk to support</Button><Button className="bg-transparent text-sm text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Forgot password</Button>
+                        <Button className="text-sm bg-transparent text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70" isloading={isLoading}>Talk to support</Button><Button className="bg-transparent text-sm text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Forgot password</Button>
                     </div>
                 </div>
             </form>
