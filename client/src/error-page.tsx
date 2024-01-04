@@ -18,12 +18,18 @@ export default function ErrorPage() {
   }
 
   return (
-    <div id="error-page">
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p className='text-slate-400'>
-        <i>{errorCode} {errorMessage}</i>
-      </p>
+    <div id="error-page" className="w-full h-screen flex flex-row justify-between">
+      <div className="flex flex-col justify-center items-center h-full w-full md:w-1/2">
+        <div>
+          <p className='text-primary font-bold pl-2'>{errorCode} {errorMessage}</p>
+          <h1 className="text-8xl">Oops!</h1>
+          <p className="text-xl pl-2 pt-5 pb-8 font-light text-slate-500">Sorry, an unexpected error has occurred.</p>
+          <a href="/" className="ml-2 px-5 py-3 bg-primary rounded-sm text-white font-medium">Go back</a>
+        </div>
+      </div>
+      <div className="bg-[url('./images/login-bg.jpg')] md:w-3/5 bg-cover bg-center hidden md:block">
+
+      </div>
     </div>
   );
 }
