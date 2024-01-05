@@ -2,6 +2,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from notes.utils import generate_id
 
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=generate_id)
@@ -29,6 +34,8 @@ class Group(BaseModel):
     icon = models.CharField(choices=ICON_CHOICES, default="default")
     description = models.CharField(max_length=512)
 
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
     class Meta:
         ordering = ["name"]
 
@@ -42,8 +49,11 @@ class File(BaseModel):
     description = models.CharField(max_length=1024, blank=True, null=True)
     # thumbnail = models.ImageField()  # todo
     tags = ArrayField(
-        models.CharField(max_length=16), size=6, blank=True, null=True  # Max tags count
+        models.CharField(max_length=16, null=True, blank=True), size=6, blank=True, null=True
     )
+
+    file = models.FileField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["created_at"]
