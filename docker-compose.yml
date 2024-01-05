@@ -27,6 +27,10 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     volumes:
       - ./skynotes:/code
     
@@ -40,7 +44,36 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    volumes:
+      - ./skynotes:/code
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=skynotes
+      - RABBITMQ_DEFAULT_PASS=skynotes
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery:
+    build:
+      dockerfile: Dockerfile
+    restart: always
+    command: celery -A skynotes worker -l info
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
       app:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ./skynotes:/code
