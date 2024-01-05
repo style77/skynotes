@@ -65,15 +65,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
-    MIDDLEWARE.insert(
-        6,  # After AuthenticationMiddleware
-        "authorization.middleware.JWTRefreshMiddleware",
-    )
-
 AUTH_USER_MODEL = "authorization.CustomUser"
 
-ACCESS_TOKEN_LIFETIME = timedelta(minutes=5)
+ACCESS_TOKEN_LIFETIME = timedelta(hours=8) if DEBUG else timedelta(minutes=5)
 REFRESH_TOKEN_LIFETIME = timedelta(days=15)
 
 AUTH_COOKIE = "access_token"
@@ -132,6 +126,7 @@ SPECTACULAR_SETTINGS = {
         if DEBUG
         else "rest_framework.permissions.IsAdminUser"
     ],
+    "COMPONENT_SPLIT_REQUEST": True,
 }
 
 # Cors
@@ -212,3 +207,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Celery
+
+# REDIS_URL = env("REDIS_URL")
+
+CELERY_BROKER_URL = env("RABBITMQ_URL")
+# CELERY_RESULT_BACKEND = REDIS_URL
