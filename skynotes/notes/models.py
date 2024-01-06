@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from notes.utils import generate_id
@@ -18,6 +19,18 @@ class BaseModel(models.Model):
 
     def __str__(self):
         return f"<{self.__class__.__name__} id={id}>"
+
+
+class StatusField(models.IntegerField):
+    statuses = OrderedDict({
+        0: "REQUESTED",
+        1: "PROCESSING",
+        2: "COMPLETED"
+    })
+
+    def representation(self):
+        # Custom logic to represent the integer field
+        return self.statuses.get(self.value_from_object(self.model))
 
 
 class Group(BaseModel):
@@ -49,11 +62,16 @@ class File(BaseModel):
     description = models.CharField(max_length=1024, blank=True, null=True)
     # thumbnail = models.ImageField()  # todo
     tags = ArrayField(
-        models.CharField(max_length=16, null=True, blank=True), size=6, blank=True, null=True
+        models.CharField(max_length=16, null=True, blank=True),
+        size=6,
+        blank=True,
+        null=True,
     )
+
+    status = StatusField(default=0)
 
     file = models.FileField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
