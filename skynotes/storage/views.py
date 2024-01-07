@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework import status, parsers
 from rest_framework.response import Response
-from notes.serializers import FileSerializer
-from notes.models import File, Group
+from storage.serializers import FileSerializer
+from storage.models import File
 
 from drf_spectacular.utils import extend_schema
 

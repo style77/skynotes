@@ -1,4 +1,4 @@
-from notes.models import File, Group
+from storage.models import File, Group
 from django.contrib import admin
 
 admin.site.register(File)

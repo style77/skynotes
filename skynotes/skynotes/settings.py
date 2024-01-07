@@ -50,7 +50,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-APPLICATIONS = ["notes", "authorization"]
+APPLICATIONS = ["storage", "authorization"]
 
 INSTALLED_APPS = CORE_APPS + APPLICATIONS + THIRD_PARTY_APPS
 

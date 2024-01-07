@@ -1,6 +1,6 @@
 import base64
 from celery import shared_task
-from notes.models import File
+from storage.models import File
 from django.core.files.base import ContentFile
 
 

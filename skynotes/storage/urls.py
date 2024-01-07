@@ -1,6 +1,6 @@
 from django.urls import path
 
-from notes.views import FilesListView, FilesGroupedListView
+from storage.views import FilesListView, FilesGroupedListView
 
 
 urlpatterns = [

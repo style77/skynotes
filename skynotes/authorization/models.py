@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from notes.models import generate_id
+from storage.utils import generate_id
 
 
 class UserManager(BaseUserManager):

@@ -1,7 +1,7 @@
 import base64
 from rest_framework import serializers
-from notes.models import File, Group
-from notes.tasks import handle_file_upload
+from storage.models import File, Group
+from storage.tasks import handle_file_upload
 
 
 class GroupSerializer(serializers.ModelSerializer):

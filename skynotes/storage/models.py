@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from notes.utils import generate_id
+from storage.utils import generate_id
 
 from django.contrib.auth import get_user_model
 
