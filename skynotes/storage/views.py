@@ -23,7 +23,7 @@ class FilesListView(APIView):
     @extend_schema(
         description="Upload file",
         request=FileSerializer,
-        responses={200: FileSerializer},
+        responses={201: FileSerializer},
     )
     def post(self, request, *args, **kwargs):
         serializer = FileSerializer(data=request.data)
