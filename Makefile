@@ -12,6 +12,11 @@ run-api:
 	@echo "Running api server"
 	docker compose -f docker-compose.yml up -d
 
+run-api-build:
+	@echo "Running api server"
+	@echo "Building images"
+	docker compose -f docker-compose.yml up -d --build
+
 run-web:
 	@echo "Running web server"
 	cd client && pnpm run dev
