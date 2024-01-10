@@ -14,13 +14,13 @@ _sym_db = _symbol_database.Default()
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n\x11thumbnailer.proto\x12\x0bthumbnailer"#\n\x10ThumbnailRequest\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\x0c"&\n\x11ThumbnailResponse\x12\x11\n\tthumbnail\x18\x01 \x01(\x0c\x32\x66\n\x10ThumbnailService\x12R\n\x11GenerateThumbnail\x12\x1d.thumbnailer.ThumbnailRequest\x1a\x1e.thumbnailer.ThumbnailResponseB\x08Z\x06./grpcb\x06proto3'
+    b'\n\x11thumbnailer.proto\x12\x0bthumbnailer"#\n\x10ThumbnailRequest\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\x0c"&\n\x11ThumbnailResponse\x12\x11\n\tthumbnail\x18\x01 \x01(\x0c\x32\x66\n\x10ThumbnailService\x12R\n\x11GenerateThumbnail\x12\x1d.thumbnailer.ThumbnailRequest\x1a\x1e.thumbnailer.ThumbnailResponseB\x08Z\x06./grpcb\x06proto3'  # noqa
 )
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "thumbnailer_pb2", _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
+if _descriptor._USE_C_DESCRIPTORS == False:  # noqa
     _globals["DESCRIPTOR"]._options = None
     _globals["DESCRIPTOR"]._serialized_options = b"Z\006./grpc"
     _globals["_THUMBNAILREQUEST"]._serialized_start = 34

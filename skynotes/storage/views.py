@@ -1,11 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
-from rest_framework import status, parsers
-from rest_framework.response import Response
-from storage.serializers import FileSerializer, GroupSerializer, GroupDetailsSerializer
-from storage.models import File, Group
-
 from drf_spectacular.utils import extend_schema
+from rest_framework import parsers, status
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from storage.models import File, Group
+from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
 
 
 class FilesListView(APIView):

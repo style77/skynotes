@@ -1,8 +1,8 @@
 import base64
+
 from rest_framework import serializers
 from storage.models import File, Group
 from storage.tasks import handle_file_upload
-from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 
 
 class GroupSerializer(serializers.ModelSerializer):

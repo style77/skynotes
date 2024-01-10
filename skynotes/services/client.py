@@ -1,5 +1,4 @@
 import grpc
-
 from thumbnailer import thumbnailer_pb2, thumbnailer_pb2_grpc
 
 

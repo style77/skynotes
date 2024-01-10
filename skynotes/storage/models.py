@@ -1,10 +1,9 @@
 from collections import OrderedDict
+
+from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from storage.utils import generate_id
-
-from django.contrib.auth import get_user_model
-
 
 User = get_user_model()
 
@@ -22,12 +21,9 @@ class BaseModel(models.Model):
 
 
 class StatusField(models.IntegerField):
-    statuses = OrderedDict({
-        0: "REQUESTED",
-        1: "PROCESSING",
-        2: "THUMBNAIL_CREATION",
-        4: "COMPLETED"
-    })
+    statuses = OrderedDict(
+        {0: "REQUESTED", 1: "PROCESSING", 2: "THUMBNAIL_CREATION", 4: "COMPLETED"}
+    )
 
     def representation(self):
         # Custom logic to represent the integer field
