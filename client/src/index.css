@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 233 18% 9%;
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -75,7 +75,7 @@
   }
 }
 
-input:-webkit-autofill,
+input:-webkit-autofill,v
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active{

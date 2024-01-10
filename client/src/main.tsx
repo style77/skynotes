@@ -9,6 +9,7 @@ import "./index.css";
 import ErrorPage from "./error-page";
 import LoginPage from "./routes/login";
 import RegisterPage from "./routes/register";
+import Dashboard from "./routes/dashboard";
 import CustomProvider from "@/store/provider";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "register",
     element: <RegisterPage />,
+  },
+  {
+    path: "dashboard",
+    element: <Dashboard />,
   },
 ]);
 
