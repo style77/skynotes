@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework import status, parsers
 from rest_framework.response import Response
-from storage.serializers import FileSerializer
-from storage.models import File
+from storage.serializers import FileSerializer, GroupSerializer, GroupDetailsSerializer
+from storage.models import File, Group
 
 from drf_spectacular.utils import extend_schema
 
@@ -40,3 +41,25 @@ class FilesGroupedListView(APIView):
     )
     def get(self, request, group, *args, **kwargs):
         return FilesListView.as_view()(request._request, group, *args, **kwargs)
+
+
+class GroupsListCreateView(ListCreateAPIView):
+    queryset = Group.objects.all()
+
+    def get_serializer_class(self):
+        return GroupDetailsSerializer
+
+    @extend_schema(
+        description="Retrieve all user groups",
+        responses={200: GroupDetailsSerializer(many=True)},
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @extend_schema(description="Create new group", request=GroupSerializer)
+    def post(self, request, *args, **kwargs):
+        serializer = GroupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

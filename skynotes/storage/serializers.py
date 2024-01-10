@@ -2,6 +2,7 @@ import base64
 from rest_framework import serializers
 from storage.models import File, Group
 from storage.tasks import handle_file_upload
+from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -9,6 +10,26 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = ["id", "created_at", "updated_at", "name", "icon", "description"]
         read_only_fields = ["id", "created_at", "updated_at"]
+
+
+class GroupDetailsSerializer(GroupSerializer):
+    files = serializers.SerializerMethodField(method_name="get_files_count")
+
+    class Meta(GroupSerializer.Meta):
+        fields = GroupSerializer.Meta.fields + ["files"]
+        read_only_fields = GroupSerializer.Meta.read_only_fields + ["files"]
+
+    def get_files_count(self, obj: Group):
+        """
+        Get the number of files associated with a given group.
+
+        Parameters:
+            obj (Group): The group object for which to retrieve the file count.
+
+        Returns:
+            int: The total count of files associated with the group.
+        """
+        return File.objects.filter(group=obj.id).count()
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -24,7 +45,7 @@ class FileSerializer(serializers.ModelSerializer):
             "tags",
             "status",
             "file",
-            "thumbnail"
+            "thumbnail",
         ]
         read_only_fields = ["id", "created_at", "updated_at", "status", "thumbnail"]
 
