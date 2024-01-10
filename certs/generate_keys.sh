@@ -16,54 +16,25 @@ check_cfssl() {
     fi
 }
 
-generate_csr_json() {
-    local common_name="$1"
-    cat <<EOF
-{
-  "CN": "$common_name",
-  "key": {
-      "algo": "ecdsa",
-      "size": 256
-  },
-  "names": [
-      {
-          "C": "PL",
-          "ST": "Kuyavian-Pomeranian",
-          "L": "Warsaw"
-      }
-  ],
-   "hosts": [
-    "127.0.0.1",
-    "localhost"
-  ]
-}
-EOF
-}
-
 # Check if CFSSL is installed
 check_cfssl
 
 # Configuration JSONs
-ca_config='ca-config.json'
-ca_csr='ca-csr.json'
-client_csr='client-csr.json'
-server_csr='server-csr.json'
+cfssl_config="cfssl.json"
+csr_config="csr.json"
+ca_name="Dev Testing CA"
 
 # CA config
-cfssl print-defaults config > "$ca_config"
-
 # Generate CA certificate
-generate_csr_json "CA" > "$ca_csr"
 cfssl gencert -initca "$ca_csr" | cfssljson -bare ca -
 
-# Generate client certificate
-generate_csr_json "client" > "$client_csr"
-cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config="$ca_config" -profile=client "$client_csr" | cfssljson -bare client
+cfssl selfsign -config "$cfssl_config" --profile rootca "$ca_name" "$csr_config" | cfssljson -bare root
 
-# Generate server certificate
-echo "Creating www certificate..."
+cfssl genkey "$csr_config" | cfssljson -bare server
+cfssl genkey "$csr_config" | cfssljson -bare client
 
-generate_csr_json "www" > "$server_csr"
-cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config="$ca_config" -hostname=127.0.0.1 -profile=www "$server_csr" | cfssljson -bare server
+cfssl sign -ca root.pem -ca-key root-key.pem -config "$cfssl_config" -profile server server.csr | cfssljson -bare server
+cfssl sign -ca root.pem -ca-key root-key.pem -config "$cfssl_config" -profile client client.csr | cfssljson -bare client
+
 
 echo "Certificates generated successfully."
