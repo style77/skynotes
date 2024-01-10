@@ -77,3 +77,11 @@ services:
         condition: service_healthy
     volumes:
       - ./skynotes:/code
+
+  thumbnailer:
+    build:
+      dockerfile: thumbnailer.Dockerfile
+      context: .  # use the same context as the app service (in future)
+    restart: always
+    ports: 
+      - 50051:50051
