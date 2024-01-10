@@ -24,8 +24,9 @@ class FileSerializer(serializers.ModelSerializer):
             "tags",
             "status",
             "file",
+            "thumbnail"
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "status"]
+        read_only_fields = ["id", "created_at", "updated_at", "status", "thumbnail"]
 
     def _get_file_ext(self, name: str):
         return name.split(".")[-1]
