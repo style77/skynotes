@@ -25,7 +25,8 @@ class StatusField(models.IntegerField):
     statuses = OrderedDict({
         0: "REQUESTED",
         1: "PROCESSING",
-        2: "COMPLETED"
+        2: "THUMBNAIL_CREATION",
+        4: "COMPLETED"
     })
 
     def representation(self):
@@ -60,7 +61,7 @@ class File(BaseModel):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024, blank=True, null=True)
-    # thumbnail = models.ImageField()  # todo
+    thumbnail = models.ImageField(blank=True, null=True)  # todo
     tags = ArrayField(
         models.CharField(max_length=16, null=True, blank=True),
         size=6,
