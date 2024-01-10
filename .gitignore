@@ -160,3 +160,6 @@ cython_debug/
 
 
 media/
+
+certs/*
+!certs/generate_keys.sh
