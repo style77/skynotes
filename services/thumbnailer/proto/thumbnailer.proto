@@ -6,7 +6,6 @@ option go_package = "./grpc";
 
 message ThumbnailRequest {
     bytes content = 1;
-    string extension = 2;
 }
 
 message ThumbnailResponse {
