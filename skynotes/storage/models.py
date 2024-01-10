@@ -54,7 +54,7 @@ class Group(BaseModel):
 
 
 class File(BaseModel):
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, blank=True, null=True)
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024, blank=True, null=True)
     thumbnail = models.ImageField(blank=True, null=True)  # todo

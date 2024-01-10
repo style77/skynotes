@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from storage.models import File, Group
@@ -42,7 +42,7 @@ class FilesGroupedListView(APIView):
         return FilesListView.as_view()(request._request, group, *args, **kwargs)
 
 
-class GroupsListCreateView(ListCreateAPIView):
+class GroupListCreateView(ListCreateAPIView):
     queryset = Group.objects.all()
 
     def get_serializer_class(self):
@@ -62,3 +62,8 @@ class GroupsListCreateView(ListCreateAPIView):
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupDetailsSerializer
