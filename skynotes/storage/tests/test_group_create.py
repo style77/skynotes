@@ -1,11 +1,12 @@
 import json
 
 from django.db.utils import DataError, IntegrityError
-from .common import GroupTestCaseBase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from storage.models import Group, IconChoices
+
+from .common import GroupTestCaseBase
 
 
 class GroupCreationUnitTest(GroupTestCaseBase):
