@@ -147,10 +147,8 @@ class MediaView(View):
         return HttpResponseForbidden("You are not authorized to access this media.")
 
     def _get_file_id(self, file_path):
-        # Extract the file ID from the file path
-        file_id, _, _ = file_path.rpartition("_thumb")
-
-        # Validate the extracted file ID as a UUID
+        file_id = file_path.split(".")[0].rstrip("_thumb")
+    
         try:
             uuid.UUID(file_id)
         except ValueError:
