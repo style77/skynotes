@@ -1,17 +1,17 @@
 import uuid
+
+from django.core.exceptions import ValidationError
+from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
+from django.http.response import FileResponse
 from django.shortcuts import get_object_or_404
+from django.views import View
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.core.exceptions import ValidationError
 from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
-
-from django.views import View
-from django.http.response import FileResponse
-from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404
 
 
 class FileDetailsView(RetrieveUpdateDestroyAPIView):
@@ -133,7 +133,9 @@ class MediaView(View):
 
         get_thumbnail = "thumbnail" in request.GET
 
-        access, file = self._check_file_access(request, file_id, get_thumbnail=get_thumbnail)
+        access, file = self._check_file_access(
+            request, file_id, get_thumbnail=get_thumbnail
+        )
 
         if access:
             if not file:

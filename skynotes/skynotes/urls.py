@@ -13,7 +13,5 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
-    path(
-        "media/<file_path>", MediaView.as_view(), name="media"
-    )
+    path("media/<file_path>", MediaView.as_view(), name="media"),
 ]
