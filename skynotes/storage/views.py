@@ -7,6 +7,11 @@ from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
 
 
+class FileDetailsView(RetrieveUpdateDestroyAPIView):
+    serializer_class = FileSerializer
+    queryset = File.objects.all()
+
+
 class FilesListView(APIView):
     parser_classes = (parsers.MultiPartParser,)
 
