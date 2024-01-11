@@ -104,7 +104,8 @@ class MediaView(View):
             file_id (int): The ID of the file to check access for.
 
         Returns:
-            tuple: A tuple containing a boolean value indicating whether the user has access to the file, and the file object if access is granted, otherwise None.
+            tuple: A tuple containing a boolean value indicating whether the user has 
+            access to the file, and the file object if access is granted, otherwise None.
         """
         user = request.user
 
