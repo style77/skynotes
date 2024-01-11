@@ -1,5 +1,3 @@
-import React from "react";
-import { cn } from "@/lib/utils";
 import { Folder, FolderUp, Files, FolderHeart, FolderLock, Trash2, MessageSquareShare, LogOut } from "lucide-react"
 
 
