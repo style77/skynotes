@@ -42,7 +42,7 @@ class Group(BaseModel):
 
     name = models.CharField(max_length=128)
     icon = models.CharField(choices=ICON_CHOICES, default="default")
-    description = models.CharField(max_length=512)
+    description = models.CharField(max_length=512, blank=True, null=True)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
