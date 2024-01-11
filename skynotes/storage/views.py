@@ -1,14 +1,17 @@
+import uuid
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.core.exceptions import ValidationError
 from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
 
 from django.views import View
 from django.http.response import FileResponse
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404
 
 
 class FileDetailsView(RetrieveUpdateDestroyAPIView):
@@ -92,7 +95,7 @@ class MediaView(View):
         """
         return file.owner == user
 
-    def _check_file_access(self, request, file_id):
+    def _check_file_access(self, request, file_id, *, get_thumbnail=False):
         """
         Checks the file access for the given user and file ID.
 
@@ -108,21 +111,45 @@ class MediaView(View):
         if not user or not user.is_authenticated:
             return False, None
 
-        file = File.objects.get(id=file_id)
+        file_object = get_object_or_404(File, id=file_id)
+        if get_thumbnail:
+            file = file_object.thumbnail
+        else:
+            file = file_object.file
 
         if user.is_staff or user.is_superuser:
             return True, file
 
-        if self.__user_permissions_to_file(user, file):
+        if self.__user_permissions_to_file(user, file_object):
             return True, file
 
         return False, None
 
     def get(self, request, file_path, *args, **kwargs):
-        file_id = file_path.split(".")[0]
-        access, file = self._check_file_access(request, file_id)
+        try:
+            file_id = self._get_file_id(file_path)
+        except ValidationError as e:
+            return HttpResponseBadRequest(e.message)
+
+        get_thumbnail = "thumbnail" in request.GET
+
+        access, file = self._check_file_access(request, file_id, get_thumbnail=get_thumbnail)
 
         if access:
-            response = FileResponse(file.file, filename=file.name)
+            if not file:
+                return Http404("File not found.")
+            response = FileResponse(file, filename=file.name)
             return response
         return HttpResponseForbidden("You are not authorized to access this media.")
+
+    def _get_file_id(self, file_path):
+        # Extract the file ID from the file path
+        file_id, _, _ = file_path.rpartition("_thumb")
+
+        # Validate the extracted file ID as a UUID
+        try:
+            uuid.UUID(file_id)
+        except ValueError:
+            raise ValidationError("Invalid UUID format")
+
+        return file_id
