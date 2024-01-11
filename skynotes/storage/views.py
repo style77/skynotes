@@ -6,6 +6,10 @@ from rest_framework.views import APIView
 from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
 
+from django.views import View
+from django.http.response import FileResponse
+from django.http import HttpResponseForbidden
+
 
 class FileDetailsView(RetrieveUpdateDestroyAPIView):
     serializer_class = FileSerializer
@@ -72,3 +76,53 @@ class GroupListCreateView(ListCreateAPIView):
 class GroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailsSerializer
+
+
+class MediaView(View):
+    def __user_permissions_to_file(self, user, file):
+        """
+        A function that checks if the given user has permissions to access the file.
+
+        Parameters:
+            user (User): The user object representing the user.
+            file (File): The file object representing the file.
+
+        Returns:
+            bool: True if the user has permissions to access the file, False otherwise.
+        """
+        return file.owner == user
+
+    def _check_file_access(self, request, file_id):
+        """
+        Checks the file access for the given user and file ID.
+
+        Parameters:
+            request (HttpRequest): The HTTP request object.
+            file_id (int): The ID of the file to check access for.
+
+        Returns:
+            tuple: A tuple containing a boolean value indicating whether the user has access to the file, and the file object if access is granted, otherwise None.
+        """
+        user = request.user
+
+        if not user or not user.is_authenticated:
+            return False, None
+
+        file = File.objects.get(id=file_id)
+
+        if user.is_staff or user.is_superuser:
+            return True, file
+
+        if self.__user_permissions_to_file(user, file):
+            return True, file
+
+        return False, None
+
+    def get(self, request, file_path, *args, **kwargs):
+        file_id = file_path.split(".")[0]
+        access, file = self._check_file_access(request, file_id)
+
+        if access:
+            response = FileResponse(file.file, filename=file.name)
+            return response
+        return HttpResponseForbidden("You are not authorized to access this media.")
