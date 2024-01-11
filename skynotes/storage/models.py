@@ -30,24 +30,30 @@ class StatusField(models.IntegerField):
         return self.statuses.get(self.value_from_object(self.model))
 
 
-class Group(BaseModel):
-    ICON_CHOICES = (
-        ("default", "default"),
-        ("music", "music"),
-        ("video", "video"),
-        ("photo", "photo"),
-        ("document", "document"),
-        ("archive", "archive"),
-    )
+class IconChoices(models.TextChoices):
+    DEFAULT = "default", "default"
+    MUSIC = "music", "music"
+    VIDEO = "video", "video"
+    PHOTO = "photo", "photo"
+    DOCUMENT = "document", "document"
+    ARCHIVE = "archive", "archive"
 
+
+class Group(BaseModel):
     name = models.CharField(max_length=128)
-    icon = models.CharField(choices=ICON_CHOICES, default="default")
+    icon = models.CharField(choices=IconChoices.choices, default="default")
     description = models.CharField(max_length=512, blank=True, null=True)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["name"]
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_icon_valid",
+                check=models.Q(icon__in=IconChoices.values),
+            )
+        ]
 
     def __str__(self):
         return self.name
