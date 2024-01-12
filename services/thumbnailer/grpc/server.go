@@ -17,8 +17,8 @@ func (s *Server) GenerateThumbnail(ctx context.Context, req *ThumbnailRequest) (
 
 	opts := thumbnailer.Options{
 		ThumbDims: thumbnailer.Dims{
-			Width:  200,
-			Height: 400,
+			Width:  400,
+			Height: 200,
 		},
 	}
 
