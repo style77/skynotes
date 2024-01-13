@@ -163,3 +163,5 @@ media/
 
 certs/*
 !certs/generate_keys.sh
+!cfssl.json
+!csr.json
