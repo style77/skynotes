@@ -148,7 +148,7 @@ class MediaView(View):
 
     def _get_file_id(self, file_path):
         file_id = file_path.split(".")[0].rstrip("_thumb")
-    
+
         try:
             uuid.UUID(file_id)
         except ValueError:
