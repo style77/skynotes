@@ -16,10 +16,6 @@ on:
             - master
             - develop
 
-defaults:
-    run:
-        working-directory: ./client
-
 jobs:
     lint:
         name: ⬣ ESLint
@@ -27,6 +23,10 @@ jobs:
         strategy:
           matrix:
             node-version: [16]
+
+        defaults:
+            run:
+                working-directory: ./client
 
         steps:
             - name: ⬇️ Checkout repo
@@ -55,6 +55,10 @@ jobs:
         strategy:
           matrix:
             node-version: [16]
+
+        defaults:
+          run:
+              working-directory: ./client
 
         steps:
             - name: ⬇️ Checkout repo
