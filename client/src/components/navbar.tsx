@@ -1,4 +1,4 @@
-import { UploadCloud, FolderPlus } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { Button } from "./ui/button";
 import { NewGroupModal } from "./group/newGroupModal";
 
