@@ -15,8 +15,10 @@ import { LoginInput } from "@/components/loginInput"
 import { Fingerprint } from "lucide-react"
 import { useLoginMutation } from "@/store/features/authApiSlice"
 import { useToast } from "./ui/use-toast"
-// import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { isLoadingFinished, setAuth } from "@/store/features/authSlice"
+import store from "@/store"
 
 const formSchema = z.object({
     email: z.string().min(6, {
@@ -30,7 +32,7 @@ type LoginFormSchemaType = z.infer<typeof formSchema>;
 export function LoginForm() {
     const [login, { isLoading }] = useLoginMutation();
     const { toast } = useToast();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState<string[]>([])
 
@@ -46,8 +48,9 @@ export function LoginForm() {
         const { email, password } = data;
         try {
             await login({ email, password }).unwrap()
-
-            // navigate("/dashboard")
+            store.dispatch(setAuth())
+            store.dispatch(isLoadingFinished())
+            navigate("/dashboard")
         } catch (error: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
             toast({
                 variant: "destructive",
@@ -100,7 +103,7 @@ export function LoginForm() {
                 </div>
                 <div className="space-y-4">
                     <div>
-                        <Button className="bg-primary w-full" type="submit">Sign in</Button>
+                        <Button className="bg-primary w-full" type="submit" isloading={isLoading}>Sign in</Button>
                         {
                             errors.length > 0 && (
                                 <div className="flex flex-col items-center justify-center space-y-2 mx-2 mt-1">
@@ -127,7 +130,7 @@ export function LoginForm() {
                         <p className="text-sm text-[#667085]">Don't have an account?</p><a href="/register" className="text-sm text-primary font-bold hover:scale-105 transition">Sign up!</a>
                     </div>
                     <div className="flex flex-row text-center justify-between">
-                        <Button className="text-sm bg-transparent text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70" isloading={isLoading}>Talk to support</Button><Button className="bg-transparent text-sm text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Forgot password</Button>
+                        <Button className="text-sm bg-transparent text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Talk to support</Button><Button className="bg-transparent text-sm text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Forgot password</Button>
                     </div>
                 </div>
             </form>
