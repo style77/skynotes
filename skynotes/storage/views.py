@@ -10,8 +10,10 @@ from rest_framework import parsers, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from authorization.authentication import JWTCookiesAuthentication
 from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
+from rest_framework.exceptions import AuthenticationFailed
 
 
 class FileDetailsView(RetrieveUpdateDestroyAPIView):
@@ -62,10 +64,13 @@ class GroupListCreateView(ListCreateAPIView):
 
     @extend_schema(
         description="Retrieve all user groups",
-        responses={200: GroupDetailsSerializer(many=True)},
+        responses={200: FileSerializer(many=True)},
     )
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    def get(self, request, group=None, *args, **kwargs):
+        groups = Group.objects.filter(owner=request.user).all()
+        serializer = GroupDetailsSerializer(groups, many=True)
+
+        return Response(serializer.data)
 
     @extend_schema(description="Create new group", request=GroupSerializer)
     def post(self, request, *args, **kwargs):
@@ -82,6 +87,7 @@ class GroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
 
 class MediaView(View):
+    
     def __user_permissions_to_file(self, user, file):
         """
         A function that checks if the given user has permissions to access the file.
@@ -132,6 +138,17 @@ class MediaView(View):
             file_id = self._get_file_id(file_path)
         except ValidationError as e:
             return HttpResponseBadRequest(e.message)
+
+        jwt_auth = JWTCookiesAuthentication()
+        try:
+            user_auth_tuple = jwt_auth.authenticate(request)
+            print(user_auth_tuple)
+            if user_auth_tuple is not None:
+                request.user, request.auth = user_auth_tuple
+            else:
+                return HttpResponseForbidden("You are not authorized to access this media.")
+        except AuthenticationFailed:
+            return HttpResponseForbidden("Invalid authentication.")
 
         get_thumbnail = "thumbnail" in request.GET
 
