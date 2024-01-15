@@ -7,31 +7,31 @@ interface User {
 const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     retrieveUser: builder.query<User, void>({
-      query: () => "users/me/",
+      query: () => "api/users/me/",
     }),
     login: builder.mutation({
       query: ({ email, password }) => ({
-        url: "auth/jwt/create/",
+        url: "api/auth/jwt/create/",
         method: "POST",
         body: { email, password },
       }),
     }),
     register: builder.mutation({
       query: ({ email, password }) => ({
-        url: "users/",
+        url: "api/users/",
         method: "POST",
         body: { email, password },
       }),
     }),
     verify: builder.mutation({
       query: () => ({
-        url: "auth/jwt/verify/",
+        url: "api/auth/jwt/verify/",
         method: "POST",
       }),
     }),
     logout: builder.mutation({
       query: () => ({
-        url: "auth/logout/",
+        url: "api/auth/logout/",
         method: "POST",
       }),
     }),

@@ -9,7 +9,7 @@ import { Mutex } from "async-mutex";
 
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
-  baseUrl: `http://localhost:8000/api/`,
+  baseUrl: `http://localhost:8000/`,
   credentials: "include",
 });
 const baseQueryWithReauth: BaseQueryFn<
@@ -26,7 +26,7 @@ const baseQueryWithReauth: BaseQueryFn<
       try {
         const refreshResult = await baseQuery(
           {
-            url: "auth/jwt/refresh/",
+            url: "api/auth/jwt/refresh/",
             method: "POST",
           },
           api,
@@ -52,5 +52,6 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ['Group', 'File'],
   endpoints: () => ({}),
 });
