@@ -1,5 +1,6 @@
 import uuid
 
+from authorization.authentication import JWTCookiesAuthentication
 from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.http.response import FileResponse
@@ -7,13 +8,12 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from authorization.authentication import JWTCookiesAuthentication
 from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
-from rest_framework.exceptions import AuthenticationFailed
 
 
 class FileDetailsView(RetrieveUpdateDestroyAPIView):
@@ -87,7 +87,6 @@ class GroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
 
 class MediaView(View):
-    
     def __user_permissions_to_file(self, user, file):
         """
         A function that checks if the given user has permissions to access the file.
@@ -146,7 +145,9 @@ class MediaView(View):
             if user_auth_tuple is not None:
                 request.user, request.auth = user_auth_tuple
             else:
-                return HttpResponseForbidden("You are not authorized to access this media.")
+                return HttpResponseForbidden(
+                    "You are not authorized to access this media."
+                )
         except AuthenticationFailed:
             return HttpResponseForbidden("Invalid authentication.")
 
