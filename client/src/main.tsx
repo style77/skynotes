@@ -12,6 +12,7 @@ import RegisterPage from "./routes/register";
 import Dashboard from "./routes/dashboard";
 import CustomProvider from "@/store/provider";
 import { Toaster } from "@/components/ui/toaster";
+import RequireAuth from "@/components/requireAuth";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <Dashboard />,
+    element: <RequireAuth><Dashboard /></RequireAuth>,
   },
 ]);
 
