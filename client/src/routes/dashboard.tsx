@@ -5,6 +5,10 @@ import { Group, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { Folder, MoreVertical } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { EditGroupModal } from "@/components/group/groupModal";
 
 type FileItemProps = {
   id: string;
@@ -20,23 +24,51 @@ type GroupItemProps = {
   name: string;
   files: number;
   icon: string;
+  description: string;
 }
 
 export function GroupItem(props: GroupItemProps) {
-  return (
-    <div className="flex flex-col items-center h-56 w-full">
-      <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
-        <div className="flex flex-row">
+  const [showEditModal, setShowEditModal] = useState(false)
+  const navigate = useNavigate();
 
+  const handleClick = () => {
+    console.log(123)
+  }
+
+  return (
+    <DropdownMenu>
+      <div className="flex flex-col items-center h-56 w-full cursor-pointer" onClick={handleClick}>
+        <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-1 rounded-t-xl w-full">
+          <div className="flex flex-row justify-between items-center">
+            <Folder width={40} height={40} />
+            <DropdownMenuTrigger className="p-1 hover:bg-gray-300/25 rounded-full transition inline-flex justify-center items-center z-10">
+              <MoreVertical className="text-gray-600" />
+            </DropdownMenuTrigger>
+          </div>
+          <span className="font-semibold truncate">{props.name}</span>
+          <span className="opacity-50 text-xs">{props.files} files</span>
         </div>
-        <span className="font-semibold">{props.name}</span>
-        <span className="opacity-50 text-xs">{props.files} files</span>
+        <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
+          <span className="text-sm font-semibold">21.5 Mb</span>
+          <span className="text-sm"></span>
+        </div>
       </div>
-      <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
-        <span className="text-sm font-semibold">21.5 Mb</span>
-        <span className="text-sm"></span>
-      </div>
-    </div>
+
+
+
+      <DropdownMenuContent>
+        <EditGroupModal group={{
+          id: props.id,
+          name: props.name,
+          description: props.description,
+          icon: props.icon,
+        } as Group} />
+        <DropdownMenuItem>Share</DropdownMenuItem>
+        <DropdownMenuItem>Share settings</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="text-red-500">Delete</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
@@ -113,6 +145,7 @@ function ItemsGrid(props: ItemsGridProps) {
           name={group.name}
           files={group.files}
           icon={group.icon}
+          description={group.description}
         />
       ))}
       {props.files && props.files.map((file) => (
@@ -140,11 +173,11 @@ export default function Dashboard() {
 
   return (
     <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
-      <ResizablePanel defaultSize={13} minSize={13} maxSize={20} className="flex">
+      <ResizablePanel defaultSize={15} minSize={10} maxSize={20} className="flex">
         <Sidebar />
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={87} minSize={80} maxSize={87} className="w-full flex flex-col">
+      <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col">
         <Navbar />
         <div className="px-12 py-8">
           <div className="flex flex-col gap-4">
