@@ -1,6 +1,6 @@
 import { UploadCloud } from "lucide-react";
 import { Button } from "./ui/button";
-import { NewGroupModal } from "./group/newGroupModal";
+import { NewGroupModal } from "./group/groupModal";
 
 export function Navbar() {
     return (
