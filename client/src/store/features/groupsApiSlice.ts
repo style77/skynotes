@@ -24,10 +24,19 @@ const groupsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Group"],
         }),
+        updateGroup: builder.mutation({
+            query: ({ id, name, icon, description }) => ({
+                url: `api/groups/${id}/`,
+                method: "PATCH",
+                body: { name, icon, description }
+            }),
+            invalidatesTags: ["Group"],
+        }),
     }),
 });
 
 export const {
     useRetrieveGroupsQuery,
-    useCreateGroupMutation
+    useCreateGroupMutation,
+    useUpdateGroupMutation
 } = groupsApiSlice;
