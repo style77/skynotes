@@ -5,7 +5,7 @@ export function Sidebar() {
     return (
         <div className="flex flex-col justify-between bg-foreground h-full text-white">
             <div className="mt-5 w-full flex justify-center">
-                <img src="/icons/logo-transparent.png" alt="SkyNotes logo" className="w-40" />
+                <img src="/icons/logo-transparent.png" alt="SkyNotes logo" className="w-24 md:w-40 lg:w-60" />
             </div>
             <div className="space-y-4 flex flex-col justify-center px-6">
                 <SidebarItem name="My Cloud" icon={Folder} href="/dashboard" onClick={() => { }} />
