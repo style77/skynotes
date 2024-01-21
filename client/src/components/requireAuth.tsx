@@ -1,5 +1,6 @@
 "use client";
 import { useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface RequireAuthProps {
@@ -12,18 +13,12 @@ const RequireAuth = ({ children }: RequireAuthProps) => {
     );
 
     const navigate = useNavigate();
-    
-    if (isLoading) {
-        // return (
-        //     <div className="my-8 flex justify-center">
-        //         <Spinner />
-        //     </div>
-        // );
-    }
 
-    if (!isUserAuthenticated) {
-        navigate("/login");
-    }
+    useEffect(() => {
+        if (!isLoading && !isUserAuthenticated) {
+            navigate("/login");
+        }
+    })
 
     return <>{children}</>;
 };
