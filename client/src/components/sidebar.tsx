@@ -4,10 +4,10 @@ import { SidebarItem } from "./sidebarItem"
 export function Sidebar() {
     return (
         <div className="flex flex-col justify-between bg-foreground h-full text-white">
-            <div className="mt-5 mx-6">
-                <h1 className="text-3xl font-medium">Skynotes</h1>
+            <div className="mt-5 w-full flex justify-center">
+                <img src="/icons/logo-transparent.png" alt="SkyNotes logo" className="w-40" />
             </div>
-            <div className="space-y-4 mx-6">
+            <div className="space-y-4 flex flex-col justify-center px-6">
                 <SidebarItem name="My Cloud" icon={Folder} href="/dashboard" onClick={() => { }} />
                 <SidebarItem name="Shared" icon={FolderUp} href="/dashboard/shared" onClick={() => { }} />
                 <SidebarItem name="All Files" icon={Files} href="/dashboard/files" onClick={() => { }} />
