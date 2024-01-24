@@ -18,7 +18,7 @@ import { useToast } from "./ui/use-toast"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { isLoadingFinished, setAuth } from "@/store/features/authSlice"
-import store from "@/store"
+import { store } from "@/store"
 
 const formSchema = z.object({
     email: z.string().min(6, {
