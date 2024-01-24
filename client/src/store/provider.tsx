@@ -1,6 +1,5 @@
-"use client";
-
-import store from "./";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./index";
 import { Provider } from "react-redux";
 
 interface Props {
@@ -8,5 +7,9 @@ interface Props {
 }
 
 export default function CustomProvider({ children }: Props) {
-  return <Provider store={store}>{children}</Provider>;
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>{children}</PersistGate>
+    </Provider>
+  );
 }
