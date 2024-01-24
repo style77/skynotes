@@ -92,7 +92,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
         });
         setThumbnailUrl(url);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
 
