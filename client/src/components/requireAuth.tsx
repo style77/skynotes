@@ -8,14 +8,14 @@ interface RequireAuthProps {
 }
 
 const RequireAuth = ({ children }: RequireAuthProps) => {
-    const { isUserAuthenticated, isLoading } = useAppSelector(
+    const { isUserAuthenticated } = useAppSelector(
         (state) => state.auth,
     );
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isLoading && !isUserAuthenticated) {
+        if (!isUserAuthenticated) {
             navigate("/login");
         }
     })

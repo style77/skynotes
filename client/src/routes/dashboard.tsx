@@ -6,8 +6,8 @@ import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Folder, MoreVertical } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+// import { useNavigate } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EditGroupModal } from "@/components/group/groupModal";
 
 type FileItemProps = {
@@ -28,8 +28,7 @@ type GroupItemProps = {
 }
 
 export function GroupItem(props: GroupItemProps) {
-  const [showEditModal, setShowEditModal] = useState(false)
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleClick = () => {
     console.log(123)
