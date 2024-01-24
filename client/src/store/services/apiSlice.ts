@@ -28,6 +28,9 @@ const baseQueryWithReauth: BaseQueryFn<
           {
             url: "api/auth/jwt/refresh/",
             method: "POST",
+            body: {
+              refresh: "anytoken",
+            }
           },
           api,
           extraOptions,
