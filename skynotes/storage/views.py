@@ -84,6 +84,7 @@ class GroupListCreateView(ListCreateAPIView):
 class GroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailsSerializer
+    lookup_field = "id"
 
 
 class MediaView(View):
