@@ -16,7 +16,7 @@ const RequireAuth = ({ children }: RequireAuthProps) => {
 
     useEffect(() => {
         if (!isUserAuthenticated) {
-            navigate("/login");
+            navigate("/login", { replace: true });
         }
     })
 
