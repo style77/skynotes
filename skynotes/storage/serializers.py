@@ -14,9 +14,10 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class GroupDetailsSerializer(GroupSerializer):
     files = serializers.SerializerMethodField(method_name="get_files_count")
+    size = serializers.SerializerMethodField(method_name="get_files_size")
 
     class Meta(GroupSerializer.Meta):
-        fields = GroupSerializer.Meta.fields + ["files"]
+        fields = GroupSerializer.Meta.fields + ["files", "size"]
         read_only_fields = GroupSerializer.Meta.read_only_fields + ["files"]
 
     def get_files_count(self, obj: Group):
@@ -31,8 +32,24 @@ class GroupDetailsSerializer(GroupSerializer):
         """
         return File.objects.filter(group=obj.id).count()
 
+    def get_files_size(self, obj: Group) -> int:
+        """
+        Get the total size of files associated with a given group.
+
+        Parameters:
+            obj (Group): The group object for which to retrieve the file size.
+
+        Returns:
+            int: The total size of files associated with the group, in bytes.
+        """
+        total_size = 0
+        for file in File.objects.filter(group=obj.id).all():
+            total_size += file.file.size
+
+        return total_size if total_size is not None else 0
 
 class FileSerializer(serializers.ModelSerializer):
+    size = serializers.SerializerMethodField(method_name="get_file_size")
     class Meta:
         model = File
         fields = [
@@ -45,9 +62,19 @@ class FileSerializer(serializers.ModelSerializer):
             "tags",
             "status",
             "file",
+            "size",
             "thumbnail",
         ]
         read_only_fields = ["id", "created_at", "updated_at", "status", "thumbnail"]
+
+    def get_file_size(self, obj):
+        """
+        Get the size of the file in bytes.
+        """
+        if obj.file:
+            return obj.file.size
+
+        return None
 
     def _get_file_ext(self, name: str):
         return name.split(".")[-1]
