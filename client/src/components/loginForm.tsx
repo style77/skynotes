@@ -81,7 +81,7 @@ export function LoginForm() {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="email" placeholder="Enter your email" icon="email" iconStyle="w-5" {...field} />
+                                    <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="email" placeholder="Enter your email" icon="email" iconstyle="w-5" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -94,7 +94,7 @@ export function LoginForm() {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="password" placeholder="••••••••" icon="password" iconStyle="w-4" {...field} />
+                                    <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="password" placeholder="••••••••" icon="password" iconstyle="w-4" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -103,7 +103,7 @@ export function LoginForm() {
                 </div>
                 <div className="space-y-4">
                     <div>
-                        <Button className="bg-primary w-full" type="submit" isloading={isLoading}>Sign in</Button>
+                        <Button className="bg-primary w-full" type="submit" isloading={isLoading ? true : undefined}>Sign in</Button>
                         {
                             errors.length > 0 && (
                                 <div className="flex flex-col items-center justify-center space-y-2 mx-2 mt-1">

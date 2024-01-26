@@ -6,7 +6,7 @@ import { Mail, KeyRound, LucideIcon } from "lucide-react"
 export type LoginInputProps = InputProps & {
     passwordTooltip?: boolean;
     icon?: "email" | "password"
-    iconStyle?: string
+    iconstyle?: string
 }
 
 const iconsMap: {
@@ -29,7 +29,7 @@ const LoginInput = React.forwardRef<HTMLInputElement, LoginInputProps>(
             >
                 {SelectedIcon && <SelectedIcon className={cn(
                     "",
-                    props.iconStyle
+                    props.iconstyle
                 )} />}
                 <input
                     {...props}

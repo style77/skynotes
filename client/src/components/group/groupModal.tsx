@@ -196,7 +196,7 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" isloading={isLoading}>Create group</Button>
+                            <Button type="submit" isloading={isLoading ? true : undefined}>Create group</Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -341,7 +341,7 @@ export function NewGroupModal() {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" isloading={isLoading}>Update group</Button>
+                            <Button type="submit" isloading={isLoading ? true : undefined}>Update group</Button>
                         </DialogFooter>
                     </form>
                 </Form>
