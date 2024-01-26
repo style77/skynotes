@@ -60,7 +60,13 @@ export function GroupItem(props: GroupItemProps) {
                 <MoreVertical className="text-gray-600" />
               </DropdownMenuTrigger>
             </div>
-            <span className="font-semibold truncate">{props.name}</span>
+            <div className="flex flex-col">
+              <span className="font-semibold truncate">{props.name}</span>
+              <span className="opacity-50 truncate" style={{
+                fontSize: "0.5rem",
+                lineHeight: "0.50rem"
+              }}>{props.description}</span>
+            </div>
             <span className="opacity-50 text-xs">{props.files} files</span>
           </div>
           <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
