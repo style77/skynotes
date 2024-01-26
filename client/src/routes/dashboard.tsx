@@ -3,7 +3,7 @@ import { File, useRetrieveRootFilesQuery } from "@/store/features/filesApiSlice"
 import { Group, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
-import { Folder, MoreVertical } from "lucide-react";
+import { Folder, MoreVertical, Image, Music, Video, Files, Archive, ArrowUpZA, ArrowDownZA, ArrowUp10, ArrowDown10, ArrowUpWideNarrow, ArrowDownWideNarrow } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EditGroupModal } from "@/components/group/groupModal";
@@ -13,6 +13,7 @@ type FileItemProps = {
   name: string;
   file: string;
   size: number;
+  tags: string[];
   createdAt: string;
   onClick?: () => void;
   focused?: boolean;
@@ -40,7 +41,26 @@ export function GroupItem(props: GroupItemProps) {
 
   let groupSize = humanFriendlySize(props.size);
   if (groupSize === "0 B") {
-    groupSize = "Empty (0 B)"
+    groupSize = "0 files"
+  }
+
+  const getIcon = (icon: string) => {
+    switch (icon) {
+      case "default":
+        return <Folder width={40} height={40} />
+      case "music":
+        return <Music width={40} height={40} />
+      case "video":
+        return <Video width={40} height={40} />
+      case "photo":
+        return <Image width={40} height={40} />
+      case "document":
+        return <Files width={40} height={40} />
+      case "archive":
+        return <Archive width={40} height={40} />
+      default:
+        return <Folder width={40} height={40} />
+    }
   }
 
   return (
@@ -53,24 +73,21 @@ export function GroupItem(props: GroupItemProps) {
       } as Group} open={editOpen} setOpen={setEditOpen} />
       <DropdownMenu>
         <div className="flex flex-col items-center h-56 w-56 cursor-pointer">
-          <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-1 rounded-t-xl w-full">
+          <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-2 rounded-t-xl w-full">
             <div className="flex flex-row justify-between items-center">
-              <Folder width={40} height={40} />
+              {getIcon(props.icon)}
               <DropdownMenuTrigger className="p-1 hover:bg-gray-300/25 rounded-full transition inline-flex justify-center items-center z-10">
                 <MoreVertical className="text-gray-600" />
               </DropdownMenuTrigger>
             </div>
             <div className="flex flex-col">
               <span className="font-semibold truncate">{props.name}</span>
-              <span className="opacity-50 truncate" style={{
-                fontSize: "0.5rem",
-                lineHeight: "0.50rem"
-              }}>{props.description}</span>
+              <span className="opacity-50 truncate text-xs">{props.description || "No description..."}</span>
             </div>
-            <span className="opacity-50 text-xs">{props.files} files</span>
+            <span className="opacity-50 text-sm">{props.files} files</span>
           </div>
-          <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
-            <span className="text-sm font-semibold">{groupSize}</span>
+          <div className="bg-primary text-white rounded-b-xl w-full flex flex-row py-4 px-4">
+            <span className="text-xs font-semibold">{groupSize}</span>
             <span className="text-sm"></span>
           </div>
         </div>
@@ -95,7 +112,7 @@ interface ThumbnailProps {
 
 const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
 
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>("https://cdn-icons-png.flaticon.com/512/906/906794.png");
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchThumbnail = async () => {
@@ -107,17 +124,18 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
         setThumbnailUrl(url);
       } catch (e) {
         console.error(e);
+        setThumbnailUrl(null)
       }
     }
 
     fetchThumbnail();
-
   }, [mediaUrl]);
 
   return (
     <div className="w-full select-none">
-      {<img src={thumbnailUrl} alt={`Thumbnail for media ID ${mediaUrl}`} className="rounded-t-xl h-24 w-full select-none" />}
-      {/* {!thumbnailUrl && <p>No thumbnail available</p>} */}
+      {
+        thumbnailUrl ? <img src={thumbnailUrl} alt={`Thumbnail for media ID ${mediaUrl}`} className="rounded-t-xl h-24 w-full select-none" /> : <div className="w-full h-24 bg-gray-300 rounded-t-xl animate-pulse"></div>
+      }
     </div>
   );
 };
@@ -126,7 +144,7 @@ export function FileItem(props: FileItemProps) {
   const formattedDate = format(parseISO(props.createdAt), 'dd/MM/yyyy, hh:mm a');
 
   return (
-    <div className={`flex flex-col items-center w-56 hover:ring-2 hover:ring-primary/50 rounded-xl transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+    <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-xl cursor-pointer transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
       <div className="flex flex-col bg-white h-full gap-1 rounded-t-xl w-full">
         <Thumbnail mediaUrl={props.file} />
         <div className="mt-1 px-3 flex flex-col">
@@ -134,9 +152,8 @@ export function FileItem(props: FileItemProps) {
           <span className="opacity-50 text-xs">{formattedDate}</span>
         </div>
       </div>
-      <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
-        <span className="text-sm font-semibold">{humanFriendlySize(props.size)}</span>
-        <span className="text-sm"></span>
+      <div className="bg-primary text-white rounded-b-xl w-full flex flex-row py-4 px-4">
+        <span className="text-xs font-semibold">{humanFriendlySize(props.size)}</span>
       </div>
     </div>
   )
@@ -145,7 +162,7 @@ export function FileItem(props: FileItemProps) {
 type ItemsGridProps = {
   groups: Group[] | undefined;
   files: File[] | undefined;
-  setFocusedFile: (id: string) => void;
+  setFocusedFile: (id: string | null) => void;
   focusedFile: string | null;
 }
 
@@ -170,9 +187,10 @@ function ItemsGrid(props: ItemsGridProps) {
           file={file.file}
           name={file.name}
           size={file.size}
+          tags={file.tags}
           createdAt={file.created_at}
           onClick={() => {
-            props.setFocusedFile(file.id);
+            props.setFocusedFile(props.focusedFile === file.id ? null : file.id);
           }}
           focused={file.id === props.focusedFile}
         />
@@ -187,6 +205,22 @@ export default function Dashboard() {
 
   const [focusedFile, setFocusedFile] = useState<string | null>(null);
 
+  const [sortOption] = useState<string>("name");
+  const [sortDirection] = useState<string>("asc");
+
+  const getSortDirectionIcon = (sortDirection: string) => {
+    switch (sortOption) {
+      case "name":
+        return sortDirection === "asc" ? <ArrowUpZA /> : <ArrowDownZA />;
+      case "size":
+        return sortDirection === "asc" ? <ArrowUp10 /> : <ArrowDown10 />;
+      case "date":
+        return sortDirection === "asc" ? <ArrowUpWideNarrow /> : <ArrowDownWideNarrow />;
+      default:
+        return sortDirection === "asc" ? <ArrowUpWideNarrow /> : <ArrowDownWideNarrow />;
+    }
+  }
+
   return (
     // <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
     <div className="min-h-screen w-full flex flex-col bg-[#EAEAEA]">
@@ -199,8 +233,12 @@ export default function Dashboard() {
       <div className="px-12 py-8">
         <div className="flex flex-col gap-4">
           <h2 className="font-semibold text-2xl">My Cloud</h2>
-          <div className="flex flex-row space-between">
-            <span className="opacity-50 text-sm">Sort by: </span>
+          <div className="flex flex-row space-between items-center opacity-50 text-sm">
+            <span>Sort by:</span>
+            <div className="flex flex-row ml-1 items-center gap-1">
+              <span className="font-bold capitalize">{sortOption}</span>
+              {getSortDirectionIcon(sortDirection)}
+            </div>
           </div>
           {
             groupsIsLoading || filesIsLoading ? (
