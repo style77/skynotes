@@ -29,10 +29,6 @@ export function GroupItem(props: GroupItemProps) {
   // const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
 
-  const handleClick = () => {
-    console.log(123)
-  }
-
   return (
     <>
       <EditGroupModal group={{
@@ -42,7 +38,7 @@ export function GroupItem(props: GroupItemProps) {
         icon: props.icon,
       } as Group} open={editOpen} setOpen={setEditOpen} />
       <DropdownMenu>
-        <div className="flex flex-col items-center h-56 w-56 cursor-pointer" onClick={handleClick}>
+        <div className="flex flex-col items-center h-56 w-56 cursor-pointer">
           <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-1 rounded-t-xl w-full">
             <div className="flex flex-row justify-between items-center">
               <Folder width={40} height={40} />
