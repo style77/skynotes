@@ -61,11 +61,12 @@ const FormSchema = z.object({
 
 type UpdateGroupModalProps = {
     group: Group;
+    open: boolean;
+    setOpen: (open: boolean) => void;
 }
 
 export function EditGroupModal(props: UpdateGroupModalProps) {
     const [ updateGroup ] = useUpdateGroupMutation()
-    const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -82,14 +83,11 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
         setIsLoading(true)
         await updateGroup(data).unwrap();
         setIsLoading(false)
-        setOpen(false)
+        props.setOpen(false)
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <DropdownMenuItem onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
-            </DialogTrigger>
+        <Dialog open={props.open} onOpenChange={props.setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Edit Group</DialogTitle>

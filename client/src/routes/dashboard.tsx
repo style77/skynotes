@@ -27,42 +27,46 @@ type GroupItemProps = {
 
 export function GroupItem(props: GroupItemProps) {
   // const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
 
   const handleClick = () => {
     console.log(123)
   }
 
   return (
-    <DropdownMenu>
-      <div className="flex flex-col items-center h-56 w-56 cursor-pointer" onClick={handleClick}>
-        <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-1 rounded-t-xl w-full">
-          <div className="flex flex-row justify-between items-center">
-            <Folder width={40} height={40} />
-            <DropdownMenuTrigger className="p-1 hover:bg-gray-300/25 rounded-full transition inline-flex justify-center items-center z-10">
-              <MoreVertical className="text-gray-600" />
-            </DropdownMenuTrigger>
+    <>
+      <EditGroupModal group={{
+        id: props.id,
+        name: props.name,
+        description: props.description,
+        icon: props.icon,
+      } as Group} open={editOpen} setOpen={setEditOpen} />
+      <DropdownMenu>
+        <div className="flex flex-col items-center h-56 w-56 cursor-pointer" onClick={handleClick}>
+          <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-1 rounded-t-xl w-full">
+            <div className="flex flex-row justify-between items-center">
+              <Folder width={40} height={40} />
+              <DropdownMenuTrigger className="p-1 hover:bg-gray-300/25 rounded-full transition inline-flex justify-center items-center z-10">
+                <MoreVertical className="text-gray-600" />
+              </DropdownMenuTrigger>
+            </div>
+            <span className="font-semibold truncate">{props.name}</span>
+            <span className="opacity-50 text-xs">{props.files} files</span>
           </div>
-          <span className="font-semibold truncate">{props.name}</span>
-          <span className="opacity-50 text-xs">{props.files} files</span>
+          <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
+            <span className="text-sm font-semibold">21.5 Mb</span>
+            <span className="text-sm"></span>
+          </div>
         </div>
-        <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
-          <span className="text-sm font-semibold">21.5 Mb</span>
-          <span className="text-sm"></span>
-        </div>
-      </div>
-      <DropdownMenuContent>
-        <EditGroupModal group={{
-          id: props.id,
-          name: props.name,
-          description: props.description,
-          icon: props.icon,
-        } as Group} />
-        <DropdownMenuItem>Share</DropdownMenuItem>
-        <DropdownMenuItem>Share settings</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-red-500">Delete</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Share</DropdownMenuItem>
+          <DropdownMenuItem>Share settings</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-red-500">Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   )
 }
 
