@@ -36,7 +36,7 @@ export function GroupItem(props: GroupItemProps) {
 
   return (
     <DropdownMenu>
-      <div className="flex flex-col items-center h-56 w-full cursor-pointer" onClick={handleClick}>
+      <div className="flex flex-col items-center h-56 w-56 cursor-pointer" onClick={handleClick}>
         <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-1 rounded-t-xl w-full">
           <div className="flex flex-row justify-between items-center">
             <Folder width={40} height={40} />
@@ -52,9 +52,6 @@ export function GroupItem(props: GroupItemProps) {
           <span className="text-sm"></span>
         </div>
       </div>
-
-
-
       <DropdownMenuContent>
         <EditGroupModal group={{
           id: props.id,
@@ -111,7 +108,7 @@ export function FileItem(props: FileItemProps) {
   const formattedDate = format(parseISO(props.createdAt), 'dd/MM/yyyy, hh:mm a');
 
   return (
-    <div className={`flex flex-col items-center w-full hover:ring-2 hover:ring-primary/50 rounded-xl transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+    <div className={`flex flex-col items-center w-56 hover:ring-2 hover:ring-primary/50 rounded-xl transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
       <div className="flex flex-col bg-white h-full gap-1 rounded-t-xl w-full">
         <Thumbnail mediaUrl={props.file} />
         <div className="mt-1 px-3 flex flex-col">
@@ -136,7 +133,7 @@ type ItemsGridProps = {
 
 function ItemsGrid(props: ItemsGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="flex flex-wrap gap-3">
       {props.groups && props.groups.map((group) => (
         <GroupItem
           key={group.id}
