@@ -1,10 +1,8 @@
 import { Navbar } from "@/components/navbar"
-import { Sidebar } from "@/components/sidebar"
 import { File, useRetrieveRootFilesQuery } from "@/store/features/filesApiSlice";
 import { Group, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Folder, MoreVertical } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -184,10 +182,10 @@ export default function Dashboard() {
           </div>
           {
             groupsIsLoading || filesIsLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="flex flex-wrap gap-3">
                 {
                   Array.from(Array(10).keys()).map((_, index) => (
-                    <div className="animate-pulse flex flex-col items-center h-56 w-full" key={index}>
+                    <div className="animate-pulse flex flex-col items-center h-56 w-56" key={index}>
                       <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
                         <div className="bg-[#f0f0f0] rounded-t-xl h-24 w-full"></div>
                         <div className="mt-1 px-3 flex flex-col">
