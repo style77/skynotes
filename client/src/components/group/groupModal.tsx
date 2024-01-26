@@ -36,7 +36,6 @@ import {
 } from "@/components/ui/popover"
 import { useState } from "react"
 import { Group, useCreateGroupMutation, useUpdateGroupMutation } from "@/store/features/groupsApiSlice"
-import { DropdownMenuItem } from "../ui/dropdown-menu"
 
 const icons = [
     { label: "Default", value: "default" },
@@ -81,7 +80,10 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         setIsLoading(true)
-        await updateGroup(data).unwrap();
+        await updateGroup({
+            id: props.group.id,
+            ...data
+        }).unwrap();
         setIsLoading(false)
         props.setOpen(false)
     }
@@ -194,7 +196,7 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" isloading={isLoading ? true : undefined}>Create group</Button>
+                            <Button type="submit" isloading={isLoading ? true : undefined}>Update group</Button>
                         </DialogFooter>
                     </form>
                 </Form>
