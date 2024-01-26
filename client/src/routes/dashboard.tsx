@@ -12,6 +12,7 @@ type FileItemProps = {
   id: string;
   name: string;
   file: string;
+  size: number;
   createdAt: string;
   onClick?: () => void;
   focused?: boolean;
@@ -22,7 +23,15 @@ type GroupItemProps = {
   name: string;
   files: number;
   icon: string;
+  size: number;
   description: string;
+}
+
+const humanFriendlySize = (size: number) => {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  let l = 0, n = size || 0;
+  while (n >= 1024 && ++l) n = n / 1024;
+  return (n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
 }
 
 export function GroupItem(props: GroupItemProps) {
@@ -50,7 +59,7 @@ export function GroupItem(props: GroupItemProps) {
             <span className="opacity-50 text-xs">{props.files} files</span>
           </div>
           <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
-            <span className="text-sm font-semibold">21.5 Mb</span>
+            <span className="text-sm font-semibold">{humanFriendlySize(props.size)}</span>
             <span className="text-sm"></span>
           </div>
         </div>
@@ -115,7 +124,7 @@ export function FileItem(props: FileItemProps) {
         </div>
       </div>
       <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
-        <span className="text-sm font-semibold">21.5 Mb</span>
+        <span className="text-sm font-semibold">{humanFriendlySize(props.size)}</span>
         <span className="text-sm"></span>
       </div>
     </div>
@@ -139,6 +148,7 @@ function ItemsGrid(props: ItemsGridProps) {
           name={group.name}
           files={group.files}
           icon={group.icon}
+          size={group.size}
           description={group.description}
         />
       ))}
@@ -148,6 +158,7 @@ function ItemsGrid(props: ItemsGridProps) {
           id={file.id}
           file={file.file}
           name={file.name}
+          size={file.size}
           createdAt={file.created_at}
           onClick={() => {
             props.setFocusedFile(file.id);

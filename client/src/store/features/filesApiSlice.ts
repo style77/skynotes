@@ -9,6 +9,7 @@ export interface File {
     description: string;
     tags: string[];
     file: string;
+    size: number;
     thumbnail: string;
 }
 

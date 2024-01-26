@@ -7,6 +7,7 @@ export interface Group {
     name: string;
     icon: string;
     description: string;
+    size: number;
     files: number;
 }
 
