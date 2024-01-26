@@ -168,55 +168,57 @@ export default function Dashboard() {
   const [focusedFile, setFocusedFile] = useState<string | null>(null);
 
   return (
-    <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
-      <ResizablePanel defaultSize={15} minSize={10} maxSize={20} className="flex">
+    // <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
+    <div className="min-h-screen w-full flex flex-col bg-[#EAEAEA]">
+      {/* <ResizablePanel defaultSize={15} minSize={10} maxSize={20} className="flex">
         <Sidebar />
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col">
-        <Navbar />
-        <div className="px-12 py-8">
-          <div className="flex flex-col gap-4">
-            <h2 className="font-semibold text-2xl">My Cloud</h2>
-            <div className="flex flex-row space-between">
-              <span className="opacity-50 text-sm">Sort by: </span>
-            </div>
-            {
-              groupsIsLoading || filesIsLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                  {
-                    Array.from(Array(10).keys()).map((_, index) => (
-                      <div className="animate-pulse flex flex-col items-center h-56 w-full" key={index}>
-                        <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
-                          <div className="bg-[#f0f0f0] rounded-t-xl h-24 w-full"></div>
-                          <div className="mt-1 px-3 flex flex-col">
-                            <div className="font-semibold text-xs sm:text-xs md:text-base bg-[#f0f0f0] rounded h-4 w-1/2"></div>
-                            <div className="opacity-50 text-xs bg-[#f0f0f0] rounded h-4 w-1/4"></div>
-                          </div>
-                        </div>
-                        <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
-                          <div className="text-sm font-semibold bg-[#f0f0f0] rounded h-4 w-1/4"></div>
-                          <div className="text-sm bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+      <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col"> */}
+      <Navbar />
+      <div className="px-12 py-8">
+        <div className="flex flex-col gap-4">
+          <h2 className="font-semibold text-2xl">My Cloud</h2>
+          <div className="flex flex-row space-between">
+            <span className="opacity-50 text-sm">Sort by: </span>
+          </div>
+          {
+            groupsIsLoading || filesIsLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {
+                  Array.from(Array(10).keys()).map((_, index) => (
+                    <div className="animate-pulse flex flex-col items-center h-56 w-full" key={index}>
+                      <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
+                        <div className="bg-[#f0f0f0] rounded-t-xl h-24 w-full"></div>
+                        <div className="mt-1 px-3 flex flex-col">
+                          <div className="font-semibold text-xs sm:text-xs md:text-base bg-[#f0f0f0] rounded h-4 w-1/2"></div>
+                          <div className="opacity-50 text-xs bg-[#f0f0f0] rounded h-4 w-1/4"></div>
                         </div>
                       </div>
-                    ))
-                  }
-                </div>
-              ) : groupsError ? (
-                <>
-                  {groupsError}
-                </>
-              ) : filesError ? (
-                <>
-                  {filesError}
-                </>
-              ) : (
-                <ItemsGrid groups={groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
-              )
-            }
-          </div>
+                      <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
+                        <div className="text-sm font-semibold bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+                        <div className="text-sm bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            ) : groupsError ? (
+              <>
+                {groupsError}
+              </>
+            ) : filesError ? (
+              <>
+                {filesError}
+              </>
+            ) : (
+              <ItemsGrid groups={groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
+            )
+          }
         </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      </div>
+    </div>
+    // {/* </ResizablePanel> */ }
+    // {/* </ResizablePanelGroup> */ }
   )
 }
