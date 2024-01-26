@@ -38,6 +38,11 @@ export function GroupItem(props: GroupItemProps) {
   // const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
 
+  let groupSize = humanFriendlySize(props.size);
+  if (groupSize === "0 B") {
+    groupSize = "Empty (0 B)"
+  }
+
   return (
     <>
       <EditGroupModal group={{
@@ -59,7 +64,7 @@ export function GroupItem(props: GroupItemProps) {
             <span className="opacity-50 text-xs">{props.files} files</span>
           </div>
           <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-6">
-            <span className="text-sm font-semibold">{humanFriendlySize(props.size)}</span>
+            <span className="text-sm font-semibold">{groupSize}</span>
             <span className="text-sm"></span>
           </div>
         </div>
