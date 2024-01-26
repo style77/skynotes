@@ -72,7 +72,7 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
         defaultValues: {
             icon: props.group.icon,
             name: props.group.name,
-            description: props.group.description,
+            description: props.group.description ?? "",
         },
     })
 
