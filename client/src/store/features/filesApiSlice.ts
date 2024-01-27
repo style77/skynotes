@@ -17,10 +17,28 @@ const filesApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         retrieveRootFiles: builder.query<File[], void>({
             query: () => "api/files/",
+            providesTags: ["File"],
+        }),
+        updateFile: builder.mutation({
+            query: ({ id, name, description, tags, group }) => ({
+                url: `api/file/${id}/`,
+                method: "PATCH",
+                body: { name, description, tags, group }
+            }),
+            invalidatesTags: ["File"],
+        }),
+        deleteFile: builder.mutation({
+            query: ({ id }) => ({
+                url: `api/file/${id}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["File"],
         }),
     }),
 });
 
 export const {
     useRetrieveRootFilesQuery,
+    useUpdateFileMutation,
+    useDeleteFileMutation
 } = filesApiSlice;
