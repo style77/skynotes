@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/navbar"
-import { File, useRetrieveRootFilesQuery } from "@/store/features/filesApiSlice";
+import { File, useDeleteFileMutation, useRetrieveRootFilesQuery } from "@/store/features/filesApiSlice";
 import { Group, useDeleteGroupMutation, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { humanFriendlySize } from "@/lib/utils";
 
 type FileItemProps = {
   id: string;
@@ -37,13 +38,6 @@ type GroupItemProps = {
   icon: string;
   size: number;
   description: string;
-}
-
-const humanFriendlySize = (size: number) => {
-  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  let l = 0, n = size || 0;
-  while (n >= 1024 && ++l) n = n / 1024;
-  return (n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
 }
 
 export function GroupItem(props: GroupItemProps) {
@@ -76,7 +70,7 @@ export function GroupItem(props: GroupItemProps) {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleDelete = async () => {
     await deleteGroup(props.id).unwrap();
     setDeleteOpen(false);
   }
@@ -94,7 +88,7 @@ export function GroupItem(props: GroupItemProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSubmit}>Continue</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -183,26 +177,60 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
 export function FileItem(props: FileItemProps) {
   const formattedDate = format(parseISO(props.createdAt), 'dd/MM/yyyy, hh:mm a');
 
+  const [deleteFile] = useDeleteFileMutation()
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleDelete = async () => {
+    await deleteFile({ id: props.id }).unwrap()
+    setDeleteOpen(false);
+  }
+
   return (
-    <DropdownMenu>
-      <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-xl cursor-pointer transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
-        <div className="flex flex-col bg-white h-full gap-1 rounded-t-xl w-full">
-          <div className="relative">
-            <Thumbnail mediaUrl={props.file} />
-            <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
-              <MoreVertical className="text-gray-50" />
-            </DropdownMenuTrigger>
+    <>
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the <code>{props.name}</code> file
+              and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <DropdownMenu>
+        <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-xl cursor-pointer transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+          <div className="flex flex-col bg-white h-full gap-1 rounded-t-xl w-full">
+            <div className="relative">
+              <Thumbnail mediaUrl={props.file} />
+              <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
+                <MoreVertical className="text-gray-50" />
+              </DropdownMenuTrigger>
+            </div>
+            <div className="mt-1 px-3 flex flex-col">
+              <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
+              <span className="opacity-50 text-xs">{formattedDate}</span>
+            </div>
           </div>
-          <div className="mt-1 px-3 flex flex-col">
-            <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
-            <span className="opacity-50 text-xs">{formattedDate}</span>
+          <div className="bg-primary text-white rounded-b-xl w-full flex flex-row py-4 px-4">
+            <span className="text-xs font-semibold">{humanFriendlySize(props.size)}</span>
           </div>
         </div>
-        <div className="bg-primary text-white rounded-b-xl w-full flex flex-row py-4 px-4">
-          <span className="text-xs font-semibold">{humanFriendlySize(props.size)}</span>
-        </div>
-      </div>
-    </DropdownMenu>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Share</DropdownMenuItem>
+          <DropdownMenuItem>Share settings</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   )
 }
 
