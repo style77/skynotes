@@ -146,7 +146,7 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
                                                 </PopoverTrigger>
                                                 <PopoverContent className="col-span-3 p-0">
                                                     <Command>
-                                                        <CommandEmpty>No framework found.</CommandEmpty>
+                                                        <CommandEmpty>No icon found.</CommandEmpty>
                                                         <CommandGroup>
                                                             {icons.map((icon) => (
                                                                 <CommandItem
@@ -205,9 +205,13 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
     )
 }
 
-export function NewGroupModal() {
+type NewGroupModalProps = {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+}
+
+export function NewGroupModal(props: NewGroupModalProps) {
     const [ createGroup ] = useCreateGroupMutation()
-    const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -222,19 +226,11 @@ export function NewGroupModal() {
         setIsLoading(true)
         await createGroup(data).unwrap();
         setIsLoading(false)
-        setOpen(false)
+        props.setOpen(false)
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button className="bg-white text-black hover:text-white flex flex-row items-center">
-                    <div>
-                        <FolderPlus />
-                    </div>
-                    <span className="ml-2 font-semibold">New Folder</span>
-                </Button>
-            </DialogTrigger>
+        <Dialog open={props.open} onOpenChange={props.setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>New Folder</DialogTitle>
@@ -291,7 +287,7 @@ export function NewGroupModal() {
                                                 </PopoverTrigger>
                                                 <PopoverContent className="col-span-3 p-0">
                                                     <Command>
-                                                        <CommandEmpty>No framework found.</CommandEmpty>
+                                                        <CommandEmpty>No icon found.</CommandEmpty>
                                                         <CommandGroup>
                                                             {icons.map((icon) => (
                                                                 <CommandItem
