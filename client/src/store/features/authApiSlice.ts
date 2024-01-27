@@ -2,6 +2,10 @@ import { apiSlice } from "../services/apiSlice";
 
 interface User {
   email: string;
+  id: number;
+  storage_limit: number;
+  storage_used: number;
+  created_at: string;
 }
 
 const authApiSlice = apiSlice.injectEndpoints({
