@@ -8,7 +8,7 @@ from storage.views import (
 )
 
 urlpatterns = [
-    path("file/<id>", FileDetailsView.as_view(), name="file-detail"),
+    path("file/<id>/", FileDetailsView.as_view(), name="file-detail"),
     path("files/", FilesListView.as_view(), name="files"),
     path("files/<group>/", FilesGroupedListView.as_view(), name="grouped-files"),
     path("groups/", GroupListCreateView.as_view(), name="groups"),

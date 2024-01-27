@@ -16,11 +16,18 @@ from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
 
 
+@extend_schema(
+    tags=["files"]
+)
 class FileDetailsView(RetrieveUpdateDestroyAPIView):
     serializer_class = FileSerializer
     queryset = File.objects.all()
+    lookup_field = "id"
 
 
+@extend_schema(
+    tags=["files"]
+)
 class FilesListView(APIView):
     parser_classes = (parsers.MultiPartParser,)
 
