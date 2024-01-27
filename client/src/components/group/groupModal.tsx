@@ -92,9 +92,9 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
         <Dialog open={props.open} onOpenChange={props.setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit Group</DialogTitle>
+                    <DialogTitle>Edit folder</DialogTitle>
                     <DialogDescription>
-                        Update group details.
+                        Update folder details.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -196,7 +196,7 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" isloading={isLoading ? true : undefined}>Update group</Button>
+                            <Button type="submit" isloading={isLoading ? true : undefined}>Update folder</Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -232,14 +232,14 @@ export function NewGroupModal() {
                     <div>
                         <FolderPlus />
                     </div>
-                    <span className="ml-2 font-semibold">New group</span>
+                    <span className="ml-2 font-semibold">New Folder</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>New Group</DialogTitle>
+                    <DialogTitle>New Folder</DialogTitle>
                     <DialogDescription>
-                        Create new group to share files with other users.
+                        Create new folder to share files with other users.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -341,7 +341,7 @@ export function NewGroupModal() {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" isloading={isLoading ? true : undefined}>Update group</Button>
+                            <Button type="submit" isloading={isLoading ? true : undefined}>Create folder</Button>
                         </DialogFooter>
                     </form>
                 </Form>
