@@ -19,3 +19,8 @@ export const humanFriendlySize = (size: number, unit?: string) => {
     return (n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
   }
 }
+
+export const getOS = () => {
+  const os = ['Windows', 'Linux', 'Mac'];
+  return os.find(v => ((global as any).window?.navigator.platform.indexOf(v) >= 0))  // eslint-disable-line
+}
