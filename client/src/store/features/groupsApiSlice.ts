@@ -33,11 +33,19 @@ const groupsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Group"],
         }),
+        deleteGroup: builder.mutation({
+            query: ({ id }) => ({
+                url: `api/groups/${id}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Group"],
+        }),
     }),
 });
 
 export const {
     useRetrieveGroupsQuery,
     useCreateGroupMutation,
-    useUpdateGroupMutation
+    useUpdateGroupMutation,
+    useDeleteGroupMutation
 } = groupsApiSlice;
