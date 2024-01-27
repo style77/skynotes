@@ -1,13 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db import models
 from rest_framework import serializers, status
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
-
 from storage.models import File
-from django.db import models
 
 User = get_user_model()
 
@@ -24,8 +23,24 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "email", "password", "storage_limit", "storage_used", "created_at", "is_active", "is_staff")
-        read_only_fields = ("id", "created_at", "storage_limit", "storage_used", "is_active", "is_staff")
+        fields = (
+            "id",
+            "email",
+            "password",
+            "storage_limit",
+            "storage_used",
+            "created_at",
+            "is_active",
+            "is_staff",
+        )
+        read_only_fields = (
+            "id",
+            "created_at",
+            "storage_limit",
+            "storage_used",
+            "is_active",
+            "is_staff",
+        )
 
     def get_storage_used(self, obj):
         return File.objects.filter(owner=obj).aggregate(models.Sum("size"))["size__sum"]

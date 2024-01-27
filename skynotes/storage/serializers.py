@@ -48,6 +48,7 @@ class GroupDetailsSerializer(GroupSerializer):
 
         return total_size if total_size is not None else 0
 
+
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
@@ -64,7 +65,14 @@ class FileSerializer(serializers.ModelSerializer):
             "size",
             "thumbnail",
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "status", "size", "thumbnail"]
+        read_only_fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "status",
+            "size",
+            "thumbnail",
+        ]
 
     def _get_file_ext(self, name: str):
         return name.split(".")[-1]
