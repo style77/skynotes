@@ -27,8 +27,8 @@ export function Navbar() {
             {
                 !user && (userLoading || userError) ? <Spinner /> : user && (
                     <div className="flex flex-row gap-4 items-center">
-                        <div className="border border-gray-200/50 px-4 py-2 rounded-3xl">
-                            <span className="text-sm font-semibold text-primary">{humanFriendlySize(user.storage_used, "GB")} / {humanFriendlySize(user.storage_limit, "GB")}</span>
+                        <div className="border border-gray-200/75 hover:border-gray-400 transition px-4 py-2 rounded-3xl">
+                            <span className="text-sm font-semibold text-primary cursor-default">{humanFriendlySize(user.storage_used, "GB")} / {humanFriendlySize(user.storage_limit, "GB")}</span>
                         </div>
                         <div>
                             <Avatar>
