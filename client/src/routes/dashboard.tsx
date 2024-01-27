@@ -18,7 +18,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { humanFriendlySize } from "@/lib/utils";
+import { getOS, humanFriendlySize } from "@/lib/utils";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 type FileItemProps = {
   id: string;
@@ -303,51 +304,63 @@ export default function Dashboard() {
       <ResizableHandle />
       <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col"> */}
       <Navbar />
-      <div className="px-12 py-8">
-        <div className="flex flex-col gap-4">
-          <h2 className="font-semibold text-2xl">My Cloud</h2>
-          <div className="flex flex-row space-between items-center opacity-50 text-sm">
-            <span>Sort by:</span>
-            <div className="flex flex-row ml-1 items-center gap-1">
-              <span className="font-bold capitalize">{sortOption}</span>
-              {getSortDirectionIcon(sortDirection)}
+      <ContextMenu>
+        <ContextMenuTrigger className="px-12 py-8">
+          <div className="flex flex-col gap-4">
+            <h2 className="font-semibold text-2xl">My Cloud</h2>
+            <div className="flex flex-row space-between items-center opacity-50 text-sm">
+              <span>Sort by:</span>
+              <div className="flex flex-row ml-1 items-center gap-1">
+                <span className="font-bold capitalize">{sortOption}</span>
+                {getSortDirectionIcon(sortDirection)}
+              </div>
             </div>
-          </div>
-          {
-            groupsIsLoading || filesIsLoading ? (
-              <div className="flex flex-wrap gap-3">
-                {
-                  Array.from(Array(10).keys()).map((_, index) => (
-                    <div className="animate-pulse flex flex-col items-center h-56 w-56" key={index}>
-                      <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
-                        <div className="bg-[#f0f0f0] rounded-t-xl h-24 w-full"></div>
-                        <div className="mt-1 px-3 flex flex-col">
-                          <div className="font-semibold text-xs sm:text-xs md:text-base bg-[#f0f0f0] rounded h-4 w-1/2"></div>
-                          <div className="opacity-50 text-xs bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+            {
+              groupsIsLoading || filesIsLoading ? (
+                <div className="flex flex-wrap gap-3">
+                  {
+                    Array.from(Array(10).keys()).map((_, index) => (
+                      <div className="animate-pulse flex flex-col items-center h-56 w-56" key={index}>
+                        <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
+                          <div className="bg-[#f0f0f0] rounded-t-xl h-24 w-full"></div>
+                          <div className="mt-1 px-3 flex flex-col">
+                            <div className="font-semibold text-xs sm:text-xs md:text-base bg-[#f0f0f0] rounded h-4 w-1/2"></div>
+                            <div className="opacity-50 text-xs bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+                          </div>
+                        </div>
+                        <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
+                          <div className="text-sm font-semibold bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+                          <div className="text-sm bg-[#f0f0f0] rounded h-4 w-1/4"></div>
                         </div>
                       </div>
-                      <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
-                        <div className="text-sm font-semibold bg-[#f0f0f0] rounded h-4 w-1/4"></div>
-                        <div className="text-sm bg-[#f0f0f0] rounded h-4 w-1/4"></div>
-                      </div>
-                    </div>
-                  ))
-                }
-              </div>
-            ) : groupsError ? (
-              <>
-                {groupsError}
-              </>
-            ) : filesError ? (
-              <>
-                {filesError}
-              </>
-            ) : (
-              <ItemsGrid groups={groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
-            )
-          }
-        </div>
-      </div>
+                    ))
+                  }
+                </div>
+              ) : groupsError ? (
+                <>
+                  {groupsError}
+                </>
+              ) : filesError ? (
+                <>
+                  {filesError}
+                </>
+              ) : (
+                <ItemsGrid groups={groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
+              )
+            }
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-64">
+          <ContextMenuItem disabled>
+            Upload File
+            <ContextMenuShortcut>{getOS() === "Mac" ? "⌘⇧N" : <><kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>n</kbd></>}</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem disabled>
+            New Folder
+            <ContextMenuShortcut>{getOS() === "Mac" ? "⌘⇧N" : <><kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>g</kbd></>}</ContextMenuShortcut>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     </div>
     // {/* </ResizablePanel> */ }
     // {/* </ResizablePanelGroup> */ }
