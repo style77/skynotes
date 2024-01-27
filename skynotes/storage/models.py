@@ -74,6 +74,7 @@ class File(BaseModel):
     status = StatusField(default=0)
 
     file = models.FileField()
+    size = models.PositiveBigIntegerField()  # in bytes
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:

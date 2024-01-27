@@ -49,7 +49,6 @@ class GroupDetailsSerializer(GroupSerializer):
         return total_size if total_size is not None else 0
 
 class FileSerializer(serializers.ModelSerializer):
-    size = serializers.SerializerMethodField(method_name="get_file_size")
     class Meta:
         model = File
         fields = [
@@ -65,16 +64,7 @@ class FileSerializer(serializers.ModelSerializer):
             "size",
             "thumbnail",
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "status", "thumbnail"]
-
-    def get_file_size(self, obj):
-        """
-        Get the size of the file in bytes.
-        """
-        if obj.file:
-            return obj.file.size
-
-        return None
+        read_only_fields = ["id", "created_at", "updated_at", "status", "size", "thumbnail"]
 
     def _get_file_ext(self, name: str):
         return name.split(".")[-1]
@@ -99,8 +89,11 @@ class FileSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def save(self, **kwargs):
-        file = self.validated_data.get("file").read()
-        bytes = base64.b64encode(file)
+        file = self.validated_data.get("file")
+
+        self.validated_data["size"] = file.size
+
+        bytes = base64.b64encode(file.read())
 
         self.validated_data.pop("file")
 
