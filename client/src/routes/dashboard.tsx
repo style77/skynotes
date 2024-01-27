@@ -6,7 +6,7 @@ import { format, parseISO } from 'date-fns';
 import { Folder, MoreVertical, Image, Music, Video, Files, Archive, ArrowUpZA, ArrowDownZA, ArrowUp10, ArrowDown10, ArrowUpWideNarrow, ArrowDownWideNarrow } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { EditGroupModal } from "@/components/group/groupModal";
+import { EditGroupModal, NewGroupModal } from "@/components/group/groupModal";
 
 import {
   AlertDialog,
@@ -282,6 +282,8 @@ export default function Dashboard() {
   const [sortOption] = useState<string>("name");
   const [sortDirection] = useState<string>("asc");
 
+  const [createGroupOpen, setCreateGroupOpen] = useState(false);
+
   const getSortDirectionIcon = (sortDirection: string) => {
     switch (sortOption) {
       case "name":
@@ -304,8 +306,9 @@ export default function Dashboard() {
       <ResizableHandle />
       <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col"> */}
       <Navbar />
+      <NewGroupModal open={createGroupOpen} setOpen={setCreateGroupOpen} />
       <ContextMenu>
-        <ContextMenuTrigger className="px-12 py-8">
+        <ContextMenuTrigger className="px-12 py-8 min-h-screen">
           <div className="flex flex-col gap-4">
             <h2 className="font-semibold text-2xl">My Cloud</h2>
             <div className="flex flex-row space-between items-center opacity-50 text-sm">
@@ -355,7 +358,7 @@ export default function Dashboard() {
             Upload File
             <ContextMenuShortcut>{getOS() === "Mac" ? "⌘⇧N" : <><kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>n</kbd></>}</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem disabled>
+          <ContextMenuItem onClick={() => setCreateGroupOpen(true)}>
             New Folder
             <ContextMenuShortcut>{getOS() === "Mac" ? "⌘⇧N" : <><kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>g</kbd></>}</ContextMenuShortcut>
           </ContextMenuItem>
