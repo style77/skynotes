@@ -1,4 +1,5 @@
-import { UploadCloud } from "lucide-react";
+import { useState } from "react";
+import { UploadCloud, FolderPlus } from "lucide-react";
 import { Button } from "./ui/button";
 import { NewGroupModal } from "./group/groupModal";
 import { useRetrieveUserQuery } from "@/store/features/authApiSlice";
@@ -13,6 +14,8 @@ import Spinner from "./ui/spinner";
 export function Navbar() {
     const { data: user, isLoading: userLoading, error: userError } = useRetrieveUserQuery()
 
+    const [openCreateGroup, setOpenCreateGroup] = useState(false)
+
     return (
         <div className="w-full h-16 flex flex-row justify-between px-8 items-center bg-white">
             <div className="flex flex-row gap-2">
@@ -22,7 +25,13 @@ export function Navbar() {
                     </div>
                     <span className="ml-2 font-semibold">Upload</span>
                 </Button>
-                <NewGroupModal />
+                <Button className="bg-white text-black hover:text-white flex flex-row items-center" onClick={() => setOpenCreateGroup(true)}>
+                    <div>
+                        <FolderPlus />
+                    </div>
+                    <span className="ml-2 font-semibold">New Folder</span>
+                </Button>
+                <NewGroupModal open={openCreateGroup} setOpen={setOpenCreateGroup} />
             </div>
             {
                 !user && (userLoading || userError) ? <Spinner /> : user && (
