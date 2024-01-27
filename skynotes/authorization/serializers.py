@@ -6,6 +6,9 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 
+from storage.models import File
+from django.db import models
+
 User = get_user_model()
 
 
@@ -17,11 +20,15 @@ class InActiveUser(AuthenticationFailed):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
+    storage_used = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ("id", "email", "password", "created_at", "is_active", "is_staff")
-        read_only_fields = ("id", "created_at", "is_active", "is_staff")
+        fields = ("id", "email", "password", "storage_limit", "storage_used", "created_at", "is_active", "is_staff")
+        read_only_fields = ("id", "created_at", "storage_limit", "storage_used", "is_active", "is_staff")
+
+    def get_storage_used(self, obj):
+        return File.objects.filter(owner=obj).aggregate(models.Sum("size"))["size__sum"]
 
     def validate(self, data):
         password = data.get("password")

@@ -38,6 +38,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
+    storage_limit = models.BigIntegerField(default=5368709120)  # 5 GB
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
