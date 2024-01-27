@@ -121,7 +121,6 @@ export function GroupItem(props: GroupItemProps) {
         <DropdownMenuContent>
           <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
           <DropdownMenuItem>Share</DropdownMenuItem>
-          <DropdownMenuItem>Share settings</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
@@ -225,7 +224,6 @@ export function FileItem(props: FileItemProps) {
         <DropdownMenuContent>
           <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
           <DropdownMenuItem>Share</DropdownMenuItem>
-          <DropdownMenuItem>Share settings</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
