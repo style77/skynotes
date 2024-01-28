@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+
 from .common import GroupTestCaseBase
 
 User = get_user_model()
@@ -11,7 +12,9 @@ class GroupDeleteViewTest(GroupTestCaseBase):
         self.group = self._create_group(name="Test Group", owner=self.user)
 
         # Unauthenticated user
-        self.user2 = User.objects.create_user(email="test2@test.com", password="password")
+        self.user2 = User.objects.create_user(
+            email="test2@test.com", password="password"
+        )
         self.group2 = self._create_group(name="Test Group 2", owner=self.user2)
 
     def test_delete_group_success(self):
