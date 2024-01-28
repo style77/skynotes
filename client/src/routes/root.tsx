@@ -36,11 +36,11 @@ const HomeNavigationMenu = () => {
       </div>
       {
         isUserAuthenticated ? (
-          <a href="/dashboard" className="bg-transparent px-6 py-1.5 border border-gray-600 text-sm font-medium">
+          <a href="/dashboard" className="bg-transparent px-6 py-2 border border-gray-600 text-sm font-medium">
             Dashboard
           </a>
         ) : (
-          <a href="/login" className="bg-transparent px-6 py-1.5 border border-gray-600 text-sm font-medium">
+          <a href="/login" className="bg-transparent px-6 py-2 border border-gray-600 text-sm font-medium">
             Login
           </a>
         )
