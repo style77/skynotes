@@ -22,6 +22,9 @@ class FileDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = File.objects.all()
     lookup_field = "id"
 
+    def get_queryset(self):
+        return File.objects.filter(owner=self.request.user)
+
 
 @extend_schema(tags=["files"])
 class FilesListView(APIView):
@@ -61,19 +64,17 @@ class FilesGroupedListView(APIView):
 
 class GroupListCreateView(ListCreateAPIView):
     queryset = Group.objects.all()
+    serializer_class = GroupDetailsSerializer
 
-    def get_serializer_class(self):
-        return GroupDetailsSerializer
+    def get_queryset(self):
+        return Group.objects.filter(owner=self.request.user)
 
     @extend_schema(
         description="Retrieve all user groups",
         responses={200: FileSerializer(many=True)},
     )
     def get(self, request, group=None, *args, **kwargs):
-        groups = Group.objects.filter(owner=request.user).all()
-        serializer = GroupDetailsSerializer(groups, many=True)
-
-        return Response(serializer.data)
+        return super().get(request, *args, **kwargs)
 
     @extend_schema(description="Create new group", request=GroupSerializer)
     def post(self, request, *args, **kwargs):
@@ -88,6 +89,9 @@ class GroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailsSerializer
     lookup_field = "id"
+
+    def get_queryset(self):
+        return Group.objects.filter(owner=self.request.user)
 
 
 class MediaView(View):
