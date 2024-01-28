@@ -16,6 +16,7 @@ class GroupTestCaseBase(APITestCase):
             raise ValueError("Name is required argument for Group.")
 
         owner = kwargs.get("owner", self.user)
+        kwargs.pop("owner", None)
         group = Group.objects.create(**kwargs, owner=owner)
 
         return group
