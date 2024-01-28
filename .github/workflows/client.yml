@@ -31,7 +31,7 @@ jobs:
         steps:
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v4
-              
+
             - name: Setup pnpm
               uses: pnpm/action-setup@v2
               with:
@@ -42,6 +42,7 @@ jobs:
               with:
                 node-version: ${{ matrix.node-version }}
                 cache: 'pnpm'
+                cache-dependency-path: 'client/pnpm-lock.yaml'
 
             - name: 📥 Download deps
               run: pnpm install
@@ -63,7 +64,7 @@ jobs:
         steps:
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v4
-              
+
             - name: Setup pnpm
               uses: pnpm/action-setup@v2
               with:
