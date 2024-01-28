@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -68,4 +70,13 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-background-clip: text;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+@keyframes spin {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+.animate-spin-slow {
+  animation: spin 5s linear infinite;
 }
