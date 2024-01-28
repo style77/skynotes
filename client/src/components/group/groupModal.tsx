@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { CheckIcon } from "lucide-react"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { UseFormReturn, useForm } from "react-hook-form"
 import * as z from "zod"
 import { cn } from "@/lib/utils"
 import {
@@ -63,8 +63,117 @@ type UpdateGroupModalProps = {
     setOpen: (open: boolean) => void;
 }
 
+type GroupFormProps = {
+    form: UseFormReturn<{
+        name: string;
+        icon: string;
+        description?: string | undefined;
+    }, undefined>;
+}
+
+function GroupForm(props: GroupFormProps) {
+    return (
+        <div className="grid gap-4 py-4">
+            <FormField
+                control={props.form.control}
+                name="name"
+                render={({ field }) => (
+                    <FormItem className="grid grid-cols-4 items-center gap-4">
+                        <FormLabel className="text-right">Name</FormLabel>
+                        <FormControl>
+                            <Input
+                                id="name"
+                                placeholder="Summer Photos"
+                                className="col-span-3"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage className="col-span-3" />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={props.form.control}
+                name="icon"
+                render={({ field }) => (
+                    <>
+                        <FormItem className="grid grid-cols-4 items-center gap-4">
+                            <FormLabel className="text-right">Icon</FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            className={cn(
+                                                "col-span-3 justify-between",
+                                                !field.value && "text-muted-foreground"
+                                            )}
+                                        >
+                                            {field.value
+                                                ? icons.find(
+                                                    (icon) => icon.value === field.value
+                                                )?.label
+                                                : "Select icon"}
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="col-span-3 p-0">
+                                    <Command>
+                                        <CommandEmpty>No icon found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {icons.map((icon) => (
+                                                <CommandItem
+                                                    value={icon.label}
+                                                    key={icon.value}
+                                                    onSelect={() => {
+                                                        props.form.setValue("icon", icon.value)
+                                                    }}
+                                                >
+                                                    {icon.label}
+                                                    <CheckIcon
+                                                        className={cn(
+                                                            "ml-auto h-4 w-4",
+                                                            icon.value === field.value
+                                                                ? "opacity-100"
+                                                                : "opacity-0"
+                                                        )}
+                                                    />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
+                        </FormItem>
+                        <FormMessage className="col-span-2" />
+                    </>
+                )}
+            />
+            <FormField
+                control={props.form.control}
+                name="description"
+                render={({ field }) => (
+                    <FormItem className="grid grid-cols-4 items-center gap-4">
+                        <FormLabel className="text-right">Description</FormLabel>
+                        <FormControl>
+                            <Input
+                                id="description"
+                                placeholder="Summer Photos 2021 Vienna"
+                                className="col-span-3"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage className="col-span-2" />
+                    </FormItem>
+                )}
+            />
+        </div>
+    )
+}
+
 export function EditGroupModal(props: UpdateGroupModalProps) {
-    const [ updateGroup ] = useUpdateGroupMutation()
+    const [updateGroup] = useUpdateGroupMutation()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -98,102 +207,7 @@ export function EditGroupModal(props: UpdateGroupModalProps) {
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="grid gap-4 py-4">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem className="grid grid-cols-4 items-center gap-4">
-                                        <FormLabel className="text-right">Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="name"
-                                                placeholder="Summer Photos"
-                                                className="col-span-3"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="col-span-3" />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="icon"
-                                render={({ field }) => (
-                                    <>
-                                        <FormItem className="grid grid-cols-4 items-center gap-4">
-                                            <FormLabel className="text-right">Icon</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant="outline"
-                                                            role="combobox"
-                                                            className={cn(
-                                                                "col-span-3 justify-between",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value
-                                                                ? icons.find(
-                                                                    (icon) => icon.value === field.value
-                                                                )?.label
-                                                                : "Select icon"}
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="col-span-3 p-0">
-                                                    <Command>
-                                                        <CommandEmpty>No icon found.</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {icons.map((icon) => (
-                                                                <CommandItem
-                                                                    value={icon.label}
-                                                                    key={icon.value}
-                                                                    onSelect={() => {
-                                                                        form.setValue("icon", icon.value)
-                                                                    }}
-                                                                >
-                                                                    {icon.label}
-                                                                    <CheckIcon
-                                                                        className={cn(
-                                                                            "ml-auto h-4 w-4",
-                                                                            icon.value === field.value
-                                                                                ? "opacity-100"
-                                                                                : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
-                                        </FormItem>
-                                        <FormMessage className="col-span-2" />
-                                    </>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem className="grid grid-cols-4 items-center gap-4">
-                                        <FormLabel className="text-right">Description</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="description"
-                                                placeholder="Summer Photos 2021 Vienna"
-                                                className="col-span-3"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="col-span-2" />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                        <GroupForm form={form} />
                         <DialogFooter>
                             <Button type="submit" isloading={isLoading ? true : undefined}>Update folder</Button>
                         </DialogFooter>
@@ -210,7 +224,7 @@ type NewGroupModalProps = {
 }
 
 export function NewGroupModal(props: NewGroupModalProps) {
-    const [ createGroup ] = useCreateGroupMutation()
+    const [createGroup] = useCreateGroupMutation()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -239,102 +253,7 @@ export function NewGroupModal(props: NewGroupModalProps) {
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="grid gap-4 py-4">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem className="grid grid-cols-4 items-center gap-4">
-                                        <FormLabel className="text-right">Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="name"
-                                                placeholder="Summer Photos"
-                                                className="col-span-3"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="col-span-3" />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="icon"
-                                render={({ field }) => (
-                                    <>
-                                        <FormItem className="grid grid-cols-4 items-center gap-4">
-                                            <FormLabel className="text-right">Icon</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant="outline"
-                                                            role="combobox"
-                                                            className={cn(
-                                                                "col-span-3 justify-between",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value
-                                                                ? icons.find(
-                                                                    (icon) => icon.value === field.value
-                                                                )?.label
-                                                                : "Select icon"}
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="col-span-3 p-0">
-                                                    <Command>
-                                                        <CommandEmpty>No icon found.</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {icons.map((icon) => (
-                                                                <CommandItem
-                                                                    value={icon.label}
-                                                                    key={icon.value}
-                                                                    onSelect={() => {
-                                                                        form.setValue("icon", icon.value)
-                                                                    }}
-                                                                >
-                                                                    {icon.label}
-                                                                    <CheckIcon
-                                                                        className={cn(
-                                                                            "ml-auto h-4 w-4",
-                                                                            icon.value === field.value
-                                                                                ? "opacity-100"
-                                                                                : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
-                                        </FormItem>
-                                        <FormMessage className="col-span-2" />
-                                    </>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem className="grid grid-cols-4 items-center gap-4">
-                                        <FormLabel className="text-right">Description</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="description"
-                                                placeholder="Summer Photos 2021 Vienna"
-                                                className="col-span-3"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="col-span-2" />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                        <GroupForm form={form} />
                         <DialogFooter>
                             <Button type="submit" isloading={isLoading ? true : undefined}>Create folder</Button>
                         </DialogFooter>
