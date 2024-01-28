@@ -101,7 +101,7 @@ export function GroupItem(props: GroupItemProps) {
       } as Group} open={editOpen} setOpen={setEditOpen} />
       <DropdownMenu>
         <div className="flex flex-col items-center h-56 w-56 cursor-pointer">
-          <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-2 rounded-t-xl w-full">
+          <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-2 rounded-t-lg w-full">
             <div className="flex flex-row justify-between items-center">
               {getIcon(props.icon)}
               <DropdownMenuTrigger className="p-1 hover:bg-gray-300/25 rounded-full transition inline-flex justify-center items-center z-10">
@@ -114,7 +114,7 @@ export function GroupItem(props: GroupItemProps) {
             </div>
             <span className="opacity-50 text-sm">{props.files} files</span>
           </div>
-          <div className="bg-primary text-white rounded-b-xl w-full flex flex-row py-4 px-4">
+          <div className="bg-primary text-white rounded-b-lg w-full flex flex-row py-4 px-4">
             <span className="text-xs font-semibold">{groupSize}</span>
             <span className="text-sm"></span>
           </div>
@@ -159,15 +159,15 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
   }, [mediaUrl]);
 
   return (
-    <div className="w-full select-none bg-black rounded-t-xl">
+    <div className="w-full select-none bg-black rounded-t-lg">
       {
         thumbnailUrl ? (
-          <div className="relative rounded-t-xl h-24 w-full">
-            <img src={thumbnailUrl} alt={`Thumbnail for media ID ${mediaUrl}`} className="rounded-t-xl h-24 w-full select-none" />
-            <div className="absolute top-0 left-0 right-0 bottom-0 rounded-t-xl bg-gradient-to-b from-black/40 to-black/75"></div>
+          <div className="relative rounded-t-lg h-24 w-full">
+            <img src={thumbnailUrl} alt={`Thumbnail for media ID ${mediaUrl}`} className="rounded-t-lg h-24 w-full select-none" />
+            <div className="absolute top-0 left-0 right-0 bottom-0 rounded-t-lg bg-gradient-to-b from-black/40 to-black/75"></div>
           </div>
         ) : (
-          <div className="w-full h-24 bg-gray-300 rounded-t-xl animate-pulse"></div>
+          <div className="w-full h-24 bg-gray-300 rounded-t-lg animate-pulse"></div>
         )
       }
     </div>
@@ -205,8 +205,8 @@ export function FileItem(props: FileItemProps) {
         </AlertDialogContent>
       </AlertDialog>
       <DropdownMenu>
-        <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-xl cursor-pointer transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
-          <div className="flex flex-col bg-white h-full gap-1 rounded-t-xl w-full">
+        <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+          <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
             <div className="relative">
               <Thumbnail mediaUrl={props.file} />
               <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
@@ -218,7 +218,7 @@ export function FileItem(props: FileItemProps) {
               <span className="opacity-50 text-xs">{formattedDate}</span>
             </div>
           </div>
-          <div className="bg-primary text-white rounded-b-xl w-full flex flex-row py-4 px-4">
+          <div className="bg-primary text-white rounded-b-lg w-full flex flex-row py-4 px-4">
             <span className="text-xs font-semibold">{humanFriendlySize(props.size)}</span>
           </div>
         </div>
@@ -324,16 +324,16 @@ export default function Dashboard() {
                   {
                     Array.from(Array(10).keys()).map((_, index) => (
                       <div className="animate-pulse flex flex-col items-center h-56 w-56" key={index}>
-                        <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-xl w-full">
-                          <div className="bg-[#f0f0f0] rounded-t-xl h-24 w-full"></div>
+                        <div className="flex flex-col bg-white h-full p-4 gap-1 rounded-t-lg w-full">
+                          <div className="bg-[#f0f0f0] rounded-t-lg h-24 w-full"></div>
                           <div className="mt-1 px-3 flex flex-col">
-                            <div className="font-semibold text-xs sm:text-xs md:text-base bg-[#f0f0f0] rounded h-4 w-1/2"></div>
-                            <div className="opacity-50 text-xs bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+                            <div className="font-semibold text-xs sm:text-xs md:text-base bg-[#f0f0f0] rounded-lg h-4 w-1/2"></div>
+                            <div className="opacity-50 text-xs bg-[#f0f0f0] rounded-lg h-4 w-1/4"></div>
                           </div>
                         </div>
-                        <div className="bg-[#f0f0f0] rounded-b-xl w-full flex flex-row py-4 px-3">
-                          <div className="text-sm font-semibold bg-[#f0f0f0] rounded h-4 w-1/4"></div>
-                          <div className="text-sm bg-[#f0f0f0] rounded h-4 w-1/4"></div>
+                        <div className="bg-[#f0f0f0] rounded-b-lg w-full flex flex-row py-4 px-3">
+                          <div className="text-sm font-semibold bg-[#f0f0f0] rounded-lg h-4 w-1/4"></div>
+                          <div className="text-sm bg-[#f0f0f0] rounded-lg h-4 w-1/4"></div>
                         </div>
                       </div>
                     ))
