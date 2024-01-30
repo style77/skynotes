@@ -34,11 +34,20 @@ const filesApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["File"],
         }),
+        uploadFile: builder.mutation<object, FormData>({
+            query: (data) => ({
+                url: `api/files/`,
+                method: "POST",
+                body: data
+            }),
+            invalidatesTags: ["File", "Group"],
+        }),
     }),
 });
 
 export const {
     useRetrieveRootFilesQuery,
     useUpdateFileMutation,
-    useDeleteFileMutation
+    useDeleteFileMutation,
+    useUploadFileMutation
 } = filesApiSlice;
