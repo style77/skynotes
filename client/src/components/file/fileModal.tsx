@@ -34,7 +34,7 @@ import {
 import { Input } from "../ui/input";
 import { useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { cn } from "@/lib/utils";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, ChevronLeft } from "lucide-react";
 
 import Dropzone from 'react-dropzone'
 
@@ -228,7 +228,16 @@ export function NewFileModal(props: NewFileModalProps) {
         <Dialog open={props.open} onOpenChange={props.setOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>New File</DialogTitle>
+                    <DialogTitle className="flex flex-row items-center gap-2">
+                        {
+                            file && (
+                                <button className="p-2 rounded-lg hover:bg-gray-100 transition" onClick={() => setFile(undefined)}>
+                                    <ChevronLeft width={15} />
+                                </button>
+                            )
+                        }
+                        New File
+                    </DialogTitle>
                     <DialogDescription>
                         {
                             file ? "Fill in the details for your file." : "Drag and drop a file to upload."
