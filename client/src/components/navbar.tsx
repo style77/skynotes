@@ -10,16 +10,18 @@ import {
 } from "@/components/ui/avatar"
 import { humanFriendlySize } from "@/lib/utils";
 import Spinner from "./ui/spinner";
+import { NewFileModal } from "./file/fileModal";
 
 export function Navbar() {
     const { data: user, isLoading: userLoading, error: userError } = useRetrieveUserQuery()
 
     const [openCreateGroup, setOpenCreateGroup] = useState(false)
+    const [openUploadFile, setOpenUploadFile] = useState(false)
 
     return (
         <div className="w-full h-16 flex flex-row justify-between px-8 items-center bg-white">
             <div className="flex flex-row gap-2">
-                <Button className="flex flex-row items-center">
+                <Button className="flex flex-row items-center" onClick={() => setOpenUploadFile(true)}>
                     <div>
                         <UploadCloud />
                     </div>
@@ -32,6 +34,7 @@ export function Navbar() {
                     <span className="ml-2 font-semibold">New Folder</span>
                 </Button>
                 <NewGroupModal open={openCreateGroup} setOpen={setOpenCreateGroup} />
+                <NewFileModal open={openUploadFile} setOpen={setOpenUploadFile} />
             </div>
             {
                 !user && (userLoading || userError) ? <Spinner /> : user && (
