@@ -34,7 +34,7 @@ const filesApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["File"],
         }),
-        uploadFile: builder.mutation<object, FormData>({
+        uploadFile: builder.mutation({
             query: (data) => ({
                 url: `api/files/`,
                 method: "POST",
