@@ -25,6 +25,26 @@ class FileDetailsView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return File.objects.filter(owner=self.request.user)
 
+    @extend_schema(description="Retrieve file details", responses={200: FileSerializer})
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @extend_schema(description="Update file details", request=FileSerializer)
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @extend_schema(description="Partial update file details", request=FileSerializer)
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+    @extend_schema(description="Delete file")
+    def delete(self, request, *args, **kwargs):
+        # remove file from storage
+        file = self.get_object()
+        file.file.delete()
+        if file.thumbnail:
+            file.thumbnail.delete()
+        return super().delete(request, *args, **kwargs)
 
 @extend_schema(tags=["files"])
 class FilesListView(APIView):
