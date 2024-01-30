@@ -225,7 +225,6 @@ export function NewFileModal(props: NewFileModalProps) {
         setIsLoading(true)
 
         const formData = new FormData()
-        console.log(file)
         formData.append("file", file as File)
         formData.append("name", data.name)
         if (data.group && data.group !== "undefined") {
@@ -237,8 +236,6 @@ export function NewFileModal(props: NewFileModalProps) {
         if (data.tags && data.tags.length > 0) {
             formData.append("tags", (data.tags ?? []).join(','))
         }
-
-        console.log(formData)
 
         try {
             await uploadFile(formData).unwrap()
