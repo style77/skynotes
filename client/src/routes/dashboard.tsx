@@ -22,6 +22,7 @@ import { getOS, humanFriendlySize } from "@/lib/utils";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Spinner from "@/components/ui/spinner";
+import { NewFileModal } from "@/components/file/fileModal";
 
 type FileItemProps = {
   id: string;
@@ -103,7 +104,7 @@ export function GroupItem(props: GroupItemProps) {
         icon: props.icon,
       } as Group} open={editOpen} setOpen={setEditOpen} />
       <DropdownMenu>
-        <div className="flex flex-col items-center h-56 w-56 cursor-pointer shadow-lg" onClick={props.onClick}>
+        <div className="flex flex-col items-center h-56 w-full md:w-56 cursor-pointer shadow-lg" onClick={props.onClick}>
           <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-2 rounded-t-lg w-full">
             <div className="flex flex-row justify-between items-center">
               {getIcon(props.icon)}
@@ -223,7 +224,7 @@ export function FileItem(props: FileItemProps) {
         {
           props.file ? (
             <>
-              <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+              <div className={`flex flex-col items-center w-full md:w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
                   <div className="relative">
                     <Thumbnail mediaUrl={props.file} />
@@ -296,7 +297,7 @@ function ItemsGrid(props: ItemsGridProps) {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-8 md:gap-3">
       {props.groups && props.groups.map((group) => (
         <GroupItem
           key={group.id}
@@ -343,6 +344,7 @@ export default function Dashboard() {
   const [sortDirection] = useState<string>("asc");
 
   const [createGroupOpen, setCreateGroupOpen] = useState(false);
+  const [uploadFileOpen, setUploadFileOpen] = useState(false);
 
   const getSortDirectionIcon = (sortDirection: string) => {
     switch (sortOption) {
@@ -367,6 +369,7 @@ export default function Dashboard() {
       <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col"> */}
       <Navbar />
       <NewGroupModal open={createGroupOpen} setOpen={setCreateGroupOpen} />
+      <NewFileModal open={uploadFileOpen} setOpen={setUploadFileOpen} currentGroupId={groupId} />
       <ContextMenu>
         <ContextMenuTrigger className="px-12 py-8 min-h-screen">
           <div className="flex flex-col gap-4">
@@ -432,7 +435,7 @@ export default function Dashboard() {
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-64">
-          <ContextMenuItem disabled>
+          <ContextMenuItem onClick={() => setUploadFileOpen(true)}>
             Upload File
             <ContextMenuShortcut>{getOS() === "Mac" ? "⌘⇧N" : <><kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>n</kbd></>}</ContextMenuShortcut>
           </ContextMenuItem>
