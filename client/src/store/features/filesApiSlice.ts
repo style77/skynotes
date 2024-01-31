@@ -15,8 +15,8 @@ export interface File {
 
 const filesApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        retrieveRootFiles: builder.query<File[], void>({
-            query: () => "api/files/",
+        retrieveFiles: builder.query<File[], {groupId: string | null}>({
+            query: ({groupId}) => `api/files/${groupId ?? ""}`,
             providesTags: ["File"],
         }),
         updateFile: builder.mutation({
@@ -46,7 +46,7 @@ const filesApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useRetrieveRootFilesQuery,
+    useRetrieveFilesQuery,
     useUpdateFileMutation,
     useDeleteFileMutation,
     useUploadFileMutation

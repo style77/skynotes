@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/navbar"
-import { File, useDeleteFileMutation, useRetrieveRootFilesQuery } from "@/store/features/filesApiSlice";
+import { File, useDeleteFileMutation, useRetrieveFilesQuery } from "@/store/features/filesApiSlice";
 import { Group, useDeleteGroupMutation, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { getOS, humanFriendlySize } from "@/lib/utils";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { useSearchParams } from "react-router-dom";
 
 type FileItemProps = {
   id: string;
@@ -274,8 +275,10 @@ function ItemsGrid(props: ItemsGridProps) {
 }
 
 export default function Dashboard() {
-  const { data: groups, error: groupsError, isLoading: groupsIsLoading } = useRetrieveGroupsQuery();
-  const { data: files, error: filesError, isLoading: filesIsLoading } = useRetrieveRootFilesQuery();
+  const [searchParams] = useSearchParams();
+
+  const { data: groups, error: groupsError, isLoading: groupsAreLoading } = useRetrieveGroupsQuery();
+  const { data: files, error: filesError, isLoading: filesAreLoading } = useRetrieveFilesQuery({groupId: searchParams.get("group")});
 
   const [focusedFile, setFocusedFile] = useState<string | null>(null);
 
@@ -319,7 +322,7 @@ export default function Dashboard() {
               </div>
             </div>
             {
-              groupsIsLoading || filesIsLoading ? (
+              groupsAreLoading || filesAreLoading ? (
                 <div className="flex flex-wrap gap-3">
                   {
                     Array.from(Array(10).keys()).map((_, index) => (
