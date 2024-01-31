@@ -3,7 +3,7 @@ import { File, useDeleteFileMutation, useRetrieveFilesQuery } from "@/store/feat
 import { Group, useDeleteGroupMutation, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
-import { Folder, MoreVertical, Image, Music, Video, Files, Archive, ArrowUpZA, ArrowDownZA, ArrowUp10, ArrowDown10, ArrowUpWideNarrow, ArrowDownWideNarrow } from "lucide-react";
+import { Folder, MoreVertical, Image, Music, Video, Files, Archive, ArrowUpZA, ArrowDownZA, ArrowUp10, ArrowDown10, ArrowUpWideNarrow, ArrowDownWideNarrow, ChevronLeft } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EditGroupModal, NewGroupModal } from "@/components/group/groupModal";
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { getOS, humanFriendlySize } from "@/lib/utils";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from "@/components/ui/context-menu";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 type FileItemProps = {
   id: string;
@@ -40,6 +40,7 @@ type GroupItemProps = {
   icon: string;
   size: number;
   description: string;
+  onClick?: () => void;
 }
 
 export function GroupItem(props: GroupItemProps) {
@@ -101,7 +102,7 @@ export function GroupItem(props: GroupItemProps) {
         icon: props.icon,
       } as Group} open={editOpen} setOpen={setEditOpen} />
       <DropdownMenu>
-        <div className="flex flex-col items-center h-56 w-56 cursor-pointer">
+        <div className="flex flex-col items-center h-56 w-56 cursor-pointer" onClick={props.onClick}>
           <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-2 rounded-t-lg w-full">
             <div className="flex flex-row justify-between items-center">
               {getIcon(props.icon)}
@@ -242,6 +243,8 @@ type ItemsGridProps = {
 }
 
 function ItemsGrid(props: ItemsGridProps) {
+  const navigate = useNavigate()
+
   return (
     <div className="flex flex-wrap gap-3">
       {props.groups && props.groups.map((group) => (
@@ -253,6 +256,7 @@ function ItemsGrid(props: ItemsGridProps) {
           icon={group.icon}
           size={group.size}
           description={group.description}
+          onClick={() => navigate(`/dashboard?group=${group.id}`)}
         />
       ))}
       {props.files && props.files.map((file) => (
@@ -275,10 +279,13 @@ function ItemsGrid(props: ItemsGridProps) {
 }
 
 export default function Dashboard() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const groupId = searchParams.get("group");
 
   const { data: groups, error: groupsError, isLoading: groupsAreLoading } = useRetrieveGroupsQuery();
-  const { data: files, error: filesError, isLoading: filesAreLoading } = useRetrieveFilesQuery({groupId: searchParams.get("group")});
+  const { data: files, error: filesError, isLoading: filesAreLoading } = useRetrieveFilesQuery({ groupId });
+
+  const currentGroup = groups?.find((group) => group.id === groupId);
 
   const [focusedFile, setFocusedFile] = useState<string | null>(null);
 
@@ -313,7 +320,25 @@ export default function Dashboard() {
       <ContextMenu>
         <ContextMenuTrigger className="px-12 py-8 min-h-screen">
           <div className="flex flex-col gap-4">
-            <h2 className="font-semibold text-2xl">My Cloud</h2>
+            <h2 className="font-semibold text-2xl flex flex-row items-center">
+              {
+                (groupId && currentGroup) ? (
+                  <>
+                    <button className="p-2 rounded-lg hover:bg-gray-100 transition mt-1" onClick={() => setSearchParams(undefined)}>
+                      <ChevronLeft width={20} />
+                    </button>
+                    {
+                      currentGroup.name
+                    }
+                  </>
+                ) : (
+                  <>
+                    My Cloud
+                  </>
+                )
+              }
+
+            </h2>
             <div className="flex flex-row space-between items-center opacity-50 text-sm">
               <span>Sort by:</span>
               <div className="flex flex-row ml-1 items-center gap-1">
@@ -351,7 +376,7 @@ export default function Dashboard() {
                   {filesError}
                 </>
               ) : (
-                <ItemsGrid groups={groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
+                <ItemsGrid groups={groupId ? undefined : groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
               )
             }
           </div>
