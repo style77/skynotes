@@ -127,10 +127,11 @@ export function LoginForm() {
                         </div>
                     </Button>
                     <div className="flex flex-row text-center justify-center space-x-1">
-                        <p className="text-sm text-[#667085]">Don't have an account?</p><a href="/register" className="text-sm text-primary font-bold hover:scale-105 transition">Sign up!</a>
+                        <p className="text-sm text-[#667085]">Don't have an account?</p><a href="/register" className="text-sm text-primary/75 font-bold hover:text-primary transition">Sign up!</a>
                     </div>
                     <div className="flex flex-row text-center justify-between">
-                        <Button className="text-sm bg-transparent text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Talk to support</Button><Button className="bg-transparent text-sm text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Forgot password</Button>
+                        <Button className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
+                        <Button className="bg-transparent text-sm text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Forgot password</Button>
                     </div>
                 </div>
             </form>

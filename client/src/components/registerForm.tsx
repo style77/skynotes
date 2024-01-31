@@ -168,10 +168,10 @@ export function RegisterForm() {
                         }
                     </div>
                     <div className="flex flex-row text-center justify-center space-x-1">
-                        <p className="text-sm text-[#667085]">Already created account?</p><a href="/login" className="text-sm text-primary font-bold hover:scale-105 transition">Sign in!</a>
+                        <p className="text-sm text-[#667085]">Already created account?</p><a href="/login" className="text-sm text-primary/75 font-bold hover:text-primary transition">Sign in!</a>
                     </div>
                     <div className="flex flex-row text-center justify-center">
-                        <Button className="text-sm bg-transparent text-primary font-bold hover:scale-105 transition hover:bg-transparent opacity-70">Talk to support</Button>
+                        <Button className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
                     </div>
                 </div>
             </form>
