@@ -11,9 +11,12 @@ import {
 import { humanFriendlySize } from "@/lib/utils";
 import Spinner from "./ui/spinner";
 import { NewFileModal } from "./file/fileModal";
+import { useSearchParams } from "react-router-dom";
 
 export function Navbar() {
     const { data: user, isLoading: userLoading, error: userError } = useRetrieveUserQuery()
+    const [searchParams] = useSearchParams()
+    const currentGroupId = searchParams.get("group")
 
     const [openCreateGroup, setOpenCreateGroup] = useState(false)
     const [openUploadFile, setOpenUploadFile] = useState(false)
@@ -34,7 +37,7 @@ export function Navbar() {
                     <span className="ml-2 font-semibold">New Folder</span>
                 </Button>
                 <NewGroupModal open={openCreateGroup} setOpen={setOpenCreateGroup} />
-                <NewFileModal open={openUploadFile} setOpen={setOpenUploadFile} />
+                <NewFileModal open={openUploadFile} setOpen={setOpenUploadFile} currentGroupId={currentGroupId} />
             </div>
             {
                 !user && (userLoading || userError) ? <Spinner /> : user && (

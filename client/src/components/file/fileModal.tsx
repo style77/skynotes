@@ -43,6 +43,7 @@ import Dropzone from 'react-dropzone'
 type NewFileModalProps = {
     open: boolean;
     setOpen: (open: boolean) => void;
+    currentGroupId: string | null;
 }
 
 type FileFormProps = {
@@ -217,9 +218,18 @@ export function NewFileModal(props: NewFileModalProps) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     })
+
     const [isLoading, setIsLoading] = useState(false)
 
     const [file, setFile] = useState<File | undefined>(undefined)
+
+    useEffect(() => {
+        if (props.currentGroupId) {
+            form.setValue("group", props.currentGroupId)
+        } else {
+            form.setValue("group", undefined)
+        }
+    }, [props.currentGroupId, form])
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         setIsLoading(true)
