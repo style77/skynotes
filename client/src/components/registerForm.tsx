@@ -45,16 +45,11 @@ type RegisterFormSchemaType = z.infer<typeof formSchema>;
 export function RegisterForm(props: LoginFormProps) {
     const [register, { isLoading }] = useRegisterMutation();
     const { toast } = useToast();
-    const navigate = useNavigate();
 
     const [errors, setErrors] = useState<string[]>([])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-            password: ""
-        },
     })
 
     const onSubmit = async (data: RegisterFormSchemaType) => {
@@ -104,7 +99,7 @@ export function RegisterForm(props: LoginFormProps) {
                                 <FormControl>
                                     <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="email" placeholder="Enter your email" icon="email" iconstyle="w-5" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -118,13 +113,15 @@ export function RegisterForm(props: LoginFormProps) {
                                         Password
                                         <TooltipProvider delayDuration={100}>
                                             <Tooltip>
-                                                <TooltipTrigger>
+                                                <TooltipTrigger type="button">
                                                     <HelpCircle className="w-4" />
                                                 </TooltipTrigger>
                                                 <TooltipContent>
-                                                    <p>* 8 minimum characters</p>
-                                                    <p>* No common passwords</p>
-                                                    <p>* 1 uppercase, 1 lowercase, 1 number, 1 special character</p>
+                                                    <ul className="list-disc">
+                                                        <li>8 minimum characters</li>
+                                                        <li>No common passwords</li>
+                                                        <li>1 uppercase, 1 lowercase, 1 number, 1 special character</li>
+                                                    </ul>
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
@@ -133,7 +130,7 @@ export function RegisterForm(props: LoginFormProps) {
                                 <FormControl>
                                     <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="password" placeholder="••••••••" icon="password" iconstyle="w-4" passwordTooltip={true} {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -148,7 +145,7 @@ export function RegisterForm(props: LoginFormProps) {
                                 <FormControl>
                                     <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="password" placeholder="••••••••" icon="password" iconstyle="w-4" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -173,7 +170,7 @@ export function RegisterForm(props: LoginFormProps) {
                         <button onClick={() => props.setShowRegister(false)} className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent">Sign in!</button>
                     </div>
                     <div className="flex flex-row text-center justify-center">
-                        <Button className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
+                        <Button disabled className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
                     </div>
                 </div>
             </form>

@@ -12,7 +12,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { LoginInput } from "@/components/loginInput"
-import { Fingerprint } from "lucide-react"
+import { QrCode } from "lucide-react"
 import { useLoginMutation } from "@/store/features/authApiSlice"
 import { useToast } from "./ui/use-toast"
 import { useNavigate } from "react-router-dom"
@@ -38,11 +38,7 @@ export function LoginForm(props: LoginFormProps) {
     const [errors, setErrors] = useState<string[]>([])
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-            password: ""
-        },
+        resolver: zodResolver(formSchema)
     })
 
     const onSubmit = async (data: LoginFormSchemaType) => {
@@ -84,7 +80,7 @@ export function LoginForm(props: LoginFormProps) {
                                 <FormControl>
                                     <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="email" placeholder="Enter your email" icon="email" iconstyle="w-5" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -97,7 +93,7 @@ export function LoginForm(props: LoginFormProps) {
                                 <FormControl>
                                     <LoginInput className="border-x-0 border-t-0 focus:bg-transparent" type="password" placeholder="••••••••" icon="password" iconstyle="w-4" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -124,7 +120,7 @@ export function LoginForm(props: LoginFormProps) {
                     </div>
                     <Button className="bg-white text-black border border-zinc-300 w-full hover:text-white" type="submit">
                         <div className="flex flex-row items-center gap-2">
-                            <Fingerprint className="w-4" /> Sign in with Code
+                            <QrCode className="w-4" /> Sign in with QR
                         </div>
                     </Button>
                     <div className="flex flex-row text-center justify-center space-x-1">
@@ -132,8 +128,8 @@ export function LoginForm(props: LoginFormProps) {
                         <button type="button" onClick={() => props.setShowRegister(true)} className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent">Sign up!</button>
                     </div>
                     <div className="flex flex-row text-center justify-between">
-                        <Button className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
-                        <Button className="bg-transparent text-sm text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Forgot password</Button>
+                        <Button disabled className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
+                        <Button disabled className="bg-transparent text-sm text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Forgot password</Button>
                     </div>
                 </div>
             </form>
