@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { isLoadingFinished, setAuth } from "@/store/features/authSlice"
 import { store } from "@/store"
+import { LoginFormProps } from "./types"
 
 const formSchema = z.object({
     email: z.string().min(6, {
@@ -29,7 +30,7 @@ const formSchema = z.object({
 
 type LoginFormSchemaType = z.infer<typeof formSchema>;
 
-export function LoginForm() {
+export function LoginForm(props: LoginFormProps) {
     const [login, { isLoading }] = useLoginMutation();
     const { toast } = useToast();
     const navigate = useNavigate();
@@ -70,7 +71,7 @@ export function LoginForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="shadow-lg shadow-[rgba(0, 0, 0, 0.25)] px-14 py-12 rounded-xl bg-card dark:bg-card-foreground">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="shadow-lg shadow-[rgba(0, 0, 0, 0.25)] px-14 py-12 rounded-xl bg-card dark:bg-card-foreground min-w-96">
                 <h1 className="text-center font-bold text-xl leading-relaxed">Sign in to your account</h1>
                 <p className="text-center text-sm p-0 m-0 text-[#667085]">Welcome back! Please enter your details.</p>
                 <div className="space-y-6 my-6">
@@ -127,7 +128,8 @@ export function LoginForm() {
                         </div>
                     </Button>
                     <div className="flex flex-row text-center justify-center space-x-1">
-                        <p className="text-sm text-[#667085]">Don't have an account?</p><a href="/register" className="text-sm text-primary/75 font-bold hover:text-primary transition">Sign up!</a>
+                        <p className="text-sm text-[#667085]">Don't have an account?</p>
+                        <button type="button" onClick={() => props.setShowRegister(true)} className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent">Sign up!</button>
                     </div>
                     <div className="flex flex-row text-center justify-between">
                         <Button className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>

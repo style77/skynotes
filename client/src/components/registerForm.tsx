@@ -25,6 +25,7 @@ import { useRegisterMutation } from "@/store/features/authApiSlice"
 import { useState } from "react"
 
 import { useNavigate } from "react-router-dom";
+import { LoginFormProps } from "./types"
 
 const formSchema = z.object({
     email: z.string().min(6, {
@@ -41,7 +42,7 @@ const formSchema = z.object({
 
 type RegisterFormSchemaType = z.infer<typeof formSchema>;
 
-export function RegisterForm() {
+export function RegisterForm(props: LoginFormProps) {
     const [register, { isLoading }] = useRegisterMutation();
     const { toast } = useToast();
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ export function RegisterForm() {
                 title: "Your account was succesfully created!",
             });
 
-            navigate("/login")
+            props.setShowRegister(false)
 
         } catch (error: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
             toast({
@@ -90,7 +91,7 @@ export function RegisterForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="shadow-lg shadow-[rgba(0, 0, 0, 0.25)] px-14 py-12 rounded-xl bg-card dark:bg-card-foreground">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="shadow-lg shadow-[rgba(0, 0, 0, 0.25)] px-14 py-12 rounded-xl bg-card dark:bg-card-foreground min-w-96">
                 <h1 className="text-center font-bold text-xl leading-relaxed">Create new account</h1>
                 <p className="text-center text-sm p-0 m-0 text-[#667085]">Welcome! Please enter your details.</p>
                 <div className="space-y-6 my-6">
@@ -168,7 +169,8 @@ export function RegisterForm() {
                         }
                     </div>
                     <div className="flex flex-row text-center justify-center space-x-1">
-                        <p className="text-sm text-[#667085]">Already created account?</p><a href="/login" className="text-sm text-primary/75 font-bold hover:text-primary transition">Sign in!</a>
+                        <p className="text-sm text-[#667085]">Already created account?</p>
+                        <button onClick={() => props.setShowRegister(false)} className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent">Sign in!</button>
                     </div>
                     <div className="flex flex-row text-center justify-center">
                         <Button className="text-sm bg-transparent text-primary/75 font-bold hover:text-primary transition hover:bg-transparent opacity-70">Talk to support</Button>
