@@ -102,7 +102,7 @@ export function GroupItem(props: GroupItemProps) {
         icon: props.icon,
       } as Group} open={editOpen} setOpen={setEditOpen} />
       <DropdownMenu>
-        <div className="flex flex-col items-center h-56 w-56 cursor-pointer" onClick={props.onClick}>
+        <div className="flex flex-col items-center h-56 w-56 cursor-pointer shadow-lg" onClick={props.onClick}>
           <div className="flex flex-col bg-white hover:bg-gray-50 transition h-full p-4 gap-2 rounded-t-lg w-full">
             <div className="flex flex-row justify-between items-center">
               {getIcon(props.icon)}
@@ -207,7 +207,7 @@ export function FileItem(props: FileItemProps) {
         </AlertDialogContent>
       </AlertDialog>
       <DropdownMenu>
-        <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+        <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
           <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
             <div className="relative">
               <Thumbnail mediaUrl={props.file} />
