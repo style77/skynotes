@@ -43,7 +43,8 @@ class GroupDetailsSerializer(GroupSerializer):
         Returns:
             int: The total size of files associated with the group, in bytes.
         """
-        return File.objects.filter(group=obj.id).aggregate(models.Sum("size"))["size__sum"]
+        total_sum = File.objects.filter(group=obj.id).aggregate(models.Sum("size"))
+        return total_sum["size__sum"]
 
 
 class FileSerializer(serializers.ModelSerializer):

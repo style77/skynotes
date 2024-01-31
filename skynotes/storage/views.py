@@ -46,6 +46,7 @@ class FileDetailsView(RetrieveUpdateDestroyAPIView):
             file.thumbnail.delete()
         return super().delete(request, *args, **kwargs)
 
+
 @extend_schema(tags=["files"])
 class FilesListView(APIView):
     parser_classes = (parsers.MultiPartParser,)
