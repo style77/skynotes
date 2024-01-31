@@ -24,6 +24,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Spinner from "@/components/ui/spinner";
 import { NewFileModal } from "@/components/file/fileModal";
 import { Viewer } from "@/components/viewer/baseViewer";
+import { useDispatch } from "react-redux";
+import { apiSlice } from "@/store/services/apiSlice";
 
 type FileItemProps = {
   id: string;
@@ -188,6 +190,29 @@ export function FileItem(props: FileItemProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [fileUploadingDeleteOpen, setFileUploadingDeleteOpen] = useState(false);
 
+  const [fileUploaded, setFileUploaded] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (props.file) {
+      setFileUploaded(true);
+    } else {
+      setFileUploaded(false);
+
+      intervalId = setInterval(() => {
+        dispatch(apiSlice.util.invalidateTags(['File']));
+      }, 5000);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [props.file, dispatch]);
+
   const handleDelete = async () => {
     await deleteFile({ id: props.id }).unwrap()
     setDeleteOpen(false);
@@ -223,7 +248,7 @@ export function FileItem(props: FileItemProps) {
       </AlertDialog>
       <DropdownMenu>
         {
-          props.file ? (
+          fileUploaded ? (
             <>
               <div className={`flex flex-col items-center w-full md:w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
@@ -320,7 +345,7 @@ function ItemsGrid(props: ItemsGridProps) {
       ))}
       {
         (props.focusedFile && props.files) && (
-          <Viewer open={viewFile} setOpen={setViewFile} file={props.files.filter((val) => val.id === props.focusedFile)[0]!} setFocusedFile={props.setFocusedFile}  />
+          <Viewer open={viewFile} setOpen={setViewFile} file={props.files.filter((val) => val.id === props.focusedFile)[0]!} setFocusedFile={props.setFocusedFile} />
         )
       }
       {props.files && props.files.map((file) => (
