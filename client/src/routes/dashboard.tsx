@@ -23,6 +23,7 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, 
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Spinner from "@/components/ui/spinner";
 import { NewFileModal } from "@/components/file/fileModal";
+import { Viewer } from "@/components/viewer/baseViewer";
 
 type FileItemProps = {
   id: string;
@@ -296,6 +297,13 @@ type ItemsGridProps = {
 function ItemsGrid(props: ItemsGridProps) {
   const navigate = useNavigate()
 
+  const [viewFile, setViewFile] = useState<boolean>(false);
+
+  const handleFileClick = (file: File) => {
+    props.setFocusedFile(props.focusedFile === file.id ? null : file.id)
+    setViewFile(true);
+  }
+
   return (
     <div className="flex flex-wrap gap-8 md:gap-3">
       {props.groups && props.groups.map((group) => (
@@ -310,6 +318,11 @@ function ItemsGrid(props: ItemsGridProps) {
           onClick={() => navigate(`/dashboard?group=${group.id}`)}
         />
       ))}
+      {
+        (props.focusedFile && props.files) && (
+          <Viewer open={viewFile} setOpen={setViewFile} file={props.files.filter((val) => val.id === props.focusedFile)[0]!} setFocusedFile={props.setFocusedFile}  />
+        )
+      }
       {props.files && props.files.map((file) => (
         <FileItem
           key={file.id}
@@ -320,7 +333,7 @@ function ItemsGrid(props: ItemsGridProps) {
           tags={file.tags}
           createdAt={file.created_at}
           onClick={() => {
-            props.setFocusedFile(props.focusedFile === file.id ? null : file.id);
+            handleFileClick(file)
           }}
           focused={file.id === props.focusedFile}
         />
