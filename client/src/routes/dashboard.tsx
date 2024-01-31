@@ -186,7 +186,8 @@ export function FileItem(props: FileItemProps) {
 
   const [deleteFile] = useDeleteFileMutation()
 
-  const [editOpen, setEditOpen] = useState(false);
+  // @ts-expect-error TODO: Implement edit file
+  const [editOpen, setEditOpen] = useState(false);  // eslint-disable-line
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [fileUploadingDeleteOpen, setFileUploadingDeleteOpen] = useState(false);
 
