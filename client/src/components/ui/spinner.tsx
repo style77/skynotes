@@ -6,7 +6,7 @@ type SpinnerProps = {
 
 const Spinner = (props: SpinnerProps) => {
     return (
-        <Loader2 className={`animate-spin ${props.className}`} />
+        <Loader2 className={`animate-fancySpin ${props.className}`} />
     );
 };
 
