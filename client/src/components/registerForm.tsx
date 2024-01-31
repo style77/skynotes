@@ -24,7 +24,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRegisterMutation } from "@/store/features/authApiSlice"
 import { useState } from "react"
 
-import { useNavigate } from "react-router-dom";
 import { LoginFormProps } from "./types"
 
 const formSchema = z.object({
