@@ -1,5 +1,6 @@
 import base64
 
+from django.db import models
 from rest_framework import serializers
 from storage.models import File, Group
 from storage.tasks import handle_file_upload
@@ -42,11 +43,7 @@ class GroupDetailsSerializer(GroupSerializer):
         Returns:
             int: The total size of files associated with the group, in bytes.
         """
-        total_size = 0
-        for file in File.objects.filter(group=obj.id).all():
-            total_size += file.file.size
-
-        return total_size if total_size is not None else 0
+        return File.objects.filter(group=obj.id).aggregate(models.Sum("size"))["size__sum"]
 
 
 class FileSerializer(serializers.ModelSerializer):
