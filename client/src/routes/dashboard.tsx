@@ -21,6 +21,7 @@ import {
 import { getOS, humanFriendlySize } from "@/lib/utils";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Spinner from "@/components/ui/spinner";
 
 type FileItemProps = {
   id: string;
@@ -74,7 +75,7 @@ export function GroupItem(props: GroupItemProps) {
   }
 
   const handleDelete = async () => {
-    await deleteGroup(props.id).unwrap();
+    await deleteGroup({id: props.id}).unwrap();
     setDeleteOpen(false);
   }
 
@@ -176,6 +177,39 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
   );
 };
 
+type LoadingFileItemProps = {
+  name: string;
+  createdAt: string;
+  size: number;
+}
+
+function LoadingFileItem(props: LoadingFileItemProps) {
+  const formattedDate = format(parseISO(props.createdAt), 'dd/MM/yyyy, hh:mm a');
+
+  return (
+    <div className="relative flex flex-col items-center w-56 h-56 rounded-lg cursor-disabled shadow-lg transition-all">
+      <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg z-50 animate-pulse flex items-center justify-center">
+        <Spinner className="text-white" />
+      </div>
+      <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
+        <div className="relative">
+          <div className="w-full h-24 bg-gray-300 rounded-t-lg animate-pulse"></div>
+          <div className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
+            <MoreVertical className="text-gray-50" />
+          </div>
+        </div>
+        <div className="mt-1 px-3 flex flex-col">
+          <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
+          <span className="opacity-50 text-xs">{formattedDate}</span>
+        </div>
+      </div>
+      <div className="bg-primary text-white rounded-b-lg w-full flex flex-row py-4 px-4">
+        <span className="text-xs font-semibold">{props.size && humanFriendlySize(props.size)}</span>
+      </div>
+    </div>
+  )
+}
+
 export function FileItem(props: FileItemProps) {
   const formattedDate = format(parseISO(props.createdAt), 'dd/MM/yyyy, hh:mm a');
 
@@ -206,31 +240,37 @@ export function FileItem(props: FileItemProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <DropdownMenu>
-        <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
-          <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
-            <div className="relative">
-              <Thumbnail mediaUrl={props.file} />
-              <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
-                <MoreVertical className="text-gray-50" />
-              </DropdownMenuTrigger>
+      {
+        props.file ? (
+          <DropdownMenu>
+            <div className={`flex flex-col items-center w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+              <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
+                <div className="relative">
+                  <Thumbnail mediaUrl={props.file} />
+                  <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
+                    <MoreVertical className="text-gray-50" />
+                  </DropdownMenuTrigger>
+                </div>
+                <div className="mt-1 px-3 flex flex-col">
+                  <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
+                  <span className="opacity-50 text-xs">{formattedDate}</span>
+                </div>
+              </div>
+              <div className="bg-primary text-white rounded-b-lg w-full flex flex-row py-4 px-4">
+                <span className="text-xs font-semibold">{humanFriendlySize(props.size)}</span>
+              </div>
             </div>
-            <div className="mt-1 px-3 flex flex-col">
-              <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
-              <span className="opacity-50 text-xs">{formattedDate}</span>
-            </div>
-          </div>
-          <div className="bg-primary text-white rounded-b-lg w-full flex flex-row py-4 px-4">
-            <span className="text-xs font-semibold">{humanFriendlySize(props.size)}</span>
-          </div>
-        </div>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Share</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Share</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <LoadingFileItem name={props.name} createdAt={props.createdAt} size={props.size} />
+        )
+      }
     </>
   )
 }
