@@ -3,7 +3,7 @@ import { File, useDeleteFileMutation, useRetrieveFilesQuery } from "@/store/feat
 import { Group, useDeleteGroupMutation, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
-import { Folder, MoreVertical, Image, Music, Video, Files, Archive, ArrowUpZA, ArrowDownZA, ArrowUp10, ArrowDown10, ArrowUpWideNarrow, ArrowDownWideNarrow, ChevronLeft } from "lucide-react";
+import { Folder, MoreVertical, Image, Music, Video, Files, Archive, ArrowUpZA, ArrowDownZA, ArrowUp10, ArrowDown10, ArrowUpWideNarrow, ArrowDownWideNarrow, ChevronLeft, Menu } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EditGroupModal, NewGroupModal } from "@/components/group/groupModal";
@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { getOS, humanFriendlySize } from "@/lib/utils";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger, ContextMenuLabel, ContextMenuSeparator } from "@/components/ui/context-menu";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Spinner from "@/components/ui/spinner";
 import { NewFileModal } from "@/components/file/fileModal";
@@ -398,6 +398,8 @@ export default function Dashboard() {
     }
   }
 
+  console.log(groups, files, groupsError, filesError, groupsAreLoading, filesAreLoading)
+
   return (
     // <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
     <div className="min-h-screen w-full flex flex-col bg-[#EAEAEA]">
@@ -461,11 +463,13 @@ export default function Dashboard() {
                 </div>
               ) : groupsError ? (
                 <>
-                  {groupsError}
+                  {/* @ts-expect-error Serialized error */}
+                  {groupsError.error}
                 </>
               ) : filesError ? (
                 <>
-                  {filesError}
+                  {/* @ts-expect-error Serialized error */}
+                  {filesError.error}
                 </>
               ) : (
                 <ItemsGrid groups={groupId ? undefined : groups} files={files} setFocusedFile={setFocusedFile} focusedFile={focusedFile} />
@@ -474,6 +478,10 @@ export default function Dashboard() {
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-64">
+          <ContextMenuLabel className="flex flex-row gap-1 items-center">
+            <Menu width={16} />Skynotes Menu
+          </ContextMenuLabel>
+          <ContextMenuSeparator />
           <ContextMenuItem onClick={() => setUploadFileOpen(true)}>
             Upload File
             <ContextMenuShortcut>{getOS() === "Mac" ? "⌘⇧N" : <><kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>n</kbd></>}</ContextMenuShortcut>
