@@ -107,8 +107,8 @@ export function FileItem(props: FileItemProps) {
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
                   <div className="relative">
                     <Thumbnail fileName={props.name} mediaUrl={props.thumbnail} />
-                    <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
-                      <MoreVertical className="text-gray-50" />
+                    <DropdownMenuTrigger className={`p-1 ${props.thumbnail ? "hover:bg-gray-100/25" : "hover:bg-gray-300/25"} rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3`}>
+                      <MoreVertical className={props.thumbnail ? "text-gray-50" : "text-gray-600"} />
                     </DropdownMenuTrigger>
                   </div>
                   <div className="mt-1 px-3 flex flex-col">
