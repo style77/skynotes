@@ -4,6 +4,7 @@ from authorization.authentication import JWTCookiesAuthentication
 from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.http.response import FileResponse
+from django.db import models
 from django.shortcuts import get_object_or_404
 from django.views import View
 from drf_spectacular.utils import extend_schema
@@ -67,6 +68,14 @@ class FilesListView(APIView):
         responses={201: FileSerializer},
     )
     def post(self, request, *args, **kwargs):
+
+        file_size = request.data["file"].size
+        total_sum = File.objects.filter(owner=request.user).aggregate(models.Sum("size"))
+        if total_sum["size__sum"] + file_size > request.user.storage_limit:
+            return Response(
+                {"error": "Storage limit exceeded"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = FileSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
