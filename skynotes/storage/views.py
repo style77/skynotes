@@ -170,7 +170,6 @@ class MediaView(View):
         jwt_auth = JWTCookiesAuthentication()
         try:
             user_auth_tuple = jwt_auth.authenticate(request)
-            print(user_auth_tuple)
             if user_auth_tuple is not None:
                 request.user, request.auth = user_auth_tuple
             else:
@@ -197,7 +196,7 @@ class MediaView(View):
         file_id = file_path.split(".")[0].rstrip("_thumb")
 
         try:
-            uuid.UUID(file_id)
+            uuid.UUID(file_id, version=4)
         except ValueError:
             raise ValidationError("Invalid UUID format")
 
