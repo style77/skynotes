@@ -2,7 +2,7 @@ import base64
 
 from django.db import models
 from rest_framework import serializers
-from storage.models import File, Group
+from storage.models import File, Group, FileShare
 from storage.tasks import handle_file_upload
 
 
@@ -110,3 +110,10 @@ class FileSerializer(serializers.ModelSerializer):
         handle_file_upload.delay(file_id=data.id, ext=ext, content=bytes)
 
         return data
+
+
+class FileShareSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileShare
+        fields = ["id", "created_at", "updated_at", "file", "is_active", "shared_until", "password", "token"]
+        read_only_fields = ["id", "created_at", "updated_at", "token", "file"]
