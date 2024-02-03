@@ -69,17 +69,22 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        fancySpin: {
+        'fancy-spin': {
           '0%, 100%': { transform: 'rotate(0deg)' },
           '25%': { transform: 'rotate(90deg)' },
           '50%': { transform: 'rotate(180deg)' },
           '75%': { transform: 'rotate(270deg)' },
         },
+        'bouncing-loader': {
+          '0%, 100%': { transform: 'translateY(0)', opacity: '1' },
+          '50%': { transform: 'translateY(-16px)', opacity: '0.1' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fancySpin": "spin 2s ease-in-out infinite",
+        "fancy-spin": "spin 2s ease-in-out infinite",
+        "bouncing-loader": "bouncing-loader 0.6s infinite alternate",
       },
     },
   },
