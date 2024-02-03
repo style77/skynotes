@@ -25,6 +25,7 @@ type FileItemProps = {
   id: string;
   name: string;
   file: string;
+  thumbnail: string | null;
   size: number;
   tags: string[];
   createdAt: string;
@@ -105,7 +106,7 @@ export function FileItem(props: FileItemProps) {
               <div className={`flex flex-col items-center w-full md:w-56 h-56 max-h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
                   <div className="relative">
-                    <Thumbnail mediaUrl={props.file} />
+                    <Thumbnail fileName={props.name} mediaUrl={props.thumbnail} />
                     <DropdownMenuTrigger className="p-1 hover:bg-gray-100/25 rounded-full transition inline-flex justify-center items-center z-10 absolute top-3 right-3">
                       <MoreVertical className="text-gray-50" />
                     </DropdownMenuTrigger>

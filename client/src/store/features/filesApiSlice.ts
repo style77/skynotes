@@ -10,7 +10,7 @@ export interface File {
     tags: string[];
     file: string;
     size: number;
-    thumbnail: string;
+    thumbnail: string | null;
 }
 
 const filesApiSlice = apiSlice.injectEndpoints({

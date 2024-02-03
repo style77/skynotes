@@ -50,6 +50,7 @@ export function ItemsGrid(props: ItemsGridProps) {
           name={file.name}
           size={file.size}
           tags={file.tags}
+          thumbnail={file.thumbnail}
           createdAt={file.created_at}
           onClick={() => {
             handleFileClick(file)

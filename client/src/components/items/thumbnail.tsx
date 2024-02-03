@@ -2,16 +2,17 @@ import { File, FileArchive, FileAudio, FileBarChart, FileCog, FileSpreadsheet, F
 import { useState, useEffect } from "react";
 
 interface ThumbnailProps {
-  mediaUrl: string;
+  fileName: string;
+  mediaUrl: string | null;
 }
 
-export const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
+export const Thumbnail = (props: ThumbnailProps) => {
 
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchThumbnail = async () => {
-      const url = `http://localhost:8000${mediaUrl}?thumbnail=true`
+      const url = `http://localhost:8000${props.mediaUrl}?thumbnail=true`
       try {
         const response = await fetch(url, {
           credentials: 'include',
@@ -26,8 +27,9 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
       }
     }
 
-    fetchThumbnail();
-  }, [mediaUrl]);
+    if (props.mediaUrl) fetchThumbnail();
+    else setThumbnailUrl(null);
+  }, [props.mediaUrl]);
 
   const getIconByExtension = (extension: string) => {
     const className = "text-gray-300/25 absolute left-4 top-4";
@@ -51,17 +53,17 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ mediaUrl }) => {
   };
 
   return (
-    <div className="w-full select-none bg-black rounded-t-radius">
+    <div className="w-full select-none bg-white rounded-t-radius">
       {
         thumbnailUrl ? (
           <div className="relative rounded-t-radius h-24 w-full">
-            <img src={thumbnailUrl} alt={`Thumbnail for media ID ${mediaUrl}`} className="rounded-t-radius h-24 w-full select-none" />
+            <img src={thumbnailUrl} alt={`Thumbnail for ${props.fileName}`} className="rounded-t-radius h-24 w-full select-none" />
             <div className="absolute top-0 left-0 right-0 bottom-0 rounded-t-radius bg-gradient-to-b from-black/40 to-black/75"></div>
           </div>
         ) : (
-          <div className="w-full h-24 bg-white rounded-t-radius">
+          <div className="w-full h-24 rounded-t-radius">
             <div className="flex flex-col items-center justify-center h-full">
-              {getIconByExtension(mediaUrl.split('.').pop() || '')}
+              {getIconByExtension(props.fileName.split('.').pop() || '')}
               <div className="text-xs font-semibold text-gray-400">No thumbnail available</div>
             </div>
           </div>
