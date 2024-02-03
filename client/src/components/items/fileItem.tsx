@@ -102,7 +102,7 @@ export function FileItem(props: FileItemProps) {
         {
           fileUploaded ? (
             <>
-              <div className={`flex flex-col items-center w-full md:w-56 h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
+              <div className={`flex flex-col items-center w-full md:w-56 h-56 max-h-56 hover:ring-2 hover:ring-primary/50 rounded-lg cursor-pointer shadow-lg transition-all` + (props.focused && " ring-primary ring-2")} onClick={props.onClick}>
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
                   <div className="relative">
                     <Thumbnail mediaUrl={props.file} />
@@ -111,7 +111,7 @@ export function FileItem(props: FileItemProps) {
                     </DropdownMenuTrigger>
                   </div>
                   <div className="mt-1 px-3 flex flex-col">
-                    <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
+                    <span className="font-semibold text-xs sm:text-xs md:text-base truncate text-wrap">{props.name}</span>
                     <span className="opacity-50 text-xs">{formattedDate}</span>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export function FileItem(props: FileItemProps) {
             </>
           ) : (
             <>
-              <div className="relative flex flex-col items-center w-56 h-56 rounded-lg cursor-disabled shadow-lg transition-all">
+              <div className="relative flex flex-col items-center md:w-56 h-56 max-h-56 rounded-lg cursor-disabled shadow-lg transition-all">
                 <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg z-50 animate-pulse flex items-center justify-center">
                   <BouncingDotsLoader dotsColor="bg-gray-400" />
                 </div>
