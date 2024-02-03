@@ -101,6 +101,9 @@ dependencies:
   usehooks-ts:
     specifier: ^2.9.4
     version: 2.9.4(react-dom@18.2.0)(react@18.2.0)
+  wavesurfer.js:
+    specifier: ^7.7.1
+    version: 7.7.1
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -5769,6 +5772,10 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
+
+  /wavesurfer.js@7.7.1:
+    resolution: {integrity: sha512-2HFBnTgxtz2e2XMpoPVDxDjxJH6CQLj+Q1TO6U3K2ngtQ4svgymDb4fhK++qTZlL4GTMmUuqxDHEi6wK/8gGtg==}
+    dev: false
 
   /webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
