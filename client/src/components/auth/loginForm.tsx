@@ -11,10 +11,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { LoginInput } from "@/components/loginInput"
+import { LoginInput } from "@/components/auth/loginInput"
 import { QrCode } from "lucide-react"
 import { useLoginMutation } from "@/store/features/authApiSlice"
-import { useToast } from "./ui/use-toast"
+import { useToast } from "../ui/use-toast"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { isLoadingFinished, setAuth } from "@/store/features/authSlice"

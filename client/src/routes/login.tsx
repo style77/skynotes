@@ -1,5 +1,5 @@
-import { RegisterForm } from "@/components/registerForm"
-import { LoginForm } from "../components/loginForm"
+import { RegisterForm } from "@/components/auth/registerForm"
+import { LoginForm } from "../components/auth/loginForm"
 import { useState } from "react"
 
 export default function LoginPage() {

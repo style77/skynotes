@@ -11,7 +11,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { LoginInput } from "@/components/loginInput"
+import { LoginInput } from "@/components/auth/loginInput"
 import { HelpCircle } from "lucide-react"
 
 import {

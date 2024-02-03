@@ -1,5 +1,5 @@
 import React from "react";
-import { InputProps } from "./ui/input";
+import { InputProps } from "../ui/input";
 import { cn } from "@/lib/utils";
 import { Mail, KeyRound, LucideIcon } from "lucide-react"
 

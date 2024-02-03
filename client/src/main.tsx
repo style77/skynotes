@@ -11,7 +11,7 @@ import LoginPage from "./routes/login";
 import Dashboard from "./routes/dashboard";
 import CustomProvider from "@/store/provider";
 import { Toaster } from "@/components/ui/toaster";
-import RequireAuth from "@/components/requireAuth";
+import RequireAuth from "@/components/auth/requireAuth";
 
 const router = createBrowserRouter([
   {
