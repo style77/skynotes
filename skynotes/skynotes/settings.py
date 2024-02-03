@@ -215,3 +215,8 @@ GRPC_ADDR = "thumbnailer:50051"
 
 if DEBUG:
     os.environ["GRPC_VERBOSITY"] = "debug"
+
+
+# Don't forget to makemigrations and migrate after changing this value
+# Keep in mind that already existing users will not be affected by this change
+DEFAULT_STORAGE_LIMIT = 1368709120  # 1GB

@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
+from skynotes.settings import DEFAULT_STORAGE_LIMIT
 from storage.utils import generate_id
 
 
@@ -38,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    storage_limit = models.BigIntegerField(default=5368709120)  # 5 GB
+    storage_limit = models.BigIntegerField(default=DEFAULT_STORAGE_LIMIT)  # 5 GB
 
     objects = UserManager()
 
