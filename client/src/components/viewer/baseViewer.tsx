@@ -98,6 +98,7 @@ function BaseViewer(props: BaseViewerProps) {
             <Link className="text-gray-300 hover:text-white cursor-pointer" size={22} />
             <MoreHorizontal className="text-gray-300 hover:text-white cursor-pointer" size={22} />
           </div>
+          <div className="font-regular text-white/90 select-none">{props.file.name}</div>
           <X className="text-gray-300 hover:text-white cursor-pointer" size={24} onClick={handleClose} />
         </div>
         {props.children}
@@ -242,8 +243,8 @@ function AudioViewer(props: ViewerProps) {
                 <div className="bg-primary/50 h-2 rounded-radius absolute" style={{ width: `${hoverProgress}%` }}></div>
               </div>
               <div className="flex justify-between text-xs mt-2">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(wavesurfer.getDuration())}</span>
+                <span className={`${isPlaying ? "text-gray-300" : "text-gray-400"} transition`}>{formatTime(currentTime)}</span>
+                <span className={`${isPlaying ? "text-gray-300" : "text-gray-400"} transition`}>{formatTime(wavesurfer.getDuration())}</span>
               </div>
             </div>
             <div className="flex justify-center items-center gap-4">
