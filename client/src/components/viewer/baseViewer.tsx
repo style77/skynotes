@@ -3,6 +3,8 @@ import { File } from "@/store/features/filesApiSlice";
 import { Download, Link, MoreHorizontal, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX, X } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { useWavesurfer } from '@wavesurfer/react'
+import { setShowYScroll } from "@/store/features/interfaceSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 
 type ViewerProps = {
@@ -48,9 +50,20 @@ type BaseViewerProps = {
 
 function BaseViewer(props: BaseViewerProps) {
 
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (props.open) {
+      dispatch(setShowYScroll(false));
+    } else {
+      dispatch(setShowYScroll(true));
+    }
+  }, [props.open, dispatch]);
+
   const handleClose = () => {
     props.setOpen(false);
     props.setFocusedFile(null);
+    dispatch(setShowYScroll(true));
   }
 
   const handleDownload = async () => {
