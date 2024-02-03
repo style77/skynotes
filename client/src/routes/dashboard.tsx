@@ -23,7 +23,7 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, 
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Spinner from "@/components/ui/spinner";
 import { NewFileModal } from "@/components/file/fileModal";
-import { Viewer } from "@/components/viewer/baseViewer";
+import { Viewer } from "@/components/viewers/baseViewer";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "@/store/services/apiSlice";
 import { useAppSelector } from "@/store/hooks";
