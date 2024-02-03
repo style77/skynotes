@@ -148,8 +148,12 @@ function AudioViewer(props: ViewerProps) {
   const playHandler = () => {
     wavesurfer && wavesurfer.playPause()
   };
-  const skipBackHandler = () => { /* ... */ };
-  const skipForwardHandler = () => { /* ... */ };
+  const skipBackHandler = () => {
+    wavesurfer && wavesurfer.setTime(0)
+  };
+  const skipForwardHandler = () => {
+    wavesurfer && wavesurfer.setTime(wavesurfer.getDuration())
+  };
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
