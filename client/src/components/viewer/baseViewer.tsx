@@ -53,12 +53,32 @@ function BaseViewer(props: BaseViewerProps) {
     props.setFocusedFile(null);
   }
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000${props.file.file}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = props.file.name;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Failed to fetch file:', e);
+    }
+  }
+
   return (
     <>
       <div className={`fixed inset-0 z-40 bg-black text-white justify-between items-center p-4 flex-col h-full w-full ${props.open ? "flex" : "hidden"}`}>
         <div className="w-full justify-between flex flex-row items-center">
           <div className="flex flex-row gap-6">
-            <Download className="text-gray-300 hover:text-white cursor-pointer" size={22} />
+            <Download className="text-gray-300 hover:text-white cursor-pointer" size={22} onClick={handleDownload} />
             <Link className="text-gray-300 hover:text-white cursor-pointer" size={22} />
             <MoreHorizontal className="text-gray-300 hover:text-white cursor-pointer" size={22} />
           </div>
