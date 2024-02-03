@@ -15,11 +15,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { humanFriendlySize } from "@/lib/utils";
-import Spinner from "@/components/ui/spinner";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "@/store/services/apiSlice";
 
 import { Thumbnail } from "@/components/items/thumbnail";
+import { BouncingDotsLoader } from "../ui/bouncing-dots";
 
 type FileItemProps = {
   id: string;
@@ -130,7 +130,7 @@ export function FileItem(props: FileItemProps) {
             <>
               <div className="relative flex flex-col items-center w-56 h-56 rounded-lg cursor-disabled shadow-lg transition-all">
                 <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg z-50 animate-pulse flex items-center justify-center">
-                  <Spinner className="text-white" />
+                  <BouncingDotsLoader dotsBackground="bg-gray-400" />
                 </div>
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
                   <div className="relative">
