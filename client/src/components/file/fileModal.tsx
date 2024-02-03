@@ -261,7 +261,13 @@ export function NewFileModal(props: NewFileModalProps) {
 
     const handleFile = (file: File) => {
         setFile(file)
-        form.setValue("name", file.name.split('.').slice(0, -1).join('.') ?? file.name)
+
+        let splittedName = file.name.split('.').slice(0, -1).join('.')
+        if (splittedName.length < 1) {
+            splittedName = file.name
+        }
+
+        form.setValue("name", splittedName)
     }
 
     return (
