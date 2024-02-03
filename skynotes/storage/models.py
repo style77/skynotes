@@ -79,3 +79,26 @@ class File(BaseModel):
 
     class Meta:
         ordering = ["-created_at"]
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_size_valid",
+                check=models.Q(size__gt=0),
+            )
+        ]
+
+
+class FileShare(BaseModel):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+    shared_until = models.DateTimeField(blank=True, null=True)
+    password = models.CharField(max_length=128, blank=True, null=True)
+    token = models.UUIDField(default=generate_id, unique=True, editable=False)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_shared_until_valid",
+                check=models.Q(shared_until__gt=models.F("created_at")),
+            )
+        ]
