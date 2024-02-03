@@ -24,6 +24,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@reduxjs/toolkit": "^2.0.1",
+    "@wavesurfer/react": "^1.0.4",
     "async-mutex": "^0.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
