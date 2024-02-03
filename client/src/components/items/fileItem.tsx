@@ -130,7 +130,7 @@ export function FileItem(props: FileItemProps) {
             <>
               <div className="relative flex flex-col items-center w-56 h-56 rounded-lg cursor-disabled shadow-lg transition-all">
                 <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg z-50 animate-pulse flex items-center justify-center">
-                  <BouncingDotsLoader dotsBackground="bg-gray-400" />
+                  <BouncingDotsLoader dotsColor="bg-gray-400" />
                 </div>
                 <div className="flex flex-col bg-white h-full gap-1 rounded-t-lg w-full">
                   <div className="relative">
