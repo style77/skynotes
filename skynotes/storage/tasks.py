@@ -3,7 +3,7 @@ import base64
 from celery import shared_task
 from django.conf import settings
 from django.core.files.base import ContentFile
-from services.client import Client
+from services.grpc_client import Client
 from storage.models import File
 
 
