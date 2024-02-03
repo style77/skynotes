@@ -90,7 +90,7 @@ class File(BaseModel):
 class FileShare(BaseModel):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
-    shared_until = models.DateTimeField(blank=True, null=True)
+    shared_until = models.DateTimeField(blank=True, null=True, default=None)
     password = models.CharField(max_length=128, blank=True, null=True)
     token = models.UUIDField(default=generate_id, unique=True, editable=False)
 
