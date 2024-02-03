@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/navbar"
-import { File, useDeleteFileMutation, useRetrieveFilesQuery } from "@/store/features/filesApiSlice";
+import { useDeleteFileMutation, useRetrieveFilesQuery } from "@/store/features/filesApiSlice";
 import { Group, useDeleteGroupMutation, useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
@@ -20,13 +20,13 @@ import {
 } from "@/components/ui/alert-dialog"
 import { getOS, humanFriendlySize } from "@/lib/utils";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger, ContextMenuLabel, ContextMenuSeparator } from "@/components/ui/context-menu";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Spinner from "@/components/ui/spinner";
 import { NewFileModal } from "@/components/file/fileModal";
-import { Viewer } from "@/components/viewers/baseViewer";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "@/store/services/apiSlice";
 import { useAppSelector } from "@/store/hooks";
+import { ItemsGrid } from "@/components/items/itemsGrid";
 
 type FileItemProps = {
   id: string;
@@ -311,61 +311,6 @@ export function FileItem(props: FileItemProps) {
         }
       </DropdownMenu>
     </>
-  )
-}
-
-type ItemsGridProps = {
-  groups: Group[] | undefined;
-  files: File[] | undefined;
-  setFocusedFile: (id: string | null) => void;
-  focusedFile: string | null;
-}
-
-function ItemsGrid(props: ItemsGridProps) {
-  const navigate = useNavigate()
-
-  const [viewFile, setViewFile] = useState<boolean>(false);
-
-  const handleFileClick = (file: File) => {
-    props.setFocusedFile(props.focusedFile === file.id ? null : file.id)
-    setViewFile(true);
-  }
-
-  return (
-    <div className="flex flex-wrap gap-8 md:gap-3">
-      {props.groups && props.groups.map((group) => (
-        <GroupItem
-          key={group.id}
-          id={group.id}
-          name={group.name}
-          files={group.files}
-          icon={group.icon}
-          size={group.size}
-          description={group.description}
-          onClick={() => navigate(`/dashboard?group=${group.id}`)}
-        />
-      ))}
-      {
-        (props.focusedFile && props.files) && (
-          <Viewer open={viewFile} setOpen={setViewFile} file={props.files.filter((val) => val.id === props.focusedFile)[0]!} setFocusedFile={props.setFocusedFile} />
-        )
-      }
-      {props.files && props.files.map((file) => (
-        <FileItem
-          key={file.id}
-          id={file.id}
-          file={file.file}
-          name={file.name}
-          size={file.size}
-          tags={file.tags}
-          createdAt={file.created_at}
-          onClick={() => {
-            handleFileClick(file)
-          }}
-          focused={file.id === props.focusedFile}
-        />
-      ))}
-    </div>
   )
 }
 
