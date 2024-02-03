@@ -349,13 +349,7 @@ export default function Dashboard() {
   }
 
   return (
-    // <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
     <div className="min-h-screen w-full flex flex-col bg-[#EAEAEA]">
-      {/* <ResizablePanel defaultSize={15} minSize={10} maxSize={20} className="flex">
-        <Sidebar />
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={85} minSize={85} maxSize={90} className="w-full flex flex-col"> */}
       <Navbar />
       <NewGroupModal open={createGroupOpen} setOpen={setCreateGroupOpen} />
       <NewFileModal open={uploadFileOpen} setOpen={setUploadFileOpen} currentGroupId={groupId} />
@@ -442,7 +436,5 @@ export default function Dashboard() {
         </ContextMenuContent>
       </ContextMenu>
     </div>
-    // {/* </ResizablePanel> */ }
-    // {/* </ResizablePanelGroup> */ }
   )
 }
