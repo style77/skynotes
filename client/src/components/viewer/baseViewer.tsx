@@ -37,7 +37,7 @@ export function Viewer(props: ViewerProps) {
     case 'flac':
       return <AudioViewer {...props} />
     default:
-      return <>no</>
+      return <></>
     // return <DefaultViewer {...props} />
   }
 }
