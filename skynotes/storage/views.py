@@ -5,16 +5,18 @@ from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.http.response import FileResponse
 from django.db import models
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.views import View
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from storage.models import FileShare
 from storage.models import File, Group
-from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer
+from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer, FileShareSerializer
 
 
 @extend_schema(tags=["files"])
@@ -46,6 +48,27 @@ class FileDetailsView(RetrieveUpdateDestroyAPIView):
         if file.thumbnail:
             file.thumbnail.delete()
         return super().delete(request, *args, **kwargs)
+
+
+@extend_schema(tags=["files"])
+class FileShareCreateView(CreateAPIView):
+    queryset = FileShare.objects.all()
+    serializer_class = FileShareSerializer
+
+    @extend_schema(description="Share file", request=FileShareSerializer)
+    def post(self, request, id, *args, **kwargs):
+        file = get_object_or_404(File, id=id)
+        if file.owner != request.user:
+            return Response(
+                {"error": "You are not authorized to share this file"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        serializer = FileShareSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(file=file)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @extend_schema(tags=["files"])
@@ -170,29 +193,68 @@ class MediaView(View):
 
         return False, None
 
+    def _check_token_access(self, file_id, token, *, password=None):
+        """
+        Checks the file access for the given token and file ID.
+
+        Parameters:
+            file_id (int): The ID of the file to check access for.
+            token (str): The token to check access for.
+
+        Returns:
+            tuple: A tuple containing a boolean value indicating whether the token
+            has access to the file, and the file object if access is granted,
+            otherwise None.
+        """
+        try:
+            token = uuid.UUID(token, version=4)
+        except ValueError:
+            return False, None
+
+        file_object = get_object_or_404(File, id=file_id)
+        file_share_object = get_object_or_404(FileShare, file=file_object, token=token, is_active=True)
+
+        if file_share_object.shared_until and file_share_object.shared_until < timezone.now():
+            return False, None
+
+        if file_share_object.password and file_share_object.password != password:
+            return False, None
+
+        if file_share_object.token == token:
+            return True, file_object.file
+
+        return False, None
+
     def get(self, request, file_path, *args, **kwargs):
         try:
             file_id = self._get_file_id(file_path)
         except ValidationError as e:
             return HttpResponseBadRequest(e.message)
 
-        jwt_auth = JWTCookiesAuthentication()
-        try:
-            user_auth_tuple = jwt_auth.authenticate(request)
-            if user_auth_tuple is not None:
-                request.user, request.auth = user_auth_tuple
-            else:
-                return HttpResponseForbidden(
-                    "You are not authorized to access this media."
-                )
-        except AuthenticationFailed:
-            return HttpResponseForbidden("Invalid authentication.")
+        token = request.GET.get("token")
+        password = request.GET.get("password")
+
+        if not token:
+            jwt_auth = JWTCookiesAuthentication()
+            try:
+                user_auth_tuple = jwt_auth.authenticate(request)
+                if user_auth_tuple is not None:
+                    request.user, request.auth = user_auth_tuple
+                else:
+                    return HttpResponseForbidden(
+                        "You are not authorized to access this media."
+                    )
+            except AuthenticationFailed:
+                return HttpResponseForbidden("Invalid authentication.")
 
         get_thumbnail = "thumbnail" in request.GET
 
-        access, file = self._check_file_access(
-            request, file_id, get_thumbnail=get_thumbnail
-        )
+        if token:
+            access, file = self._check_token_access(file_id, token, password=password)
+        else:
+            access, file = self._check_file_access(
+                request, file_id, get_thumbnail=get_thumbnail
+            )
 
         if access:
             if not file:
@@ -207,6 +269,6 @@ class MediaView(View):
         try:
             uuid.UUID(file_id, version=4)
         except ValueError:
-            raise ValidationError("Invalid UUID format")
+            raise ValidationError("Invalid ID format")
 
         return file_id
