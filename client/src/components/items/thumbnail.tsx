@@ -7,7 +7,6 @@ interface ThumbnailProps {
 }
 
 export const Thumbnail = (props: ThumbnailProps) => {
-
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
   useEffect(() => {
