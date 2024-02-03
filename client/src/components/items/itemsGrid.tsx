@@ -1,10 +1,10 @@
 import { Group } from "@/store/features/groupsApiSlice";
 import { File } from "@/store/features/filesApiSlice";
-import { FileItem } from "@/routes/dashboard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Viewer } from "@/components/viewers/baseViewer";
 import { GroupItem } from "@/components/items/groupItem";
+import { FileItem } from "@/components/items/fileItem";
 
 type ItemsGridProps = {
   groups: Group[] | undefined;
