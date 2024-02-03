@@ -26,6 +26,7 @@ import { NewFileModal } from "@/components/file/fileModal";
 import { Viewer } from "@/components/viewer/baseViewer";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "@/store/services/apiSlice";
+import { useAppSelector } from "@/store/hooks";
 
 type FileItemProps = {
   id: string;
@@ -372,6 +373,10 @@ export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
   const groupId = searchParams.get("group");
 
+  const { contextMenuFunctionality } = useAppSelector(
+    (state) => state.interface,
+  );
+
   const { data: groups, error: groupsError, isLoading: groupsAreLoading } = useRetrieveGroupsQuery();
   const { data: files, error: filesError, isLoading: filesAreLoading } = useRetrieveFilesQuery({ groupId });
 
@@ -398,8 +403,6 @@ export default function Dashboard() {
     }
   }
 
-  console.log(groups, files, groupsError, filesError, groupsAreLoading, filesAreLoading)
-
   return (
     // <ResizablePanelGroup direction="horizontal" className="min-h-screen flex flex-col md:flex-row justify-center bg-[#EAEAEA]">
     <div className="min-h-screen w-full flex flex-col bg-[#EAEAEA]">
@@ -411,8 +414,9 @@ export default function Dashboard() {
       <Navbar />
       <NewGroupModal open={createGroupOpen} setOpen={setCreateGroupOpen} />
       <NewFileModal open={uploadFileOpen} setOpen={setUploadFileOpen} currentGroupId={groupId} />
+
       <ContextMenu>
-        <ContextMenuTrigger className="px-12 py-8 min-h-screen">
+        <ContextMenuTrigger className="px-12 py-8 min-h-screen" disabled={!contextMenuFunctionality}>
           <div className="flex flex-col gap-4">
             <h2 className="font-semibold text-2xl flex flex-row items-center">
               {
