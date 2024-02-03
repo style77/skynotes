@@ -83,7 +83,7 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fancy-spin": "spin 2s ease-in-out infinite",
+        "fancy-spin": "fancy-spin 2s ease-in-out infinite",
         "bouncing-loader": "bouncing-loader 0.6s infinite alternate",
       },
     },
