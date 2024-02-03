@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react";
 import { useWavesurfer } from '@wavesurfer/react'
 import { setContextMenuFunctionality, setShowYScroll } from "@/store/features/interfaceSlice";
 import { useAppDispatch } from "@/store/hooks";
+import { BouncingDotsLoader } from "../ui/bouncing-dots";
 
 
 type ViewerProps = {
@@ -227,6 +228,11 @@ function AudioViewer(props: ViewerProps) {
     <BaseViewer {...props}>
       <div className="relative w-full h-full">
         <div className="absolute bottom-10 w-full" ref={containerRef} />
+        {
+          !wavesurfer || wavesurfer?.getDuration() === 0 && (
+            <BouncingDotsLoader className="mt-16" />
+          )
+        }
       </div>
       {
         wavesurfer && (
