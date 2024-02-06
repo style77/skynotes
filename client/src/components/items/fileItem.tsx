@@ -20,6 +20,7 @@ import { apiSlice } from "@/store/services/apiSlice";
 
 import { Thumbnail } from "@/components/items/thumbnail";
 import { BouncingDotsLoader } from "../ui/bouncing-dots";
+import { FileShareModal } from "../file/fileShareModal";
 
 type FileItemProps = {
   id: string;
@@ -41,6 +42,7 @@ export function FileItem(props: FileItemProps) {
   // @ts-expect-error TODO: Implement edit file
   const [editOpen, setEditOpen] = useState(false);  // eslint-disable-line
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [fileUploadingDeleteOpen, setFileUploadingDeleteOpen] = useState(false);
 
   const [fileUploaded, setFileUploaded] = useState<boolean>(false);
@@ -99,6 +101,7 @@ export function FileItem(props: FileItemProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <FileShareModal open={shareOpen} setOpen={setShareOpen} fileId={props.id} fileName={props.name} />
       <DropdownMenu>
         {
           fileUploaded ? (
@@ -122,7 +125,7 @@ export function FileItem(props: FileItemProps) {
               </div>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Share</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShareOpen(true)}>Share</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
               </DropdownMenuContent>
