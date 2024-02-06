@@ -14,6 +14,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from storage.services import FileService
 from storage.models import FileShare
 from storage.models import File, Group
 from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer, FileShareSerializer
@@ -92,16 +93,22 @@ class FilesListView(APIView):
     )
     def post(self, request, *args, **kwargs):
 
-        file_size = request.data["file"].size
+        file = request.data["file"]
+
         total_sum = File.objects.filter(owner=request.user).aggregate(models.Sum("size"))
-        if total_sum["size__sum"] + file_size > request.user.storage_limit:
+        if total_sum["size__sum"] + file.size > request.user.storage_limit:
             return Response(
                 {"error": "Storage limit exceeded"}, status=status.HTTP_400_BAD_REQUEST
             )
 
+        request.data["size"] = file.size
+
         serializer = FileSerializer(data=request.data)
+
         if serializer.is_valid():
-            serializer.save(owner=request.user)
+            serializer.save(owner=request.user, size=file.size)
+            FileService.upload_file(serializer.data["id"], file.read())
+
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
