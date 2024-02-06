@@ -134,24 +134,25 @@ const GroupSelectionField = (props: GroupSelectionFieldProps) => {
                             <Command>
                                 <CommandEmpty>No icon found.</CommandEmpty>
                                 <CommandGroup>
-                                    {groups.map((group) => (
-                                        <CommandItem
-                                            value={group.label}
-                                            key={group.value}
-                                            onSelect={() => {
-                                                props.form.setValue("group", group.value)
-                                            }}
-                                        >
-                                            {group.label}
-                                            <CheckIcon
-                                                className={cn(
-                                                    "ml-auto h-4 w-4",
-                                                    group.value === field.value
-                                                        ? "opacity-100"
-                                                        : "opacity-0"
-                                                )}
-                                            />
-                                        </CommandItem>
+                                    {groups.map((group, i) => (
+                                        <div key={i}>
+                                            <CommandItem
+                                                value={group.label}
+                                                onSelect={() => {
+                                                    props.form.setValue("group", group.value)
+                                                }}
+                                            >
+                                                {group.label}
+                                                <CheckIcon
+                                                    className={cn(
+                                                        "ml-auto h-4 w-4",
+                                                        group.value === field.value
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                    )}
+                                                />
+                                            </CommandItem>
+                                        </div>
                                     ))}
                                 </CommandGroup>
                             </Command>

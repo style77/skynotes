@@ -122,24 +122,25 @@ function GroupForm(props: GroupFormProps) {
                                     <Command>
                                         <CommandEmpty>No icon found.</CommandEmpty>
                                         <CommandGroup>
-                                            {icons.map((icon) => (
-                                                <CommandItem
-                                                    value={icon.label}
-                                                    key={icon.value}
-                                                    onSelect={() => {
-                                                        props.form.setValue("icon", icon.value)
-                                                    }}
-                                                >
-                                                    {icon.label}
-                                                    <CheckIcon
-                                                        className={cn(
-                                                            "ml-auto h-4 w-4",
-                                                            icon.value === field.value
-                                                                ? "opacity-100"
-                                                                : "opacity-0"
-                                                        )}
-                                                    />
-                                                </CommandItem>
+                                            {icons.map((icon, i) => (
+                                                <div key={i}>
+                                                    <CommandItem
+                                                        value={icon.label}
+                                                        onSelect={() => {
+                                                            props.form.setValue("icon", icon.value)
+                                                        }}
+                                                    >
+                                                        {icon.label}
+                                                        <CheckIcon
+                                                            className={cn(
+                                                                "ml-auto h-4 w-4",
+                                                                icon.value === field.value
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                    </CommandItem>
+                                                </div>
                                             ))}
                                         </CommandGroup>
                                     </Command>
