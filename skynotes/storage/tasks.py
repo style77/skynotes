@@ -60,20 +60,21 @@ class UploadHandler(UploadAbstractHandler):
 class ThumbnailHandler(UploadAbstractHandler):
     @staticmethod
     @shared_task
-    def handle_thumbnail_generation(file_id: str):
+    def handle_thumbnail_generation(file_id: str, content: bytes):
         file = UploadAbstractHandler.get_file(file_id)
-        file_bytes = file.file.read()
+        file_data = UploadAbstractHandler.get_file_data(content, decode=True)
 
         try:
-            value = Client(settings.GRPC_ADDR).generate_thumbnail(file_bytes)
+            value = Client(settings.GRPC_ADDR).generate_thumbnail(file_data.read())
 
             file_data = UploadAbstractHandler.get_file_data(value, decode=False)
+
             file.thumbnail.save(f"{file.id}_thumb.png", file_data)
         except Exception as e:
             print(e)
 
     @update_file_status
     def handle(self, request):
-        file_id, *_ = request
-        self.handle_thumbnail_generation.delay(file_id)
+        file_id, _, content = request
+        self.handle_thumbnail_generation.delay(file_id, content)
         return super().handle(request)
