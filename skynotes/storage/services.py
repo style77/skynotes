@@ -1,7 +1,8 @@
 import base64
 import mimetypes
+
 from common.service import Service
-from storage.tasks import UploadHandler, ThumbnailHandler
+from storage.tasks import ThumbnailHandler, UploadHandler
 
 
 class FileService(Service):

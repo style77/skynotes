@@ -2,22 +2,30 @@ import uuid
 
 from authorization.authentication import JWTCookiesAuthentication
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.http.response import FileResponse
-from django.db import models
-from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.views import View
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from storage.models import File, FileShare, Group
+from storage.serializers import (
+    FileSerializer,
+    FileShareSerializer,
+    GroupDetailsSerializer,
+    GroupSerializer,
+)
 from storage.services import FileService
-from storage.models import FileShare
-from storage.models import File, Group
-from storage.serializers import FileSerializer, GroupDetailsSerializer, GroupSerializer, FileShareSerializer
 
 
 @extend_schema(tags=["files"])
@@ -71,7 +79,6 @@ class FileShareCreateView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 @extend_schema(tags=["files"])
 class FilesListView(APIView):
     parser_classes = (parsers.MultiPartParser,)
@@ -92,10 +99,11 @@ class FilesListView(APIView):
         responses={201: FileSerializer},
     )
     def post(self, request, *args, **kwargs):
-
         file = request.data["file"]
 
-        total_sum = File.objects.filter(owner=request.user).aggregate(models.Sum("size"))
+        total_sum = File.objects.filter(owner=request.user).aggregate(
+            models.Sum("size")
+        )
         total_sum = total_sum["size__sum"] if total_sum["size__sum"] else 0
 
         if total_sum + file.size > request.user.storage_limit:
@@ -109,7 +117,9 @@ class FilesListView(APIView):
 
         if serializer.is_valid():
             serializer.save(owner=request.user, size=file.size)
-            FileService.upload_file(serializer.data["id"], file.read(), file.content_type)
+            FileService.upload_file(
+                serializer.data["id"], file.read(), file.content_type
+            )
 
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -221,9 +231,14 @@ class MediaView(View):
             return False, None
 
         file_object = get_object_or_404(File, id=file_id)
-        file_share_object = get_object_or_404(FileShare, file=file_object, token=token, is_active=True)
+        file_share_object = get_object_or_404(
+            FileShare, file=file_object, token=token, is_active=True
+        )
 
-        if file_share_object.shared_until and file_share_object.shared_until < timezone.now():
+        if (
+            file_share_object.shared_until
+            and file_share_object.shared_until < timezone.now()
+        ):
             return False, None
 
         if file_share_object.password and file_share_object.password != password:

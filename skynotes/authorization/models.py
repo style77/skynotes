@@ -4,8 +4,9 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
-from skynotes.settings import DEFAULT_STORAGE_LIMIT
 from storage.utils import generate_id
+
+from skynotes.settings import DEFAULT_STORAGE_LIMIT
 
 
 class UserManager(BaseUserManager):

@@ -1,6 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from storage.models import File, Group, FileShare
+from storage.models import File, FileShare, Group
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -99,5 +99,14 @@ class FileSerializer(serializers.ModelSerializer):
 class FileShareSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileShare
-        fields = ["id", "created_at", "updated_at", "file", "is_active", "shared_until", "password", "token"]
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "file",
+            "is_active",
+            "shared_until",
+            "password",
+            "token",
+        ]
         read_only_fields = ["id", "created_at", "updated_at", "token", "file"]

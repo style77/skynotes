@@ -1,10 +1,10 @@
 import base64
 
 from celery import shared_task
+from common.chain import AbstractHandler
 from django.conf import settings
 from django.core.files.base import ContentFile
 from services.grpc_client import Client
-from common.chain import AbstractHandler
 from storage.models import File
 
 

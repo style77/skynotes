@@ -2,8 +2,8 @@ from django.urls import path
 from storage.views import (
     FileDetailsView,
     FilesGroupedListView,
-    FilesListView,
     FileShareCreateView,
+    FilesListView,
     GroupListCreateView,
     GroupRetrieveUpdateDestroyView,
 )
