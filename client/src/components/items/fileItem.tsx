@@ -153,7 +153,7 @@ export function FileItem(props: FileItemProps) {
                     </div>
                   </div>
                   <div className="mt-1 px-3 flex flex-col">
-                    <span className="font-semibold text-xs sm:text-xs md:text-base">{props.name}</span>
+                    <span className="font-semibold text-xs sm:text-xs md:text-base truncate">{props.name}</span>
                     <span className="opacity-50 text-xs">{formattedDate}</span>
                   </div>
                 </div>
