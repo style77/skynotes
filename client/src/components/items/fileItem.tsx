@@ -74,6 +74,13 @@ export function FileItem(props: FileItemProps) {
     setFileUploadingDeleteOpen(false)
   }
 
+  const truncateFileName = (fileName: string) => {
+    if (fileName.length > 20) {
+      return fileName.substring(0, 20) + '...' + fileName.substring(fileName.length - 5, fileName.length);
+    }
+    return fileName;
+  }
+
   return (
     <>
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
@@ -88,7 +95,7 @@ export function FileItem(props: FileItemProps) {
                   </>
                 ) : (
                   <>
-                    This action cannot be undone. This will permanently delete the <code>{props.name}</code> file
+                    This action cannot be undone. This will permanently delete the <code>{truncateFileName(props.name)}</code> file
                     and remove your data from our servers.
                   </>
                 )
