@@ -1,9 +1,6 @@
-import base64
-
 from django.db import models
 from rest_framework import serializers
 from storage.models import File, Group, FileShare
-from storage.tasks import handle_file_upload
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -95,21 +92,8 @@ class FileSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def save(self, **kwargs):
-        file = self.validated_data.get("file")
-
-        self.validated_data["size"] = file.size
-
-        bytes = base64.b64encode(file.read())
-
         self.validated_data.pop("file")
-
-        data = super().save(**kwargs)
-
-        ext = self._get_file_ext(data.name)
-
-        handle_file_upload.delay(file_id=data.id, ext=ext, content=bytes)
-
-        return data
+        return super().save(**kwargs)
 
 
 class FileShareSerializer(serializers.ModelSerializer):
