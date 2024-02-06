@@ -4,6 +4,7 @@ from celery import shared_task
 from django.conf import settings
 from django.core.files.base import ContentFile
 from services.grpc_client import Client
+from common.chain import AbstractHandler
 from storage.models import File
 
 
@@ -12,39 +13,67 @@ def next_status(file: File):
     file.save()
 
 
-def get_file_data(content: bytes, decode=False):
-    if decode:
-        content = base64.b64decode(content.decode(encoding="utf-8"))
+def update_file_status(func):
+    def wrapper(self, request):
+        file_id, *args = request
 
-    file_data = ContentFile(content)
-    return file_data
+        file_object = File.objects.get(id=file_id)
 
+        next_status(file_object)
+        return func(self, request)
 
-@shared_task
-def handle_file_upload(file_id: str, ext: str, content: bytes):
-    file_object = File.objects.get(id=file_id)
-
-    next_status(file_object)  # Move status to "Processing"
-
-    file_data = get_file_data(content, decode=True)
-    file_object.file.save(f"{file_object.id}.{ext}", file_data)
-
-    handle_thumbnail_generation.delay(file_id)
+    return wrapper
 
 
-@shared_task
-def handle_thumbnail_generation(file_id: str):
-    file_object = File.objects.get(id=file_id)
-    next_status(file_object)
+class UploadAbstractHandler(AbstractHandler):
+    @staticmethod
+    def get_file(file_id: str):
+        return File.objects.get(id=file_id)
 
-    file_bytes = file_object.file.read()
+    @staticmethod
+    def get_file_data(content: bytes, decode=False):
+        if decode:
+            content = base64.b64decode(content.decode(encoding="utf-8"))
 
-    try:
-        value = Client(settings.GRPC_ADDR).generate_thumbnail(file_bytes)
+        file_data = ContentFile(content)
+        return file_data
 
-        file_data = get_file_data(value, decode=False)
-        file_object.thumbnail.save(f"{file_object.id}_thumb.png", file_data)
-    except Exception as e:
-        print(e)
-    finally:
-        next_status(file_object)  # Completed/move to next service
+
+class UploadHandler(UploadAbstractHandler):
+    @staticmethod
+    @shared_task
+    def handle_file_upload(file_id: str, extension: str, content: bytes):
+        file = UploadAbstractHandler.get_file(file_id)
+
+        file_data = UploadAbstractHandler.get_file_data(content, decode=True)
+
+        file.file.save(f"{file.id}.{extension}", file_data)
+
+    @update_file_status
+    def handle(self, request):
+        file_id, extension, content = request
+
+        self.handle_file_upload.delay(file_id, extension, content)
+        return super().handle(request)
+
+
+class ThumbnailHandler(UploadAbstractHandler):
+    @staticmethod
+    @shared_task
+    def handle_thumbnail_generation(file_id: str):
+        file = UploadAbstractHandler.get_file(file_id)
+        file_bytes = file.file.read()
+
+        try:
+            value = Client(settings.GRPC_ADDR).generate_thumbnail(file_bytes)
+
+            file_data = UploadAbstractHandler.get_file_data(value, decode=False)
+            file.thumbnail.save(f"{file.id}_thumb.png", file_data)
+        except Exception as e:
+            print(e)
+
+    @update_file_status
+    def handle(self, request):
+        file_id, *_ = request
+        self.handle_thumbnail_generation.delay(file_id)
+        return super().handle(request)
