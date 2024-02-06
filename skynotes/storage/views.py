@@ -96,7 +96,9 @@ class FilesListView(APIView):
         file = request.data["file"]
 
         total_sum = File.objects.filter(owner=request.user).aggregate(models.Sum("size"))
-        if total_sum["size__sum"] + file.size > request.user.storage_limit:
+        total_sum = total_sum["size__sum"] if total_sum["size__sum"] else 0
+
+        if total_sum + file.size > request.user.storage_limit:
             return Response(
                 {"error": "Storage limit exceeded"}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -107,7 +109,7 @@ class FilesListView(APIView):
 
         if serializer.is_valid():
             serializer.save(owner=request.user, size=file.size)
-            FileService.upload_file(serializer.data["id"], file.read())
+            FileService.upload_file(serializer.data["id"], file.read(), file.content_type)
 
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
