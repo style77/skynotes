@@ -3,6 +3,7 @@ from collections import OrderedDict
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.core.files.base import ContentFile
 from storage.utils import generate_id
 
 User = get_user_model()
@@ -85,6 +86,12 @@ class File(BaseModel):
                 check=models.Q(size__gt=0),
             )
         ]
+
+    def save_file(self, extension: str, content: ContentFile):
+        self.file.save(f"{self.id}.{extension}", content)
+
+    def save_thumbnail(self, content: ContentFile):
+        self.thumbnail.save(f"{self.id}_thumb.png", content)
 
 
 class FileShare(BaseModel):
