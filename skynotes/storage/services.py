@@ -15,4 +15,4 @@ class FileService(Service):
         file_bytes = base64.b64encode(file)
         extension = FileService.get_file_extension(mimetype)
 
-        bus.emit("file_created", file_id, extension, file_bytes)
+        bus.emit("file:created", file_id, extension, file_bytes)
