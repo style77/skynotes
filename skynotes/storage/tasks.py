@@ -1,5 +1,4 @@
 import base64
-from typing import NamedTuple
 
 from celery import shared_task
 from django.conf import settings
@@ -48,5 +47,7 @@ def handle_thumbnail_generation(file_id: str, extension: str, content: bytes):
         print(e)
 
 
-bus.listener('file:created')(handle_file_upload.delay)
-bus.listener('file:uploaded')(handle_thumbnail_generation.delay)
+def wrap_celery_task(task):
+    def wrapper(*args, **kwargs):
+        task.delay(*args, **kwargs)
+    return wrapper
