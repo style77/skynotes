@@ -2,15 +2,10 @@ import base64
 import mimetypes
 
 from common.service import Service
-from storage.tasks import ThumbnailHandler, UploadHandler
+from storage.tasks import handle_file
 
 
 class FileService(Service):
-    handlers = [UploadHandler, ThumbnailHandler]
-    handler = handlers[0]()
-    for next_handler in handlers[1:]:
-        handler.set_next(next_handler())
-
     @staticmethod
     def get_file_extension(mimetype: str):
         return mimetypes.guess_extension(mimetype)
@@ -20,4 +15,7 @@ class FileService(Service):
         file_bytes = base64.b64encode(file)
         extension = FileService.get_file_extension(mimetype)
 
-        FileService.handler.handle((file_id, extension, file_bytes))
+        # UploadHandler().handle() stars the entire process of file upload
+        # After uploading the file to storage, there is event called "file:uploaded" dispatched
+        # Then external services (like thumbnailer) catch the event and procced file
+        handle_file((file_id, extension, file_bytes))
