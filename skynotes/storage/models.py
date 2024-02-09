@@ -21,16 +21,6 @@ class BaseModel(models.Model):
         return f"<{self.__class__.__name__} id={id}>"
 
 
-class StatusField(models.IntegerField):
-    statuses = OrderedDict(
-        {0: "REQUESTED", 1: "PROCESSING", 2: "THUMBNAIL_CREATION", 4: "COMPLETED"}
-    )
-
-    def representation(self):
-        # Custom logic to represent the integer field
-        return self.statuses.get(self.value_from_object(self.model))
-
-
 class IconChoices(models.TextChoices):
     DEFAULT = "default", "default"
     MUSIC = "music", "music"
@@ -71,8 +61,6 @@ class File(BaseModel):
         blank=True,
         null=True,
     )
-
-    status = StatusField(default=0)
 
     file = models.FileField()
     size = models.PositiveBigIntegerField()  # in bytes
