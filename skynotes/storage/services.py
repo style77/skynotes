@@ -15,7 +15,4 @@ class FileService(Service):
         file_bytes = base64.b64encode(file)
         extension = FileService.get_file_extension(mimetype)
 
-        # UploadHandler().handle() stars the entire process of file upload
-        # After uploading the file to storage, there is event called "file:uploaded" dispatched
-        # Then external services (like thumbnailer) catch the event and procced file
         bus.emit("file_created", file_id, extension, file_bytes)
