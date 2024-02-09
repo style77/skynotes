@@ -9,7 +9,6 @@ class EventBus(metaclass=SingletonMeta):
 
     def listener(self, event_type: str):
         def wrapper(func: Callable):
-            print(event_type, func.__repr__(), func)
             if event_type not in self.listeners:
                 self.listeners[event_type] = []
             self.listeners[event_type].append(func)
