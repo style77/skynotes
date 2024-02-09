@@ -2,7 +2,7 @@ import base64
 import mimetypes
 
 from common.service import Service
-from storage.tasks import handle_file
+from common.bus import bus
 
 
 class FileService(Service):
@@ -18,4 +18,4 @@ class FileService(Service):
         # UploadHandler().handle() stars the entire process of file upload
         # After uploading the file to storage, there is event called "file:uploaded" dispatched
         # Then external services (like thumbnailer) catch the event and procced file
-        handle_file((file_id, extension, file_bytes))
+        bus.emit("file_created", file_id, extension, file_bytes)
