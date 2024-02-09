@@ -55,7 +55,6 @@ class FileSerializer(serializers.ModelSerializer):
             "group",
             "description",
             "tags",
-            "status",
             "file",
             "size",
             "thumbnail",
@@ -64,7 +63,6 @@ class FileSerializer(serializers.ModelSerializer):
             "id",
             "created_at",
             "updated_at",
-            "status",
             "size",
             "thumbnail",
         ]
