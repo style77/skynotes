@@ -76,7 +76,7 @@ class File(BaseModel):
         ]
 
     def save_file(self, extension: str, content: ContentFile):
-        self.file.save(f"{self.id}.{extension}", content)
+        self.file.save(f"{self.id}{extension}", content)
 
     def save_thumbnail(self, content: ContentFile):
         self.thumbnail.save(f"{self.id}_thumb.png", content)
