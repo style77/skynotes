@@ -1,12 +1,15 @@
-from functools import wraps
+from typing import Callable
+
+from common.singleton import SingletonMeta
 
 
-class EventBus:
-    listeners = {}
+class EventBus(metaclass=SingletonMeta):
+    def __init__(self):
+        self.listeners = {}
 
-    def listener(self, event_type):
-        @wraps
-        def wrapper(func):
+    def listener(self, event_type: str):
+        def wrapper(func: Callable):
+            print(event_type, func.__repr__(), func)
             if event_type not in self.listeners:
                 self.listeners[event_type] = []
             self.listeners[event_type].append(func)
@@ -14,32 +17,13 @@ class EventBus:
 
         return wrapper
 
-    def emit(self, event_type, *args, **kwargs):
-        emit_after = kwargs.pop(
-            "after", False
-        )  # if the event should be dispatched before or after the function execute
-
+    def emit(self, event_type: str, *args, **kwargs):
         def invoke_listeners():
             if event_type in self.listeners:
                 for listener in self.listeners[event_type]:
                     listener(*args, **kwargs)
 
-        if emit_after:
-
-            def decorator(func):
-                @wraps(func)
-                def wrapper(*func_args, **func_kwargs):
-                    result = func(
-                        *func_args, **func_kwargs
-                    )  # Execute the decorated function first
-                    invoke_listeners()  # Then invoke listeners
-                    return result
-
-                return wrapper
-
-            return decorator
-        else:
-            invoke_listeners()
+        invoke_listeners()
 
 
 bus = EventBus()
