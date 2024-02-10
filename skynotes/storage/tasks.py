@@ -1,12 +1,11 @@
 import base64
 
 from celery import shared_task
+from common.bus import bus
 from django.conf import settings
 from django.core.files.base import ContentFile
 from services.grpc_client import Client
 from storage.models import File
-
-from common.bus import bus
 
 
 def get_file(file_id: str) -> File:
@@ -50,4 +49,5 @@ def handle_thumbnail_generation(file_id: str, extension: str, content: bytes):
 def wrap_celery_task(task):
     def wrapper(*args, **kwargs):
         task.delay(*args, **kwargs)
+
     return wrapper

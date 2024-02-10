@@ -1,9 +1,7 @@
-from collections import OrderedDict
-
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
-from django.db import models
 from django.core.files.base import ContentFile
+from django.db import models
 from storage.utils import generate_id
 
 User = get_user_model()

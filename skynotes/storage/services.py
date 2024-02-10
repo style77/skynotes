@@ -1,8 +1,8 @@
 import base64
 import mimetypes
 
-from common.service import Service
 from common.bus import bus
+from common.service import Service
 
 
 class FileService(Service):
