@@ -25,7 +25,7 @@ from storage.serializers import (
     GroupDetailsSerializer,
     GroupSerializer,
 )
-from storage.services import FileService
+from storage.services import FileService, FileAnalyticsService
 
 
 @extend_schema(tags=["files"])
@@ -75,7 +75,9 @@ class FileShareCreateView(CreateAPIView):
         serializer = FileShareSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(file=file)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({
+                "url": request.build_absolute_uri(f"/media/{file.id}?token={serializer.data['token']}")
+            }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -283,6 +285,12 @@ class MediaView(View):
         if access:
             if not file:
                 return Http404("File not found.")
+
+            if token:
+                FileAnalyticsService.create_file_analytics(
+                    token, request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"), request.META.get("HTTP_REFERER")
+                )
+
             response = FileResponse(file, filename=file.name)
             return response
         return HttpResponseForbidden("You are not authorized to access this media.")
