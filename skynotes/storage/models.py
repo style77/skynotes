@@ -1,14 +1,15 @@
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.core.files.base import ContentFile
 from django.db import models
-from storage.utils import generate_id
 
 User = get_user_model()
 
 
 class BaseModel(models.Model):
-    id = models.UUIDField(primary_key=True, unique=True, default=generate_id)
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -85,7 +86,7 @@ class FileShare(BaseModel):
     is_active = models.BooleanField(default=True)
     shared_until = models.DateTimeField(blank=True, null=True, default=None)
     password = models.CharField(max_length=128, blank=True, null=True)
-    token = models.UUIDField(default=generate_id, unique=True, editable=False)
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     class Meta:
         ordering = ["-created_at"]

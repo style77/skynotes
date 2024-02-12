@@ -1,10 +1,11 @@
+import uuid
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin,
 )
 from django.db import models
-from storage.utils import generate_id
 
 from skynotes.settings import DEFAULT_STORAGE_LIMIT
 
@@ -32,7 +33,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    id = models.UUIDField(primary_key=True, default=generate_id, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
