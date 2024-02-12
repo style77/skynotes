@@ -332,7 +332,7 @@ export function EditFileModal(props: UpdateFileModalProps) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            name: props.file.name,
+            name: props.file.name.split('.').slice(0, -1).join('.'),
             description: props.file.description ?? undefined,
             group: props.file.group ?? undefined,
             tags: props.file.tags ?? undefined,
