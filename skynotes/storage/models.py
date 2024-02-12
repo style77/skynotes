@@ -114,8 +114,4 @@ class FileAnalytics(BaseModel):
                 name="%(app_label)s_%(class)s_user_agent_valid",
                 check=models.Q(user_agent__isnull=False),
             ),
-            models.CheckConstraint(
-                name="%(app_label)s_%(class)s_referer_valid",
-                check=models.Q(referer__isnull=False),
-            ),
         ]
