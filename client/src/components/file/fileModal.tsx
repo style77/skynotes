@@ -36,9 +36,11 @@ import { useRetrieveGroupsQuery } from "@/store/features/groupsApiSlice";
 import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronLeft, UploadCloud } from "lucide-react";
 
-import { useUploadFileMutation } from "@/store/features/filesApiSlice";
+import { useUpdateFileMutation, useUploadFileMutation } from "@/store/features/filesApiSlice";
 
 import Dropzone from 'react-dropzone'
+
+import { File as SFile } from "@/store/features/filesApiSlice";
 
 type NewFileModalProps = {
     open: boolean;
@@ -53,6 +55,12 @@ type FileFormProps = {
         description?: string | undefined;
         tags?: string[] | undefined;
     }, undefined>;
+}
+
+type UpdateFileModalProps = {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    file: SFile;
 }
 
 type FileFormFieldProps = {
@@ -315,5 +323,52 @@ export function NewFileModal(props: NewFileModalProps) {
                 }
             </DialogContent>
         </Dialog >
+    )
+}
+
+export function EditFileModal(props: UpdateFileModalProps) {
+    const [updateFile] = useUpdateFileMutation()
+
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            name: props.file.name,
+            description: props.file.description ?? undefined,
+            group: props.file.group ?? undefined,
+            tags: props.file.tags ?? undefined,
+        },
+    })
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        setIsLoading(true)
+        await updateFile({
+            id: props.file.id,
+            ...data
+        }).unwrap();
+        setIsLoading(false)
+        props.setOpen(false)
+    }
+
+    return (
+        <Dialog open={props.open} onOpenChange={props.setOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Edit file</DialogTitle>
+                    <DialogDescription>
+                        Update file details.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <FileForm form={form} />
+                        <DialogFooter>
+                            <Button type="submit" isloading={isLoading ? true : undefined}>Update file</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     )
 }
