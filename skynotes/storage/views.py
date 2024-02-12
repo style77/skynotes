@@ -13,9 +13,9 @@ from rest_framework import parsers, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import (
     CreateAPIView,
+    DestroyAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    DestroyAPIView
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -26,7 +26,7 @@ from storage.serializers import (
     GroupDetailsSerializer,
     GroupSerializer,
 )
-from storage.services import FileService, FileAnalyticsService
+from storage.services import FileAnalyticsService, FileService
 
 
 @extend_schema(tags=["files"])
@@ -76,13 +76,14 @@ class FileShareCreateView(CreateAPIView):
         serializer = FileShareSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(file=file)
-            share_url = request.build_absolute_uri(f"/media/{file.id}?token={serializer.data['token']}")
+            share_url = request.build_absolute_uri(
+                f"/media/{file.id}?token={serializer.data['token']}"
+            )
             if serializer.data["password"]:
                 share_url += f"&password={serializer.data['password']}"
-            return Response({
-                "url": share_url
-            }, status=status.HTTP_201_CREATED)
+            return Response({"url": share_url}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @extend_schema(tags=["files"])
 class FileShareDestroyView(DestroyAPIView):
@@ -308,7 +309,10 @@ class MediaView(View):
 
             if token:
                 FileAnalyticsService.create_file_analytics(
-                    token, request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"), request.META.get("HTTP_REFERER")
+                    token,
+                    request.META.get("REMOTE_ADDR"),
+                    request.META.get("HTTP_USER_AGENT"),
+                    request.META.get("HTTP_REFERER"),
                 )
 
             response = FileResponse(file, filename=file.name)
