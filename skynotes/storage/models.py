@@ -95,3 +95,27 @@ class FileShare(BaseModel):
                 check=models.Q(shared_until__gt=models.F("created_at")),
             )
         ]
+
+
+class FileAnalytics(BaseModel):
+    file_share = models.ForeignKey(FileShare, on_delete=models.CASCADE)
+    ip = models.GenericIPAddressField()
+    user_agent = models.CharField(max_length=512, blank=True, null=True)
+    referer = models.URLField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_ip_valid",
+                check=models.Q(ip__isnull=False),
+            ),
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_user_agent_valid",
+                check=models.Q(user_agent__isnull=False),
+            ),
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_referer_valid",
+                check=models.Q(referer__isnull=False),
+            ),
+        ]
