@@ -11,6 +11,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { setShowYScroll, setContextMenuFunctionality } from "@/store/features/interfaceSlice";
 import { useAppDispatch } from "@/store/hooks";
 import { useShareFileMutation } from "@/store/features/filesApiSlice";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 
 type FileShareModalProps = {
   open: boolean;
@@ -183,36 +184,57 @@ export const FileShareModal = (props: FileShareModalProps) => {
 
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
-      <DialogContent className="transition">
-        <DialogHeader>
-          <DialogTitle>
-            Share file
-          </DialogTitle>
-          <DialogDescription>
-            Get a link to share <code>{props.fileName}</code> with others.
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            {
-              shareUrl ? (
-                <div>
-                  <FormDescription className="col-span-4 text-center text-sm">Here is the link to share the file:</FormDescription>
-                  <FormDescription className="col-span-4 text-center text-sm"><code><a href={shareUrl}>{shareUrl}</a></code></FormDescription>
-                </div>
-              ) : (
-                <>
-                  <FileShareForm form={form} />
-                  <DialogFooter>
-                    <Button type="submit" isloading={isLoading ? true : undefined}>
-                      Share
-                    </Button>
-                  </DialogFooter>
-                </>
-              )
-            }
-          </form>
-        </Form>
+      <DialogContent className="transition min-h-[310px]">
+        <Tabs defaultValue="share" className="">
+          <TabsList className="grid grid-cols-2 w-[400px]">
+            <TabsTrigger value="share">Share</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          </TabsList>
+          <TabsContent value="share" className="mt-6">
+            <DialogHeader>
+              <DialogTitle>
+                Share file
+              </DialogTitle>
+              <DialogDescription>
+                Get a link to share <code>{props.fileName}</code> with others.
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                {
+                  shareUrl ? (
+                    <div>
+                      <FormDescription className="col-span-4 text-center text-sm">Here is the link to share the file:</FormDescription>
+                      <FormDescription className="col-span-4 text-center text-sm"><code><a href={shareUrl}>{shareUrl}</a></code></FormDescription>
+                    </div>
+                  ) : (
+                    <>
+                      <FileShareForm form={form} />
+                      <DialogFooter>
+                        <Button type="submit" isloading={isLoading ? true : undefined}>
+                          Share
+                        </Button>
+                      </DialogFooter>
+                    </>
+                  )
+                }
+              </form>
+            </Form>
+          </TabsContent>
+          <TabsContent value="analytics" className="mt-6">
+            <DialogHeader>
+              <DialogTitle>
+                Analytics
+              </DialogTitle>
+              <DialogDescription>
+                Get analytics of the file <code>{props.fileName}</code> shared with others.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogDescription className="text-red-500">
+              This feature is not yet available.
+            </DialogDescription>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   )
