@@ -85,6 +85,9 @@ class FileSerializer(serializers.ModelSerializer):
             if attrs[key] == [""]:
                 attrs[key] = []
 
+        if "file" not in attrs and self.instance:  # Handle PATCH/PUT requests
+            attrs["file"] = self.instance.file
+
         attrs["name"] = self._get_valid_filename(attrs["name"], attrs["file"])
 
         return super().validate(attrs)
