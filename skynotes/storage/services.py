@@ -33,6 +33,6 @@ class FileAnalyticsService(Service):
 
     @staticmethod
     def get_file_analytics(file_share_id_or_token: str):
-        return FileAnalytics.objects.get(
-            Q(token=file_share_id_or_token) | Q(file_share_id=file_share_id_or_token)
-        )
+        return FileAnalytics.objects.filter(
+            Q(file_share__token=file_share_id_or_token) | Q(file_share__id=file_share_id_or_token)
+        ).all()
