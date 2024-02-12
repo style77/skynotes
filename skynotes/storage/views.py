@@ -1,4 +1,5 @@
 import uuid
+from http import HTTPMethod
 
 from authorization.authentication import JWTCookiesAuthentication
 from django.core.exceptions import ValidationError
@@ -12,13 +13,14 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import (
-    CreateAPIView,
     DestroyAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.views import APIView
+from rest_framework import mixins, viewsets
 from storage.models import File, FileShare, Group
 from storage.serializers import (
     FileSerializer,
@@ -30,44 +32,41 @@ from storage.services import FileAnalyticsService, FileService
 
 
 @extend_schema(tags=["files"])
-class FileDetailsView(RetrieveUpdateDestroyAPIView):
-    serializer_class = FileSerializer
+class FileDetailsView(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = File.objects.all()
-    lookup_field = "id"
+    serializer_class = FileSerializer
 
     def get_queryset(self):
         return File.objects.filter(owner=self.request.user)
 
     @extend_schema(description="Retrieve file details", responses={200: FileSerializer})
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     @extend_schema(description="Update file details", request=FileSerializer)
-    def put(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
     @extend_schema(description="Partial update file details", request=FileSerializer)
-    def patch(self, request, *args, **kwargs):
-        return super().patch(request, *args, **kwargs)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(description="Delete file")
-    def delete(self, request, *args, **kwargs):
-        # remove file from storage
+    def destroy(self, request, *args, **kwargs):
         file = self.get_object()
         file.file.delete()
         if file.thumbnail:
             file.thumbnail.delete()
-        return super().delete(request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
-
-@extend_schema(tags=["files"])
-class FileShareCreateView(CreateAPIView):
-    queryset = FileShare.objects.all()
-    serializer_class = FileShareSerializer
-
-    @extend_schema(description="Share file", request=FileShareSerializer)
-    def post(self, request, id, *args, **kwargs):
-        file = get_object_or_404(File, id=id)
+    @action(detail=True, methods=["post"])
+    def share(self, request, pk=None):
+        file = get_object_or_404(File, id=pk)
         if file.owner != request.user:
             return Response(
                 {"error": "You are not authorized to share this file"},
