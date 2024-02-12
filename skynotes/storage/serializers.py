@@ -120,7 +120,7 @@ class FileShareSerializer(serializers.ModelSerializer):
         ]
 
 
-class FileAnalytics(serializers.ModelSerializer):
+class FileAnalyticsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileAnalytics
         fields = [
