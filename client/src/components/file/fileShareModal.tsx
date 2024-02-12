@@ -5,9 +5,12 @@ import { CalendarClock, KeyRound } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Toggle } from "@/components/ui/toggle";
+import { setShowYScroll, setContextMenuFunctionality } from "@/store/features/interfaceSlice";
+import { useAppDispatch } from "@/store/hooks";
+import { useShareFileMutation } from "@/store/features/filesApiSlice";
 
 type FileShareModalProps = {
   open: boolean;
@@ -132,13 +135,45 @@ export const FileShareModal = (props: FileShareModalProps) => {
     resolver: zodResolver(FormSchema),
   })
 
+  const [shareFile] = useShareFileMutation()
+
   const [isLoading, setIsLoading] = useState(false)
 
-  // const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (props.open) {
+      dispatch(setShowYScroll(false));
+      dispatch(setContextMenuFunctionality(false))
+    } else {
+      dispatch(setShowYScroll(true));
+      dispatch(setContextMenuFunctionality(true))
+    }
+  }, [props.open, dispatch]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true)
-    console.log(data)
+
+    const shareData: {
+      shared_until?: string;
+      password?: string;
+    } = {}
+    if (data.shared_until !== undefined) {
+      shareData["shared_until"] = data.shared_until.toISOString()
+    }
+    if (data.password !== undefined) {
+      shareData["password"] = data.password
+    }
+
+    const response = await shareFile({
+      id: props.fileId,
+      shareData
+    }).unwrap()
+
+    setShareUrl(response.url)
+
     setIsLoading(false)
   }
 
@@ -155,12 +190,23 @@ export const FileShareModal = (props: FileShareModalProps) => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FileShareForm form={form} />
-            <DialogFooter>
-              <Button type="submit" isloading={isLoading ? true : undefined}>
-                Share
-              </Button>
-            </DialogFooter>
+            {
+              shareUrl ? (
+                <div>
+                  <FormDescription className="col-span-4 text-center text-sm">Here is the link to share the file:</FormDescription>
+                  <FormDescription className="col-span-4 text-center text-sm"><code><a href={shareUrl}>{shareUrl}</a></code></FormDescription>
+                </div>
+              ) : (
+                <>
+                  <FileShareForm form={form} />
+                  <DialogFooter>
+                    <Button type="submit" isloading={isLoading ? true : undefined}>
+                      Share
+                    </Button>
+                  </DialogFooter>
+                </>
+              )
+            }
           </form>
         </Form>
       </DialogContent>
