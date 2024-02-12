@@ -15,6 +15,7 @@ from rest_framework.generics import (
     CreateAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
+    DestroyAPIView
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -82,6 +83,22 @@ class FileShareCreateView(CreateAPIView):
                 "url": share_url
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(tags=["files"])
+class FileShareDestroyView(DestroyAPIView):
+    queryset = FileShare.objects.all()
+    serializer_class = FileShareSerializer
+    lookup_field = "id"
+
+    def get_queryset(self):
+        return FileShare.objects.filter(file__owner=self.request.user)
+
+    @extend_schema(description="Revoke file share")
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = False
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema(tags=["files"])
