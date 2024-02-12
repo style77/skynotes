@@ -203,7 +203,7 @@ export const FileShareModal = (props: FileShareModalProps) => {
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 {
                   shareUrl ? (
-                    <div>
+                    <div className="mt-4">
                       <FormDescription className="col-span-4 text-center text-sm">Here is the link to share the file:</FormDescription>
                       <FormDescription className="col-span-4 text-center text-sm"><code><a href={shareUrl}>{shareUrl}</a></code></FormDescription>
                     </div>
