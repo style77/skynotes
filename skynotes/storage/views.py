@@ -13,7 +13,6 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import (
-    DestroyAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
@@ -27,6 +26,7 @@ from storage.serializers import (
     FileShareSerializer,
     GroupDetailsSerializer,
     GroupSerializer,
+    FileAnalyticsSerializer,
 )
 from storage.services import FileAnalyticsService, FileService
 
@@ -64,37 +64,68 @@ class FileDetailsView(
             file.thumbnail.delete()
         return super().destroy(request, *args, **kwargs)
 
-    @action(detail=True, methods=[HTTPMethod.POST])
-    def share(self, request, pk=None):
-        file = get_object_or_404(File, id=pk)
-        if file.owner != request.user:
-            return Response(
-                {"error": "You are not authorized to share this file"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        serializer = FileShareSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(file=file)
-            share_url = request.build_absolute_uri(
-                f"/media/{file.id}?token={serializer.data['token']}"
-            )
-            if serializer.data["password"]:
-                share_url += f"&password={serializer.data['password']}"
-            return Response({"url": share_url}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # @extend_schema(
+    #     description="Retrieve all shared tokens for the file",
+    #     responses={200: FileShareSerializer(many=True)},
+    # )
+    @action(detail=True, methods=[HTTPMethod.GET, HTTPMethod.POST], url_path="share")
+    def share_tokens(self, request, pk=None):
+        if request.method == HTTPMethod.POST:
+            file = get_object_or_404(File, id=pk)
+            if file.owner != request.user:
+                return Response(
+                    {"error": "You are not authorized to share this file"},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+            serializer = FileShareSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(file=file)
+                share_url = request.build_absolute_uri(
+                    f"/media/{file.id}?token={serializer.data['token']}"
+                )
+                if serializer.data["password"]:
+                    share_url += f"&password={serializer.data['password']}"
+                return Response({"url": share_url}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif request.method == HTTPMethod.GET:
+            file_shares = FileShare.objects.filter(
+                file__owner=request.user, file__id=pk
+            ).all()
+            serializer = FileShareSerializer(file_shares, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @action(detail=True, methods=[HTTPMethod.DELETE], url_path="share/(?P<token>[^/.]+)")
-    def share_revoke(self, request, pk=None, token=None):
+    @extend_schema(
+        description="Revoke shared token for the file",
+        responses={204: "Token revoked successfully"},
+    )
+    @action(
+        detail=True, methods=[HTTPMethod.DELETE], url_path="share/(?P<token>[^/.]+)"
+    )
+    def share_token_revoke(self, request, pk=None, token=None):
         file = get_object_or_404(File, id=pk)
         if file.owner != request.user:
             return Response(
                 {"error": "You are not authorized to revoke share for this file"},
                 status=status.HTTP_403_FORBIDDEN,
             )
-        file_share = get_object_or_404(FileShare, file=file, token=token, is_active=True)
+        file_share = get_object_or_404(
+            FileShare, file=file, token=token, is_active=True
+        )
         file_share.is_active = False
         file_share.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(
+        detail=True,
+        methods=[HTTPMethod.GET],
+        url_path="share/(?P<token>[^/.]+)/analytics",
+    )
+    def share_analytics(self, request, pk=None, token=None):
+        analytics = FileAnalyticsService.get_file_analytics(token)
+        serializer = FileAnalyticsSerializer(analytics, many=True)
+        return Response(serializer.data)
 
 
 @extend_schema(tags=["files"])
