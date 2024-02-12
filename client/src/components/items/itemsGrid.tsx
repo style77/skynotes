@@ -25,6 +25,13 @@ export function ItemsGrid(props: ItemsGridProps) {
 
   return (
     <div className="flex flex-wrap gap-8 md:gap-3">
+      {
+        (!props.groups || props.groups.length === 0) && (!props.files || props.files.length === 0) && (
+          <div className="w-full h-96 flex justify-center items-center">
+            <p className="text-2xl text-gray-500">No files or groups found</p>
+          </div>
+        )
+      }
       {props.groups && props.groups.map((group) => (
         <GroupItem
           key={group.id}
