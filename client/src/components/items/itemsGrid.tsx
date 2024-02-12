@@ -45,13 +45,7 @@ export function ItemsGrid(props: ItemsGridProps) {
       {props.files && props.files.map((file) => (
         <FileItem
           key={file.id}
-          id={file.id}
-          file={file.file}
-          name={file.name}
-          size={file.size}
-          tags={file.tags}
-          thumbnail={file.thumbnail}
-          createdAt={file.created_at}
+          file={file}
           onClick={() => {
             handleFileClick(file)
           }}
