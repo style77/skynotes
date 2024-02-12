@@ -64,7 +64,7 @@ class FileDetailsView(
             file.thumbnail.delete()
         return super().destroy(request, *args, **kwargs)
 
-    @action(detail=True, methods=["post"])
+    @action(detail=True, methods=[HTTPMethod.POST])
     def share(self, request, pk=None):
         file = get_object_or_404(File, id=pk)
         if file.owner != request.user:
@@ -83,21 +83,17 @@ class FileDetailsView(
             return Response({"url": share_url}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-@extend_schema(tags=["files"])
-class FileShareDestroyView(DestroyAPIView):
-    queryset = FileShare.objects.all()
-    serializer_class = FileShareSerializer
-    lookup_field = "id"
-
-    def get_queryset(self):
-        return FileShare.objects.filter(file__owner=self.request.user)
-
-    @extend_schema(description="Revoke file share")
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_active = False
-        instance.save()
+    @action(detail=True, methods=[HTTPMethod.DELETE], url_path="share/(?P<token>[^/.]+)")
+    def share_revoke(self, request, pk=None, token=None):
+        file = get_object_or_404(File, id=pk)
+        if file.owner != request.user:
+            return Response(
+                {"error": "You are not authorized to revoke share for this file"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        file_share = get_object_or_404(FileShare, file=file, token=token, is_active=True)
+        file_share.is_active = False
+        file_share.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
