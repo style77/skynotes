@@ -1,5 +1,4 @@
 
-import { File } from "@/store/features/filesApiSlice";
 import { Download, Link, MoreHorizontal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { setContextMenuFunctionality, setShowYScroll } from "@/store/features/interfaceSlice";
@@ -7,12 +6,13 @@ import { useAppDispatch } from "@/store/hooks";
 import { AudioViewer } from "./audioViewer";
 import { ImageViewer } from "./imageViewer";
 import { FileShareModal } from "../file/fileShareModal";
+import { StorageFile } from "@/types/files";
 
 
 export type ViewerProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  file: File;
+  file: StorageFile;
   setFocusedFile: (id: string | null) => void;
 }
 

@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Group } from "./groupsApiSlice";
-import { File } from "./filesApiSlice";
+import { StorageFile } from "@/types/files";
 
 interface AuthState {
     groups: Group[];
-    files: File[];
+    files: StorageFile[];
 }
 
 const initialState: AuthState = {

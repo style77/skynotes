@@ -40,7 +40,7 @@ import { useUpdateFileMutation, useUploadFileMutation } from "@/store/features/f
 
 import Dropzone from 'react-dropzone'
 
-import { File as SFile } from "@/store/features/filesApiSlice";
+import { StorageFile } from "@/types/files";
 
 type NewFileModalProps = {
     open: boolean;
@@ -60,7 +60,7 @@ type FileFormProps = {
 type UpdateFileModalProps = {
     open: boolean;
     setOpen: (open: boolean) => void;
-    file: SFile;
+    file: StorageFile;
 }
 
 type FileFormFieldProps = {
@@ -244,7 +244,7 @@ export function NewFileModal(props: NewFileModalProps) {
         setIsLoading(true)
 
         const formData = new FormData()
-        formData.append("file", file as File)
+        formData.append("file", file!)
         formData.append("name", data.name)
         if (data.group && data.group !== "undefined") {
             formData.append("group", data.group)

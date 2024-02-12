@@ -1,14 +1,14 @@
 import { Group } from "@/store/features/groupsApiSlice";
-import { File } from "@/store/features/filesApiSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Viewer } from "@/components/viewers/baseViewer";
 import { GroupItem } from "@/components/items/groupItem";
 import { FileItem } from "@/components/items/fileItem";
+import { StorageFile } from "@/types/files";
 
 type ItemsGridProps = {
   groups: Group[] | undefined;
-  files: File[] | undefined;
+  files: StorageFile[] | undefined;
   setFocusedFile: (id: string | null) => void;
   focusedFile: string | null;
 }
@@ -18,7 +18,7 @@ export function ItemsGrid(props: ItemsGridProps) {
 
   const [viewFile, setViewFile] = useState<boolean>(false);
 
-  const handleFileClick = (file: File) => {
+  const handleFileClick = (file: StorageFile) => {
     props.setFocusedFile(props.focusedFile === file.id ? null : file.id)
     setViewFile(true);
   }

@@ -1,4 +1,4 @@
-import { File, useDeleteFileMutation } from "@/store/features/filesApiSlice";
+import { useDeleteFileMutation } from "@/store/features/filesApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
 import { MoreVertical } from "lucide-react";
@@ -22,9 +22,10 @@ import { Thumbnail } from "@/components/items/thumbnail";
 import { BouncingDotsLoader } from "../ui/bouncing-dots";
 import { FileShareModal } from "../file/fileShareModal";
 import { EditFileModal } from "../file/fileModal";
+import { StorageFile } from "@/types/files";
 
 type FileItemProps = {
-  file: File;
+  file: StorageFile;
   onClick?: () => void;
   focused?: boolean;
 }

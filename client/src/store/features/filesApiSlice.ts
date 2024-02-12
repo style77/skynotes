@@ -1,21 +1,9 @@
+import { ShareToken, StorageFile } from "@/types/files";
 import { apiSlice } from "../services/apiSlice";
-
-export interface File {
-    id: string;
-    created_at: string;
-    updated_at: string;
-    name: string;
-    group: string;
-    description: string;
-    tags: string[];
-    file: string;
-    size: number;
-    thumbnail: string | null;
-}
 
 const filesApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        retrieveFiles: builder.query<File[], { groupId: string | null }>({
+        retrieveFiles: builder.query<StorageFile[], { groupId: string | null }>({
             query: ({ groupId }) => `api/files/${groupId ?? ""}`,
             providesTags: ["File"],
         }),
@@ -48,7 +36,11 @@ const filesApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: shareData
             }),
-            invalidatesTags: ["File"],
+            invalidatesTags: ["File", "Share"],
+        }),
+        retrieveShareTokens: builder.query<ShareToken[], { fileId: string }>({
+            query: ({ fileId }) => `api/file/${fileId}/share/`,
+            providesTags: ["Share"],
         }),
     }),
 });
@@ -58,5 +50,6 @@ export const {
     useUpdateFileMutation,
     useDeleteFileMutation,
     useUploadFileMutation,
-    useShareFileMutation
+    useShareFileMutation,
+    useRetrieveShareTokensQuery
 } = filesApiSlice;
