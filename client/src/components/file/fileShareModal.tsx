@@ -17,6 +17,8 @@ type FileShareModalProps = {
   setOpen: (open: boolean) => void;
   fileId: string;
   fileName: string;
+
+  wrapped?: boolean;  // if modal is wrapped in another modal/viewer component
 }
 
 type FileShareFormProps = {
@@ -148,10 +150,12 @@ export const FileShareModal = (props: FileShareModalProps) => {
       dispatch(setShowYScroll(false));
       dispatch(setContextMenuFunctionality(false))
     } else {
-      dispatch(setShowYScroll(true));
-      dispatch(setContextMenuFunctionality(true))
+      if (!props.wrapped) {
+        dispatch(setShowYScroll(true));
+        dispatch(setContextMenuFunctionality(true))
+      }
     }
-  }, [props.open, dispatch]);
+  }, [props.open, dispatch, props.wrapped]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true)
