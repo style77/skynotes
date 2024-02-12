@@ -107,4 +107,4 @@ class FileShareSerializer(serializers.ModelSerializer):
             "password",
             "token",
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "token", "file"]
+        read_only_fields = ["id", "created_at", "updated_at", "token", "file", "is_active"]
