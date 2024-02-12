@@ -15,8 +15,8 @@ export interface File {
 
 const filesApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        retrieveFiles: builder.query<File[], {groupId: string | null}>({
-            query: ({groupId}) => `api/files/${groupId ?? ""}`,
+        retrieveFiles: builder.query<File[], { groupId: string | null }>({
+            query: ({ groupId }) => `api/files/${groupId ?? ""}`,
             providesTags: ["File"],
         }),
         updateFile: builder.mutation({
@@ -42,6 +42,14 @@ const filesApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["File", "Group"],
         }),
+        shareFile: builder.mutation({
+            query: ({ id, shareData }) => ({
+                url: `api/file/${id}/share/`,
+                method: "POST",
+                body: shareData
+            }),
+            invalidatesTags: ["File"],
+        }),
     }),
 });
 
@@ -49,5 +57,6 @@ export const {
     useRetrieveFilesQuery,
     useUpdateFileMutation,
     useDeleteFileMutation,
-    useUploadFileMutation
+    useUploadFileMutation,
+    useShareFileMutation
 } = filesApiSlice;
