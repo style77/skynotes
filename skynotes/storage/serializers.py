@@ -1,6 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from storage.models import File, FileShare, Group
+from storage.models import File, FileShare, FileAnalytics, Group
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -118,3 +118,18 @@ class FileShareSerializer(serializers.ModelSerializer):
             "file",
             "is_active",
         ]
+
+
+class FileAnalytics(serializers.ModelSerializer):
+    class Meta:
+        model = FileAnalytics
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "file_share",
+            "ip",
+            "user_agent",
+            "referer",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at", "file_share", "ip", "user_agent", "referer"]
