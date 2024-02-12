@@ -20,6 +20,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework import mixins, viewsets
+from storage.serializers import FileShareUrlSerializer
 from storage.models import File, FileShare, Group
 from storage.serializers import (
     FileSerializer,
@@ -64,12 +65,19 @@ class FileDetailsView(
             file.thumbnail.delete()
         return super().destroy(request, *args, **kwargs)
 
-    # @extend_schema(
-    #     description="Retrieve all shared tokens for the file",
-    #     responses={200: FileShareSerializer(many=True)},
-    # )
+    # Todo: refactor this method to another view for better separation of concerns
+    @extend_schema(
+        request=FileShareSerializer,
+        responses={
+            status.HTTP_200_OK: FileShareSerializer(many=True),
+            status.HTTP_201_CREATED: FileShareUrlSerializer(),
+        },
+    )
     @action(detail=True, methods=[HTTPMethod.GET, HTTPMethod.POST], url_path="share")
     def share_tokens(self, request, pk=None):
+        """
+            Share file with token or get all tokens for the file if request method is GET.
+        """
         if request.method == HTTPMethod.POST:
             file = get_object_or_404(File, id=pk)
             if file.owner != request.user:
@@ -85,14 +93,17 @@ class FileDetailsView(
                 )
                 if serializer.data["password"]:
                     share_url += f"&password={serializer.data['password']}"
-                return Response({"url": share_url}, status=status.HTTP_201_CREATED)
+
+                url_serializer = FileShareUrlSerializer(data={"url": share_url})
+
+                return Response(url_serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         elif request.method == HTTPMethod.GET:
             file_shares = FileShare.objects.filter(
                 file__owner=request.user, file__id=pk
             ).all()
             serializer = FileShareSerializer(file_shares, many=True)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
