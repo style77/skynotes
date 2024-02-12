@@ -75,8 +75,11 @@ class FileShareCreateView(CreateAPIView):
         serializer = FileShareSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(file=file)
+            share_url = request.build_absolute_uri(f"/media/{file.id}?token={serializer.data['token']}")
+            if serializer.data["password"]:
+                share_url += f"&password={serializer.data['password']}"
             return Response({
-                "url": request.build_absolute_uri(f"/media/{file.id}?token={serializer.data['token']}")
+                "url": share_url
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
