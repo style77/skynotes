@@ -120,6 +120,10 @@ class FileShareSerializer(serializers.ModelSerializer):
         ]
 
 
+class FileShareUrlSerializer(serializers.Serializer):
+    url = serializers.URLField(read_only=True)
+
+
 class FileAnalyticsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileAnalytics
@@ -132,4 +136,12 @@ class FileAnalyticsSerializer(serializers.ModelSerializer):
             "user_agent",
             "referer",
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "file_share", "ip", "user_agent", "referer"]
+        read_only_fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "file_share",
+            "ip",
+            "user_agent",
+            "referer",
+        ]
