@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { setContextMenuFunctionality, setShowYScroll } from "@/store/features/interfaceSlice";
 import { useAppDispatch } from "@/store/hooks";
 import { AudioViewer } from "./audioViewer";
+import { ImageViewer } from "./imageViewer";
 
 
 export type ViewerProps = {
@@ -20,11 +21,11 @@ export function Viewer(props: ViewerProps) {
   switch (extension) {
     // case 'pdf':
     //   return <PdfViewer {...props} />
-    // case 'jpg':
-    // case 'jpeg':
-    // case 'png':
-    // case 'gif':
-    //   return <ImageViewer {...props} />
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return <ImageViewer {...props} />
     // case 'mp4':
     // case 'mov':
     // case 'avi':
