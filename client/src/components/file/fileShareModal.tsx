@@ -293,7 +293,7 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       accessorKey: "token",
       header: "Token",
       cell: (cell) => {
-        return <a href={`${import.meta.env.VITE_API_URL}/media/${props.fileId}?token=${cell.getValue()}`} className="underline cursor-default"><code>{cell.getValue() as string}</code></a>
+        return <code>{cell.getValue() as string}</code>
       }
     },
     {
