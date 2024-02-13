@@ -13,7 +13,7 @@ export function ImageViewer(props: ViewerProps) {
 
     return (
         <BaseViewer {...props}>
-            <img src={imageBlob ? URL.createObjectURL(imageBlob) : ""} alt={props.file.name} className="h-full w-full py-4" />
+            <img src={imageBlob ? URL.createObjectURL(imageBlob) : ""} alt={props.file.name} className="py-4" />
         </BaseViewer>
     )
 }

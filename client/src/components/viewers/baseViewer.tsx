@@ -7,6 +7,9 @@ import { AudioViewer } from "./audioViewer";
 import { ImageViewer } from "./imageViewer";
 import { FileShareModal } from "../file/fileShareModal";
 import { StorageFile } from "@/types/filesTypes";
+import { EditFileModal } from "../file/fileModal";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import FileDeleteModal from "../file/fileDeleteModal";
 
 
 export type ViewerProps = {
@@ -53,6 +56,8 @@ type BaseViewerProps = {
 export function BaseViewer(props: BaseViewerProps) {
   const dispatch = useAppDispatch();
   const [shareOpen, setShareOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (props.open) {
@@ -93,6 +98,8 @@ export function BaseViewer(props: BaseViewerProps) {
 
   return (
     <>
+      <FileDeleteModal file={props.file} deleteOpen={deleteOpen} setDeleteOpen={setDeleteOpen} fileUploadingDeleteOpen={false} setFileUploadingDeleteOpen={() => {}} />
+      <EditFileModal open={editOpen} setOpen={setEditOpen} file={props.file} />
       <FileShareModal open={shareOpen} setOpen={setShareOpen} fileId={props.file.id} fileName={props.file.name} wrapped={true} />
       <div className={`fixed inset-0 z-40 bg-black text-white justify-between items-center p-4 flex-col h-full w-full ${props.open ? "flex" : "hidden"}`}>
         <div className="w-full justify-between flex flex-row items-center">
@@ -100,7 +107,16 @@ export function BaseViewer(props: BaseViewerProps) {
             <Download className="text-gray-300 hover:text-white cursor-pointer" size={22} onClick={handleDownload} />
             <Link className="text-gray-300 hover:text-white cursor-pointer" size={22} onClick={() => setShareOpen(true)} />
             <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="text-gray-300 hover:text-white cursor-pointer" size={22} />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <MoreHorizontal className="text-gray-300 hover:text-white cursor-pointer" size={22} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="font-regular text-white/90 select-none mr-[4.5rem]">{props.file.name}</div>
           <X className="text-gray-300 hover:text-white cursor-pointer" size={24} onClick={handleClose} />
