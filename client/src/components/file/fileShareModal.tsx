@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Control, UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarClock, KeyRound } from "lucide-react"
+import { CalendarClock, KeyRound, MoreHorizontal } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
 import { ShareStatistics, ShareToken } from "@/types/filesTypes";
 import { DataTable, FormShareDataTable } from "../ui/data-table";
 import Spoiler from "../ui/spoiler";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 type FileShareModalProps = {
   open: boolean;
@@ -322,6 +323,36 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       header: "Is active",
       cell: (cell) => {
         return cell.getValue() ? <div className="rounded-full bg-green-500 h-2 w-2 animate-pulse"></div> : <div className="rounded-full bg-red-500 h-2 w-2 animate-pulse"></div>
+      }
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        let mediaUrl = `${import.meta.env.VITE_API_URL}/media/${props.fileId}?token=${row.original.token}`
+        if (row.original.password) {
+          mediaUrl += `&password=${row.original.password}`
+        }
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(mediaUrl)}
+              >
+                Copy URL
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem disabled>Revoke</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
       }
     }
   ]
