@@ -2,26 +2,35 @@ import { useState } from 'react';
 
 type SpoilerProps = {
     text: string;
-    type: "elipsis" | "blur" | "blackout";
+    type: "blur" | "blackout";
 }
 
-const Spoiler = ({ text }: SpoilerProps) => {
+const Spoiler = ({ text, type }: SpoilerProps) => {
     const [revealed, setRevealed] = useState(false);
 
-    const handleSpoilerClick = () => {
+    const handleSpoilerMouseOver = () => {
         setRevealed(true);
     };
 
+    const handleSpoilerMouseOut = () => {
+        setRevealed(false);
+    };
+
+    const backgroundStyle = type === "blackout" ? "bg-black" : "";
+
     return (
         <div className="w-full">
-            {revealed ? (
-                <code>{text}</code>
-            ) : (
-                <span onClick={handleSpoilerClick} className="cursor-pointer w-full bg-black">
-                    <span className="text-black">{text.substring(0, 2)}</span>
-                    <span className="text-transparent bg-black hover:bg-black/80 transition">{text.substring(2)}</span>
+            <div
+                onMouseOver={handleSpoilerMouseOver}
+                onMouseOut={handleSpoilerMouseOut}
+                className={`cursor-pointer w-full ${revealed ? "bg-transparent" : backgroundStyle} transition duration-500 rounded-radius`}
+            >
+                <span
+                    className={`text-black select-none ${revealed || type !== "blur" ? "blur-0" : "blur-sm"} transition`}
+                >
+                    {text}
                 </span>
-            )}
+            </div>
         </div>
     );
 };
