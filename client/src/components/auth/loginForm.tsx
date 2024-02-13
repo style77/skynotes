@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { isLoadingFinished, setAuth } from "@/store/features/authSlice"
 import { store } from "@/store"
-import { LoginFormProps } from "./types"
+import { LoginFormProps } from "@/types/props"
 
 const formSchema = z.object({
     email: z.string().min(6, {

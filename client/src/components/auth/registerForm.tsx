@@ -23,8 +23,7 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 import { useRegisterMutation } from "@/store/features/authApiSlice"
 import { useState } from "react"
-
-import { LoginFormProps } from "./types"
+import { LoginFormProps } from "@/types/props"
 
 const formSchema = z.object({
     email: z.string().min(6, {
