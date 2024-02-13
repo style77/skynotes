@@ -10,6 +10,7 @@ import { StorageFile } from "@/types/filesTypes";
 import { EditFileModal } from "../file/fileModal";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import FileDeleteModal from "../file/fileDeleteModal";
+import { VideoViewer } from "./videoViewer";
 
 
 export type ViewerProps = {
@@ -30,13 +31,13 @@ export function Viewer(props: ViewerProps) {
     case 'png':
     case 'gif':
       return <ImageViewer {...props} />
-    // case 'mp4':
-    // case 'mov':
-    // case 'avi':
-    // case 'wmv':
-    // case 'flv':
-    // case 'mkv':
-    //   return <VideoViewer {...props} />
+    case 'mp4':
+    case 'mov':
+    case 'avi':
+    case 'wmv':
+    case 'flv':
+    case 'mkv':
+      return <VideoViewer {...props} />
     case 'mp3':
     case 'wav':
     case 'aac':
