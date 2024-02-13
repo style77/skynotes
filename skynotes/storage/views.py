@@ -99,7 +99,9 @@ class FileDetailsView(
                 file__owner=request.user, file__id=pk
             ).all()
             serializer = FileShareSerializer(file_shares, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -132,7 +134,10 @@ class FileDetailsView(
     def share_analytics(self, request, pk=None, token=None):
         analytics = FileAnalyticsService.get_file_analytics(token)
         serializer = FileAnalyticsSerializer(analytics, many=True)
-        return Response(serializer.data)
+
+        if serializer.is_valid():
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema(tags=["files"])
