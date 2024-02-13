@@ -1,5 +1,6 @@
 import {
     ColumnDef,
+    Row,
     flexRender,
     getCoreRowModel,
     useReactTable,
@@ -78,15 +79,34 @@ export function DataTable<TData, TValue>({
     )
 }
 
+interface FormShareDataTableProps {
+    columns: ColumnDef<ShareToken, ShareToken>[]
+    data: ShareToken[]
+    setSelectedToken: (token: string | null) => void
+}
+
 export function FormShareDataTable({
     columns,
     data,
-}: DataTableProps<ShareToken, ShareToken>) {
+    setSelectedToken
+}: FormShareDataTableProps) {
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
+
+    const selectRow = (row: Row<ShareToken>) => {
+        table.getRowModel().rows.map((row) => {
+            if (row.getIsSelected()) {
+                row.toggleSelected()
+            }
+        })
+
+        row.toggleSelected()
+        if (row.getIsSelected()) setSelectedToken(row.original.token)
+        else setSelectedToken(null)
+    }
 
     return (
         <div className="rounded-md border mt-4">
@@ -115,6 +135,8 @@ export function FormShareDataTable({
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
+                                onClick={() => selectRow(row)}
+                                className="cursor-pointer"
                             >
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>

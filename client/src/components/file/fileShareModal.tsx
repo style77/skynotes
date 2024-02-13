@@ -220,6 +220,8 @@ const FormShareCard = (props: ShareFormCardProps) => {
 const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
   const { data, error, isLoading } = useRetrieveShareTokensQuery({ fileId: props.fileId })
 
+  const [selectedToken, setSelectedToken] = useState<string | null>(null)
+
   const columns: ColumnDef<ShareToken>[] = [
     {
       accessorKey: "token",
@@ -272,7 +274,7 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       <DialogDescription>
         {
           error ? "Failed to retrieve analytics." : isLoading ? <BouncingDotsLoader /> : data && data.length === 0 ? "No one has accessed the file yet." : (
-            <FormShareDataTable columns={columns} data={data!} />
+            <FormShareDataTable columns={columns} data={data!} setSelectedToken={setSelectedToken} />
           )
         }
       </DialogDescription>
