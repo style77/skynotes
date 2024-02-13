@@ -369,9 +369,9 @@ export const FileShareModal = (props: FileShareModalProps) => {
 
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
-      <DialogContent className="transition min-h-[310px] max-w-[900px] min-w-[500px] w-fit">
-        <Tabs defaultValue="share" className="">
-          <TabsList className="grid grid-cols-2 w-[400px]">
+      <DialogContent className="transition min-h-[310px] max-w-screen min-w-[200px]">
+        <Tabs defaultValue="share">
+          <TabsList className="grid grid-cols-2 w-[320px]">
             <TabsTrigger value="share">Share</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
