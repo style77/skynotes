@@ -10,8 +10,17 @@ import { Input } from "@/components/ui/input";
 import { Toggle } from "@/components/ui/toggle";
 import { setShowYScroll, setContextMenuFunctionality } from "@/store/features/interfaceSlice";
 import { useAppDispatch } from "@/store/hooks";
-import { useShareFileMutation } from "@/store/features/filesApiSlice";
+import { useRetrieveShareTokensQuery, useShareFileMutation } from "@/store/features/filesApiSlice";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import { BouncingDotsLoader } from "../ui/bouncing-dots";
+
+import {
+  ColumnDef,
+} from "@tanstack/react-table"
+
+import { ShareToken } from "@/types/filesTypes";
+import { FormShareDataTable } from "../ui/data-table";
+import Spoiler from "../ui/spoiler";
 
 type FileShareModalProps = {
   open: boolean;
@@ -133,7 +142,12 @@ const FileShareForm = (props: FileShareFormProps) => {
   )
 }
 
-export const FileShareModal = (props: FileShareModalProps) => {
+type ShareFormCardProps = {
+  fileId: string;
+  fileName: string;
+}
+
+const FormShareCard = (props: ShareFormCardProps) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -143,20 +157,6 @@ export const FileShareModal = (props: FileShareModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const [shareUrl, setShareUrl] = useState<string | null>(null)
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (props.open) {
-      dispatch(setShowYScroll(false));
-      dispatch(setContextMenuFunctionality(false))
-    } else {
-      if (!props.wrapped) {
-        dispatch(setShowYScroll(true));
-        dispatch(setContextMenuFunctionality(true))
-      }
-    }
-  }, [props.open, dispatch, props.wrapped]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true)
@@ -183,56 +183,131 @@ export const FileShareModal = (props: FileShareModalProps) => {
   }
 
   return (
+    <>
+      <DialogHeader>
+        <DialogTitle>
+          Share file
+        </DialogTitle>
+        <DialogDescription>
+          Get a link to share <code>{props.fileName}</code> with others.
+        </DialogDescription>
+      </DialogHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          {
+            shareUrl ? (
+              <div className="mt-4">
+                <FormDescription className="col-span-4 text-center text-sm">Here is the link to share the file:</FormDescription>
+                <FormDescription className="col-span-4 text-center text-sm"><code><a href={shareUrl}>{shareUrl}</a></code></FormDescription>
+              </div>
+            ) : (
+              <>
+                <FileShareForm form={form} />
+                <DialogFooter>
+                  <Button type="submit" isloading={isLoading ? true : undefined}>
+                    Share
+                  </Button>
+                </DialogFooter>
+              </>
+            )
+          }
+        </form>
+      </Form>
+    </>
+  )
+}
+
+const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
+  const { data, error, isLoading } = useRetrieveShareTokensQuery({ fileId: props.fileId })
+
+  const columns: ColumnDef<ShareToken>[] = [
+    {
+      accessorKey: "token",
+      header: "Token",
+      cell: (cell) => {
+        return <code>{cell.getValue() as string}</code>
+      }
+    },
+    {
+      accessorKey: "created_at",
+      header: "Created At",
+      cell: (cell) => {
+        return new Date(cell.getValue() as string).toLocaleString()
+      }
+    },
+    {
+      accessorKey: "password",
+      header: "Password",
+      cell: (cell) => {
+        return cell.getValue() ? Spoiler({ text: cell.getValue() as string, type: "blackout" }) : "None"
+      }
+
+    },
+    {
+      accessorKey: "shared_until",
+      header: "Shared until",
+      cell: (cell) => {
+        return cell.getValue() ? new Date(cell.getValue() as string).toLocaleString() : "Never"
+      }
+    },
+    {
+      accessorKey: "is_active",
+      header: "Is active",
+      cell: (cell) => {
+        return cell.getValue() ? <div className="rounded-full bg-green-500 h-2 w-2 animate-pulse"></div> : <div className="rounded-full bg-red-500 h-2 w-2 animate-pulse"></div>
+      }
+    }
+  ]
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>
+          Analytics
+        </DialogTitle>
+        <DialogDescription>
+          Get analytics of the file <code>{props.fileName}</code> shared with others.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogDescription>
+        {
+          error ? "Failed to retrieve analytics." : isLoading ? <BouncingDotsLoader /> : data && data.length === 0 ? "No one has accessed the file yet." : (
+            <FormShareDataTable columns={columns} data={data!} />
+          )
+        }
+      </DialogDescription>
+    </>
+  )
+}
+
+export const FileShareModal = (props: FileShareModalProps) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (props.open) {
+      dispatch(setShowYScroll(false));
+      dispatch(setContextMenuFunctionality(false))
+    } else {
+      if (!props.wrapped) {
+        dispatch(setShowYScroll(true));
+        dispatch(setContextMenuFunctionality(true))
+      }
+    }
+  }, [props.open, dispatch, props.wrapped]);
+
+  return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
-      <DialogContent className="transition min-h-[310px]">
+      <DialogContent className="transition min-h-[310px] max-w-[900px] min-w-[500px] w-fit">
         <Tabs defaultValue="share" className="">
           <TabsList className="grid grid-cols-2 w-[400px]">
             <TabsTrigger value="share">Share</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
           <TabsContent value="share" className="mt-6">
-            <DialogHeader>
-              <DialogTitle>
-                Share file
-              </DialogTitle>
-              <DialogDescription>
-                Get a link to share <code>{props.fileName}</code> with others.
-              </DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                {
-                  shareUrl ? (
-                    <div className="mt-4">
-                      <FormDescription className="col-span-4 text-center text-sm">Here is the link to share the file:</FormDescription>
-                      <FormDescription className="col-span-4 text-center text-sm"><code><a href={shareUrl}>{shareUrl}</a></code></FormDescription>
-                    </div>
-                  ) : (
-                    <>
-                      <FileShareForm form={form} />
-                      <DialogFooter>
-                        <Button type="submit" isloading={isLoading ? true : undefined}>
-                          Share
-                        </Button>
-                      </DialogFooter>
-                    </>
-                  )
-                }
-              </form>
-            </Form>
+            <FormShareCard fileId={props.fileId} fileName={props.fileName} />
           </TabsContent>
           <TabsContent value="analytics" className="mt-6">
-            <DialogHeader>
-              <DialogTitle>
-                Analytics
-              </DialogTitle>
-              <DialogDescription>
-                Get analytics of the file <code>{props.fileName}</code> shared with others.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogDescription className="text-red-500">
-              This feature is not yet available.
-            </DialogDescription>
+            <FileShareAnalyticsCard fileId={props.fileId} fileName={props.fileName} />
           </TabsContent>
         </Tabs>
       </DialogContent>
