@@ -90,10 +90,7 @@ class FileDetailsView(
                 if serializer.data["password"]:
                     share_url += f"&password={serializer.data['password']}"
 
-                url_serializer = FileShareUrlSerializer(data={"url": share_url})
-                if url_serializer.is_valid():
-                    return Response(url_serializer.data, status=status.HTTP_201_CREATED)
-                return Response(url_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"url": share_url}, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         elif request.method == HTTPMethod.GET:
             file_shares = FileShare.objects.filter(
