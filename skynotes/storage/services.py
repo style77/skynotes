@@ -9,13 +9,13 @@ from storage.models import FileAnalytics, FileShare
 
 class FileService(Service):
     @staticmethod
-    def get_file_extension(mimetype: str):
+    def guess_extension(mimetype: str):
         return mimetypes.guess_extension(mimetype)
 
     @staticmethod
-    def upload_file(file_id: str, file: bytes, mimetype: str):
+    def upload_file(file_id: str, file: bytes, mimetype: str, extension: str = None):
         file_bytes = base64.b64encode(file)
-        extension = FileService.get_file_extension(mimetype)
+        extension = extension or FileService.guess_extension(mimetype)
 
         bus.emit("file:created", file_id, extension, file_bytes)
 
