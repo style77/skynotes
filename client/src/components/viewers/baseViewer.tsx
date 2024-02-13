@@ -99,6 +99,7 @@ export function BaseViewer(props: BaseViewerProps) {
           <div className="flex flex-row gap-6">
             <Download className="text-gray-300 hover:text-white cursor-pointer" size={22} onClick={handleDownload} />
             <Link className="text-gray-300 hover:text-white cursor-pointer" size={22} onClick={() => setShareOpen(true)} />
+            <span className="sr-only">Open menu</span>
             <MoreHorizontal className="text-gray-300 hover:text-white cursor-pointer" size={22} />
           </div>
           <div className="font-regular text-white/90 select-none mr-[4.5rem]">{props.file.name}</div>
