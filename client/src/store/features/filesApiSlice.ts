@@ -1,4 +1,4 @@
-import { ShareToken, StorageFile } from "@/types/filesTypes";
+import { ShareStatistics, ShareToken, StorageFile } from "@/types/filesTypes";
 import { apiSlice } from "../services/apiSlice";
 
 const filesApiSlice = apiSlice.injectEndpoints({
@@ -42,6 +42,9 @@ const filesApiSlice = apiSlice.injectEndpoints({
             query: ({ fileId }) => `api/file/${fileId}/share/`,
             providesTags: ["Share"],
         }),
+        retrieveShareStatistics: builder.query<ShareStatistics[], { fileId: string, token: string }>({
+            query: ({ fileId, token }) => `api/file/${fileId}/share/${token}/analytics/`,
+        }),
     }),
 });
 
@@ -51,5 +54,6 @@ export const {
     useDeleteFileMutation,
     useUploadFileMutation,
     useShareFileMutation,
-    useRetrieveShareTokensQuery
+    useRetrieveShareTokensQuery,
+    useRetrieveShareStatisticsQuery
 } = filesApiSlice;
