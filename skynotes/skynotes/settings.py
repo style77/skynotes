@@ -102,6 +102,15 @@ REST_FRAMEWORK = {
     },  # TODO Consider
 }
 
+# CACHES
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": env("CACHE_URL"),
+    }
+}
+
 # Spectacular
 
 SPECTACULAR_SETTINGS = {
@@ -117,7 +126,7 @@ SPECTACULAR_SETTINGS = {
     "COMPONENT_SPLIT_REQUEST": True,
 }
 
-# Cors
+# CORS
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
 CORS_ORIGIN_WHITELIST = [
