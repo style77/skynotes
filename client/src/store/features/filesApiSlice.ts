@@ -42,6 +42,13 @@ const filesApiSlice = apiSlice.injectEndpoints({
             query: ({ fileId }) => `api/file/${fileId}/share/`,
             providesTags: ["Share"],
         }),
+        revokeShareToken: builder.mutation({
+            query: ({ fileId, token }) => ({
+                url: `api/file/${fileId}/share/${token}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Share"],
+        }),
         retrieveShareStatistics: builder.query<ShareStatistics[], { fileId: string, token: string }>({
             query: ({ fileId, token }) => `api/file/${fileId}/share/${token}/analytics/`,
         }),
@@ -55,5 +62,6 @@ export const {
     useUploadFileMutation,
     useShareFileMutation,
     useRetrieveShareTokensQuery,
+    useRevokeShareTokenMutation,
     useRetrieveShareStatisticsQuery
 } = filesApiSlice;

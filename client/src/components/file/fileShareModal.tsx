@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Toggle } from "@/components/ui/toggle";
 import { setShowYScroll, setContextMenuFunctionality } from "@/store/features/interfaceSlice";
 import { useAppDispatch } from "@/store/hooks";
-import { useRetrieveShareStatisticsQuery, useRetrieveShareTokensQuery, useShareFileMutation } from "@/store/features/filesApiSlice";
+import { useRetrieveShareStatisticsQuery, useRetrieveShareTokensQuery, useRevokeShareTokenMutation, useShareFileMutation } from "@/store/features/filesApiSlice";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import { BouncingDotsLoader } from "../ui/bouncing-dots";
 
@@ -285,8 +285,20 @@ const FileShareStatisticsCard = ({ fileId, token, password }: {
 
 const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
   const { data, error, isLoading } = useRetrieveShareTokensQuery({ fileId: props.fileId })
+  const [revokeShareToken] = useRevokeShareTokenMutation()
 
   const [selectedToken, setSelectedToken] = useState<string | null>(null)
+
+  const handleRevoke = async (token: string) => {
+    await revokeShareToken({
+      token,
+      fileId: props.fileId
+    }).unwrap()
+
+    if (token === selectedToken) {
+      setSelectedToken(null)
+    }
+  }
 
   const columns: ColumnDef<ShareToken>[] = [
     {
@@ -349,7 +361,7 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
                 Copy link
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem disabled className="text-red-500">Revoke</DropdownMenuItem>
+              <DropdownMenuItem onClick={async () => await handleRevoke(row.original.token)} className="text-red-500">Revoke</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
