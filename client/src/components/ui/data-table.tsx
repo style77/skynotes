@@ -99,13 +99,16 @@ export function FormShareDataTable({
     const selectRow = (row: Row<ShareToken>) => {
         table.getRowModel().rows.map((row) => {
             if (row.getIsSelected()) {
-                row.toggleSelected()
+                row.toggleSelected(false)
             }
         })
 
-        row.toggleSelected()
-        if (row.getIsSelected()) setSelectedToken(row.original.token)
-        else setSelectedToken(null)
+        if (!row.getIsSelected()) {
+            row.toggleSelected(true)
+            setSelectedToken(row.original.token)
+        } else {
+            setSelectedToken(null)
+        }
     }
 
     return (
