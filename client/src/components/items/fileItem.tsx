@@ -118,8 +118,8 @@ export function FileItem(props: FileItemProps) {
                     </DropdownMenuTrigger>
                   </div>
                   <div className="mt-1 px-3 flex flex-col">
-                    <span className="font-semibold text-xs sm:text-xs md:text-base truncate">{props.file.name}</span>
-                    <span className="opacity-50 text-xs">{formattedDate}</span>
+                    <span className="font-semibold text-base truncate">{props.file.name}</span>
+                    <span className="opacity-50 text-sm md:text-xs">{formattedDate}</span>
                   </div>
                 </div>
                 <div className="bg-primary text-white rounded-b-lg w-full flex flex-row py-4 px-4">
