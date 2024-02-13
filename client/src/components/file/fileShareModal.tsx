@@ -217,11 +217,17 @@ const FormShareCard = (props: ShareFormCardProps) => {
   )
 }
 
-const FileShareStatisticsCard = ({ fileId, token }: {
+const FileShareStatisticsCard = ({ fileId, token, password }: {
   fileId: string;
   token: string;
+  password?: string;
 }) => {
   const { data, error, isLoading } = useRetrieveShareStatisticsQuery({ fileId: fileId, token: token })
+
+  let mediaUrl = `${import.meta.env.VITE_API_URL}/media/${fileId}?token=${token}`
+  if (password) {
+    mediaUrl += `&password=${password}`
+  }
 
   const columns: ColumnDef<ShareStatistics>[] = [
     {
@@ -261,7 +267,7 @@ const FileShareStatisticsCard = ({ fileId, token }: {
           Statistics
         </DialogTitle>
         <DialogDescription>
-          Statistics of the file shared with token <code>{token}</code>.<br />
+          Statistics of the file shared with token <a href={mediaUrl} className="underline"><code>{token}</code></a>.<br />
           Total <b>{data ? data?.length : "?"}</b> access{data?.length === 1 ? "" : "es"}.
         </DialogDescription>
       </DialogHeader>
@@ -286,7 +292,7 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       accessorKey: "token",
       header: "Token",
       cell: (cell) => {
-        return <code>{cell.getValue() as string}</code>
+        return <a href={`${import.meta.env.VITE_API_URL}/media/${props.fileId}?token=${cell.getValue()}`} className="underline cursor-default"><code>{cell.getValue() as string}</code></a>
       }
     },
     {
@@ -332,13 +338,13 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       </DialogHeader>
       <DialogDescription>
         {
-          error ? "Failed to retrieve analytics." : isLoading ? <BouncingDotsLoader /> : data && data.length === 0 ? "No one has accessed the file yet." : (
+          error ? "Failed to retrieve analytics." : isLoading ? <BouncingDotsLoader /> : data && data.length === 0 ? <span className="text-red-500 text-sm">You need to share this file to see details.</span> : (
             <FormShareDataTable columns={columns} data={data!} setSelectedToken={setSelectedToken} />
           )
         }
         {
           selectedToken && (
-            <FileShareStatisticsCard fileId={props.fileId} token={selectedToken} />
+            <FileShareStatisticsCard fileId={props.fileId} token={selectedToken} password={data?.find(obj => obj.token === selectedToken)?.password || undefined} />
           )
         }
       </DialogDescription>
