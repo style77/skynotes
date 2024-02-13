@@ -119,7 +119,7 @@ export function BaseViewer(props: BaseViewerProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="font-regular text-white/90 select-none mr-[4.5rem]">{props.file.name}</div>
+          <div className="font-regular text-white/90 select-none mr-[4.5rem] z-[999]">{props.file.name}</div>
           <X className="text-gray-300 hover:text-white cursor-pointer" size={24} onClick={handleClose} />
         </div>
         {props.children}
