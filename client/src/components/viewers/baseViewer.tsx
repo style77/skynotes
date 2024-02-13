@@ -73,7 +73,7 @@ export function BaseViewer(props: BaseViewerProps) {
 
   const handleDownload = async () => {
     try {
-      const response = await fetch(`${import.meta.env.API_URL}${props.file.file}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${props.file.file}`, {
         credentials: 'include'
       });
       if (!response.ok) {

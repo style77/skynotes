@@ -11,7 +11,7 @@ export const Thumbnail = (props: ThumbnailProps) => {
 
   useEffect(() => {
     const fetchThumbnail = async () => {
-      const url = `${import.meta.env.API_URL}${props.mediaUrl}?thumbnail=true`
+      const url = `${import.meta.env.VITE_API_URL}${props.mediaUrl}?thumbnail=true`
       try {
         const response = await fetch(url, {
           credentials: 'include',

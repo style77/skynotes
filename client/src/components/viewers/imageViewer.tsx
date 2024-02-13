@@ -5,7 +5,7 @@ export function ImageViewer(props: ViewerProps) {
     const [imageBlob, setImageBlob] = useState<Blob | null>(null);
 
     useEffect(() => {
-        const url = `${import.meta.env.API_URL}${props.file.file}`
+        const url = `${import.meta.env.VITE_API_URL}${props.file.file}`
         fetch(url, { method: "GET", credentials: 'include' })
             .then((res) => res.blob())
             .then((blob) => setImageBlob(blob));
