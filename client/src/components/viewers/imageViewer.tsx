@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BaseViewer, ViewerProps } from "./baseViewer";
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 export function ImageViewer(props: ViewerProps) {
     const [imageBlob, setImageBlob] = useState<Blob | null>(null);
@@ -13,7 +14,11 @@ export function ImageViewer(props: ViewerProps) {
 
     return (
         <BaseViewer {...props}>
-            <img src={imageBlob ? URL.createObjectURL(imageBlob) : ""} alt={props.file.name} className="py-4" />
+            <div className="w-full h-10/12 flex justify-center">
+                <AspectRatio ratio={16 / 9} className="w-full h-full">
+                    <img src={imageBlob ? URL.createObjectURL(imageBlob) : ""} alt={props.file.name} className="py-4 w-full h-full" />
+                </AspectRatio>
+            </div>
         </BaseViewer>
     )
 }
