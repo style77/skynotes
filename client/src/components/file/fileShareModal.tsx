@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Toggle } from "@/components/ui/toggle";
 import { setShowYScroll, setContextMenuFunctionality } from "@/store/features/interfaceSlice";
 import { useAppDispatch } from "@/store/hooks";
-import { useRetrieveShareTokensQuery, useShareFileMutation } from "@/store/features/filesApiSlice";
+import { useRetrieveShareStatisticsQuery, useRetrieveShareTokensQuery, useShareFileMutation } from "@/store/features/filesApiSlice";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import { BouncingDotsLoader } from "../ui/bouncing-dots";
 
@@ -18,8 +18,8 @@ import {
   ColumnDef,
 } from "@tanstack/react-table"
 
-import { ShareToken } from "@/types/filesTypes";
-import { FormShareDataTable } from "../ui/data-table";
+import { ShareStatistics, ShareToken } from "@/types/filesTypes";
+import { DataTable, FormShareDataTable } from "../ui/data-table";
 import Spoiler from "../ui/spoiler";
 
 type FileShareModalProps = {
@@ -217,6 +217,65 @@ const FormShareCard = (props: ShareFormCardProps) => {
   )
 }
 
+const FileShareStatisticsCard = ({ fileId, token }: {
+  fileId: string;
+  token: string;
+}) => {
+  const { data, error, isLoading } = useRetrieveShareStatisticsQuery({ fileId: fileId, token: token })
+
+  const columns: ColumnDef<ShareStatistics>[] = [
+    {
+      accessorKey: "created_at",
+      header: "Accessed At",
+      cell: (cell) => {
+        return new Date(cell.getValue() as string).toLocaleString()
+      }
+    },
+    {
+      accessorKey: "ip",
+      header: "IP",
+      cell: (cell) => {
+        return cell.getValue() as string
+      }
+    },
+    {
+      accessorKey: "user_agent",
+      header: "User Agent",
+      cell: (cell) => {
+        return cell.getValue() as string
+      }
+    },
+    {
+      accessorKey: "refferer",
+      header: "Refferer",
+      cell: (cell) => {
+        return cell.getValue() as string
+      }
+    }
+  ]
+
+  return (
+    <>
+      <DialogHeader className="mt-6 mb-4">
+        <DialogTitle>
+          Statistics
+        </DialogTitle>
+        <DialogDescription>
+          Statistics of the file shared with token <code>{token}</code>.<br />
+          Total <b>{data ? data?.length : "?"}</b> access{data?.length === 1 ? "" : "es"}.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogDescription>
+        {
+          error ? "Failed to retrieve statistics." : isLoading ? <BouncingDotsLoader /> : data ? (
+            <DataTable columns={columns} data={data} />
+          ) : "No one has accessed the file yet."
+        }
+      </DialogDescription>
+    </>
+  )
+}
+
 const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
   const { data, error, isLoading } = useRetrieveShareTokensQuery({ fileId: props.fileId })
 
@@ -275,6 +334,11 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
         {
           error ? "Failed to retrieve analytics." : isLoading ? <BouncingDotsLoader /> : data && data.length === 0 ? "No one has accessed the file yet." : (
             <FormShareDataTable columns={columns} data={data!} setSelectedToken={setSelectedToken} />
+          )
+        }
+        {
+          selectedToken && (
+            <FileShareStatisticsCard fileId={props.fileId} token={selectedToken} />
           )
         }
       </DialogDescription>
