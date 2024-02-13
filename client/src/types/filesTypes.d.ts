@@ -17,3 +17,10 @@ export interface ShareToken extends BaseModel {
     password: string | null;
     token: string;
 }
+
+export interface ShareStatistics extends BaseModel {
+    file_share: string;
+    ip: string;
+    user_agent: string;
+    referrer: string;
+}
