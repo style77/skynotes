@@ -104,7 +104,7 @@ export function VideoViewer(props: ViewerProps) {
                 {isLoading ? (
                     <BouncingDotsLoader className="mt-16" />
                 ) : videoBlob && (
-                    <video ref={videoRef} className="absolute bottom-10 w-full h-full" controls={false}>
+                    <video ref={videoRef} className="absolute bottom-2 w-full h-full" controls={false}>
                         <source src={URL.createObjectURL(videoBlob)} type="video/mp4" className="h-full w-full" />
                     </video>
                 )
@@ -114,7 +114,7 @@ export function VideoViewer(props: ViewerProps) {
                 !isLoading && videoRef.current && (
                     <div className="flex-grow w-full">
                         <div
-                            className="mb-2 relative cursor-pointer"
+                            className="relative cursor-pointer"
                             ref={progressBarRef}
                             onClick={seekVideo}
                             onMouseMove={updateHoverProgress}
