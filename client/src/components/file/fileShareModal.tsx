@@ -242,7 +242,7 @@ const FileShareStatisticsCard = ({ fileId, token, password }: {
       accessorKey: "ip",
       header: "IP",
       cell: (cell) => {
-        return cell.getValue() as string
+        return cell.getValue() ? Spoiler({ text: cell.getValue() as string, type: "blur" }) : "?"
       }
     },
     {
@@ -256,7 +256,7 @@ const FileShareStatisticsCard = ({ fileId, token, password }: {
       accessorKey: "refferer",
       header: "Refferer",
       cell: (cell) => {
-        return cell.getValue() as string
+        return cell.getValue() ? cell.getValue() as string : "None"
       }
     }
   ]
@@ -268,7 +268,7 @@ const FileShareStatisticsCard = ({ fileId, token, password }: {
           Statistics
         </DialogTitle>
         <DialogDescription>
-          Statistics of the file shared with token <a href={mediaUrl} className="underline"><code>{token}</code></a>.<br />
+          Statistics of the file shared with token <a href={mediaUrl} className="underline hover:text-gray-600 transition"><code>{token}</code></a>.<br />
           Total <b>{data ? data?.length : "?"}</b> access{data?.length === 1 ? "" : "es"}.
         </DialogDescription>
       </DialogHeader>
@@ -309,7 +309,6 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       cell: (cell) => {
         return cell.getValue() ? Spoiler({ text: cell.getValue() as string, type: "blur" }) : "None"
       }
-
     },
     {
       accessorKey: "shared_until",
@@ -344,12 +343,13 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
+                className="text-xs"
                 onClick={() => navigator.clipboard.writeText(mediaUrl)}
               >
-                Copy URL
+                Copy link
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem disabled>Revoke</DropdownMenuItem>
+              <DropdownMenuItem disabled className="text-red-500">Revoke</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
