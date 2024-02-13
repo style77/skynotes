@@ -26,7 +26,7 @@ const Spoiler = ({ text, type }: SpoilerProps) => {
                 className={`cursor-pointer w-full ${revealed ? "bg-transparent" : backgroundStyle} transition duration-500 rounded-radius`}
             >
                 <span
-                    className={`text-black select-none ${revealed || type !== "blur" ? "blur-0" : "blur-sm"} transition`}
+                    className={`select-none ${revealed || type !== "blur" ? "blur-0" : "blur-sm"} transition`}
                 >
                     {text}
                 </span>
