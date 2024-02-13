@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Group } from "./groupsApiSlice";
-import { StorageFile } from "@/types/files";
+import { StorageFile } from "@/types/filesTypes";
 
 interface AuthState {
     groups: Group[];

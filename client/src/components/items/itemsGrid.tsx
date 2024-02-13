@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Viewer } from "@/components/viewers/baseViewer";
 import { GroupItem } from "@/components/items/groupItem";
 import { FileItem } from "@/components/items/fileItem";
-import { StorageFile } from "@/types/files";
+import { StorageFile } from "@/types/filesTypes";
 
 type ItemsGridProps = {
   groups: Group[] | undefined;

@@ -1,4 +1,4 @@
-import { BaseModel } from './base';
+import { BaseModel } from './baseTypes';
 
 export interface StorageFile extends BaseModel {
     name: string;

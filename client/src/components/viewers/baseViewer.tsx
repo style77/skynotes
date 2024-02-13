@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { AudioViewer } from "./audioViewer";
 import { ImageViewer } from "./imageViewer";
 import { FileShareModal } from "../file/fileShareModal";
-import { StorageFile } from "@/types/files";
+import { StorageFile } from "@/types/filesTypes";
 
 
 export type ViewerProps = {

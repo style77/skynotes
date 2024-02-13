@@ -22,7 +22,7 @@ import { Thumbnail } from "@/components/items/thumbnail";
 import { BouncingDotsLoader } from "../ui/bouncing-dots";
 import { FileShareModal } from "../file/fileShareModal";
 import { EditFileModal } from "../file/fileModal";
-import { StorageFile } from "@/types/files";
+import { StorageFile } from "@/types/filesTypes";
 
 type FileItemProps = {
   file: StorageFile;

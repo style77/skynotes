@@ -40,7 +40,7 @@ import { useUpdateFileMutation, useUploadFileMutation } from "@/store/features/f
 
 import Dropzone from 'react-dropzone'
 
-import { StorageFile } from "@/types/files";
+import { StorageFile } from "@/types/filesTypes";
 
 type NewFileModalProps = {
     open: boolean;

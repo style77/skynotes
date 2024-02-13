@@ -1,4 +1,4 @@
-import { ShareToken, StorageFile } from "@/types/files";
+import { ShareToken, StorageFile } from "@/types/filesTypes";
 import { apiSlice } from "../services/apiSlice";
 
 const filesApiSlice = apiSlice.injectEndpoints({

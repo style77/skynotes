@@ -55,6 +55,6 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Group', 'File'],
+  tagTypes: ['Group', 'File', 'Share'],
   endpoints: () => ({}),
 });
