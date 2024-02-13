@@ -98,7 +98,6 @@ export function GroupItem(props: GroupItemProps) {
         </div>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Share</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-500" onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
