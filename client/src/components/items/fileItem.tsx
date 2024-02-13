@@ -1,19 +1,8 @@
-import { useDeleteFileMutation } from "@/store/features/filesApiSlice";
 import { useState, useEffect } from "react";
 import { format, parseISO } from 'date-fns';
 import { MoreVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
 import { humanFriendlySize } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "@/store/services/apiSlice";
@@ -23,6 +12,7 @@ import { BouncingDotsLoader } from "../ui/bouncing-dots";
 import { FileShareModal } from "../file/fileShareModal";
 import { EditFileModal } from "../file/fileModal";
 import { StorageFile } from "@/types/filesTypes";
+import FileDeleteModal from "../file/fileDeleteModal";
 
 type FileItemProps = {
   file: StorageFile;
@@ -32,8 +22,6 @@ type FileItemProps = {
 
 export function FileItem(props: FileItemProps) {
   const formattedDate = format(parseISO(props.file.created_at), 'dd/MM/yyyy, hh:mm a');
-
-  const [deleteFile] = useDeleteFileMutation()
 
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -63,46 +51,9 @@ export function FileItem(props: FileItemProps) {
     };
   }, [props.file, dispatch]);
 
-  const handleDelete = async () => {
-    await deleteFile({ id: props.file.id }).unwrap()
-    setDeleteOpen(false);
-    setFileUploadingDeleteOpen(false)
-  }
-
-  const truncateFileName = (fileName: string) => {
-    if (fileName.length > 20) {
-      return fileName.substring(0, 20) + '...' + fileName.substring(fileName.length - 5, fileName.length);
-    }
-    return fileName;
-  }
-
   return (
     <>
-      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {
-                fileUploadingDeleteOpen ? (
-                  <>
-                    You are currently <b>uploading this file</b>. Deleting it will cancel the upload. If you think file upload is taking too long, please check your internet connection or report the issue to us.
-                  </>
-                ) : (
-                  <>
-                    This action cannot be undone. This will permanently delete the <code>{truncateFileName(props.file.name)}</code> file
-                    and remove your data from our servers.
-                  </>
-                )
-              }
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <FileDeleteModal file={props.file} deleteOpen={deleteOpen} setDeleteOpen={setDeleteOpen} fileUploadingDeleteOpen={fileUploadingDeleteOpen} setFileUploadingDeleteOpen={setFileUploadingDeleteOpen} />
       <FileShareModal open={shareOpen} setOpen={setShareOpen} fileId={props.file.id} fileName={props.file.name} />
       <EditFileModal open={editOpen} setOpen={setEditOpen} file={props.file} />
       <DropdownMenu>

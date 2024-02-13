@@ -24,3 +24,10 @@ export const getOS = () => {
   const os = ['Windows', 'Linux', 'Mac'];
   return os.find(v => ((global as any).window?.navigator.platform.indexOf(v) >= 0))  // eslint-disable-line
 }
+
+export const truncateFileName = (fileName: string) => {
+  if (fileName.length > 20) {
+    return fileName.substring(0, 20) + '...' + fileName.substring(fileName.length - 5, fileName.length);
+  }
+  return fileName;
+}
