@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 from storage.views import (
     FileDetailsView,
     FilesGroupedListView,
@@ -6,7 +7,6 @@ from storage.views import (
     GroupListCreateView,
     GroupRetrieveUpdateDestroyView,
 )
-from rest_framework.routers import DefaultRouter
 
 file_details_router = DefaultRouter()
 file_details_router.register(r"file", FileDetailsView, basename="file-detail")

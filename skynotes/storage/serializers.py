@@ -1,6 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from storage.models import File, FileShare, FileAnalytics, Group
+from storage.models import File, FileAnalytics, FileShare, Group
 
 
 class GroupSerializer(serializers.ModelSerializer):

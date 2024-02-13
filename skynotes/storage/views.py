@@ -10,24 +10,20 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views import View
 from drf_spectacular.utils import extend_schema
-from rest_framework import parsers, status
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import (
-    ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-)
-from rest_framework.response import Response
+from rest_framework import mixins, parsers, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import mixins, viewsets
-from storage.serializers import FileShareUrlSerializer
 from storage.models import File, FileShare, Group
 from storage.serializers import (
+    FileAnalyticsSerializer,
     FileSerializer,
     FileShareSerializer,
+    FileShareUrlSerializer,
     GroupDetailsSerializer,
     GroupSerializer,
-    FileAnalyticsSerializer,
 )
 from storage.services import FileAnalyticsService, FileService
 
@@ -76,7 +72,7 @@ class FileDetailsView(
     @action(detail=True, methods=[HTTPMethod.GET, HTTPMethod.POST], url_path="share")
     def share_tokens(self, request, pk=None):
         """
-            Share file with token or get all tokens for the file if request method is GET.
+        Share file with token or get all tokens for the file if request method is GET.
         """
         if request.method == HTTPMethod.POST:
             file = get_object_or_404(File, id=pk)
