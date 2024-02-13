@@ -172,8 +172,11 @@ class FilesListView(APIView):
 
         if serializer.is_valid():
             serializer.save(owner=request.user, size=file.size)
+
+            extension = "." + file.name.split(".")[-1] if "." in file.name else None
+
             FileService.upload_file(
-                serializer.data["id"], file.read(), file.content_type, f".{file.name.split('.')[-1]}"
+                serializer.data["id"], file.read(), file.content_type, extension
             )
 
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
