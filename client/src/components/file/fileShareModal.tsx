@@ -306,7 +306,7 @@ const FileShareAnalyticsCard = (props: ShareFormCardProps) => {
       accessorKey: "password",
       header: "Password",
       cell: (cell) => {
-        return cell.getValue() ? Spoiler({ text: cell.getValue() as string, type: "blackout" }) : "None"
+        return cell.getValue() ? Spoiler({ text: cell.getValue() as string, type: "blur" }) : "None"
       }
 
     },
