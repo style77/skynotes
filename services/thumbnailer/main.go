@@ -69,8 +69,8 @@ func main() {
 
 	api.RegisterThumbnailServiceServer(server, new(api.Server))
 
-	basectx, casncel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer casncel()
+	basectx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
 
 	listener, err := net.Listen("tcp", secureAddress)
 	if err != nil {
