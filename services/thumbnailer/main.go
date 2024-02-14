@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"log"
+	"math"
 	"net"
 	"os"
 	"os/signal"
@@ -57,13 +58,10 @@ func main() {
 
 	secureAddress := "0.0.0.0:50051"
 
-	// tlsConfig, err := LoadTlSConfig("certs/server.pem", "certs/server-key.pem", "certs/root.pem")
-	// if err != nil {
-	// 	panic(err)
-	// }
+	grpc.MaxCallRecvMsgSize(math.MaxInt64)
+	grpc.MaxCallSendMsgSize(math.MaxInt64)
 
 	server := grpc.NewServer(
-		// grpc.Creds(tlsConfig),
 		grpc.UnaryInterceptor(MiddlewareHandler),
 	)
 
