@@ -8,9 +8,9 @@ from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.http.response import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, parsers, status, viewsets
 from rest_framework.decorators import action
