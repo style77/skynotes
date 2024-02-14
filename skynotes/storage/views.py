@@ -9,6 +9,8 @@ from django.http.response import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views import View
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, parsers, status, viewsets
 from rest_framework.decorators import action
@@ -307,6 +309,7 @@ class MediaView(View):
 
         return False, None
 
+    @method_decorator(cache_page(60 * 15))
     def get(self, request, file_path, *args, **kwargs):
         try:
             file_id = self._get_file_id(file_path)
@@ -351,6 +354,10 @@ class MediaView(View):
                 )
 
             response = FileResponse(file, filename=file.name)
+
+            response.headers["Cache-Control"] = "public, max-age=31536000"
+            response.headers["Expires"] = "31536000"
+
             return response
         return HttpResponseForbidden("You are not authorized to access this media.")
 
