@@ -42,6 +42,7 @@ python-dateutil==2.8.2
 python-magic==0.4.27
 pytz==2023.3.post1
 PyYAML==6.0.1
+redis==5.0.1
 referencing==0.32.0
 rpds-py==0.16.2
 six==1.16.0
