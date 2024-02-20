@@ -150,6 +150,10 @@ class FilesListView(APIView):
 
         return Response(serializer.data)
 
+    def __get_user_storage_size(self, user):
+        total_sum = File.objects.filter(owner=user).aggregate(models.Sum("size"))
+        return total_sum["size__sum"] if total_sum["size__sum"] else 0
+
     @extend_schema(
         description="Upload file",
         request=FileSerializer,
@@ -158,10 +162,7 @@ class FilesListView(APIView):
     def post(self, request, *args, **kwargs):
         file = request.data["file"]
 
-        total_sum = File.objects.filter(owner=request.user).aggregate(
-            models.Sum("size")
-        )
-        total_sum = total_sum["size__sum"] if total_sum["size__sum"] else 0
+        total_sum = self.__get_user_storage_size(request.user)
 
         if total_sum + file.size > request.user.storage_limit:
             return Response(
