@@ -1,5 +1,6 @@
-from common.bus import EventBus
 from unittest import TestCase
+
+from common.bus import EventBus
 
 
 class TestEventBus(TestCase):
