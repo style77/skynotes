@@ -12,7 +12,6 @@ class TestEventBus(TestCase):
         self.assertIs(self.bus, another_bus)
 
     def test_bus(self):
-        # Test registering a listener and emitting an event
         result = []
 
         def handler(event):
@@ -23,7 +22,6 @@ class TestEventBus(TestCase):
         self.assertEqual(result, ["test"])
 
     def test_bus_decorator(self):
-        # Test registering a listener using the decorator syntax
         result = []
 
         @self.bus.listener("test_event")
@@ -34,7 +32,6 @@ class TestEventBus(TestCase):
         self.assertEqual(result, ["test"])
 
     def test_multiple_listeners(self):
-        # Test registering multiple listeners for the same event
         result = []
 
         def handler1(event):
