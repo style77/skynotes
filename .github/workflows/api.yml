@@ -93,7 +93,7 @@ jobs:
                 DATABASE_URL: postgres://postgres:postgres@localhost:5432/skynotes-test
                 RABBITMQ_URL: amqp://rabbitmq:rabbitmq@localhost:5672
                 SECRET_KEY: test
-                CACHE_URl: redis://localhost:6379/1
+                CACHE_URL: redis://localhost:6379/1
               working-directory: skynotes
               run: |
                 python manage.py test --noinput
