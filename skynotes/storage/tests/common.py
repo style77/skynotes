@@ -3,9 +3,7 @@ import os
 from authorization.tests.common import force_authenticate
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import (
-    SimpleUploadedFile,
-)
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APITestCase
 from storage.models import File, Group
 
