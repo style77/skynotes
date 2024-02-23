@@ -1,11 +1,17 @@
 import os
+
 from authorization.tests.common import force_authenticate
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.test.client import MULTIPART_CONTENT, encode_multipart, BOUNDARY
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import (
+    InMemoryUploadedFile,
+    SimpleUploadedFile,
+    TemporaryUploadedFile,
+)
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
+from django.urls import reverse
 from rest_framework.test import APITestCase
-from storage.models import Group
+from storage.models import File, Group
 
 User = get_user_model()
 
@@ -38,32 +44,28 @@ class FileTestCaseBase(APITestCase):
         self.user = User.objects.create_user(email="test@test.com", password="password")
         force_authenticate(self.user, client=self.client)
 
-    def _create_file(self, name: str, file_path: str, **kwargs):
-        """
-            Create a file with the given name and owner.
-            It is required to call HTTP POST request to the endpoint
-            to create the file, as the file is handled by the FileService.
-        """
+    def _create_file(
+        self, name: str, *, simple_file: bool = False, file_path: str = None, **kwargs
+    ):
+        if simple_file:
+            file = SimpleUploadedFile(
+                "TEST.txt",
+                b"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",  # noqa: E501
+            )
+        else:
+            if not file_path:
+                raise ValueError("File path is required argument for File.")
 
-        # open test_media dir and check if the file exists in the directory otherwise raise an error
+            if file_path not in os.listdir("storage/tests/test_media"):
+                raise FileNotFoundError(
+                    f'File "{file_path}" not found in test_media directory.'
+                )
 
-        if file_path not in os.listdir("test_media"):
-            raise FileNotFoundError(f"File \"{file_path}\" not found in test_media directory.")
+            file_path = f"storage/tests/test_media/{file_path}"
+            with open(f"storage/tests/test_media/{file_path}", "rb") as f:
+                file = ContentFile(f.read(), name=file_path)
 
-        with open(f"test_media/{file_path}", "rb") as f:
-            file = ContentFile(f.read(), name=file_path)
-
-        data = {
-            "name": name,
-            "file": file,
-        }
-
-        data.update(kwargs)
-
-        response = self.client.post(
-            reverse("files"),
-            data=encode_multipart(data=data, boundary=BOUNDARY),
-            content_type=MULTIPART_CONTENT,
+        file = File.objects.create(
+            name=name, file=file, size=file.size, owner=self.user, **kwargs
         )
-
-        return response.json()
+        return file
