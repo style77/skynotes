@@ -1,5 +1,3 @@
-import time
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from storage.tests.common import FileTestCaseBase
@@ -33,4 +31,4 @@ class FileCreateViewTest(FileTestCaseBase):
         self.assertEqual(response.data["name"], "test_file.txt")
         self.assertEqual(response.data["size"], 445)
         print(response.data)
-        # self.assertEqual(response.data["file"], "http://testserver/media/test_file.txt")
+        # self.assertEqual(response.data["file"], "http://testserver/media/test_file.txt") noqa: E501

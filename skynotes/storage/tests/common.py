@@ -4,12 +4,8 @@ from authorization.tests.common import force_authenticate
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import (
-    InMemoryUploadedFile,
     SimpleUploadedFile,
-    TemporaryUploadedFile,
 )
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
-from django.urls import reverse
 from rest_framework.test import APITestCase
 from storage.models import File, Group
 
