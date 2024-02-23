@@ -9,23 +9,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/style77/skynotes">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">SkyNotes</h3>
 
   <p align="center">
-    Notes editor in cloud
+    Lite cloud file storage
     <br />
-    <a href="https://github.com/style77/skynotes"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/style77/skynotes/images">View Images</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/style77/skynotes/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/style77/skynotes/issues">Request Feature</a>
   </p>
 </div>
 
@@ -48,12 +41,10 @@
         <li><a href="#installation-with-docker">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#images">Images</a></li>
   </ol>
 </details>
 
@@ -64,16 +55,16 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+SkyNotes is a simple cloud file storage. It is a project that I have been working on for a while. It is a simple cloud file storage that allows you to upload files and share them with others.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+Features:
+* Upload files
+* Share files and get share analytics
+* Download files
+* Delete files
+* Create folders
+* Thumbnail generation
+* Media preview (images, videos, audio)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -101,51 +92,43 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-* docker and docker-compose
+* docker and docker-compose (or any other containerization tool like podman)
 * nodejs
-* npm
+* pnpm (or any other package manager)
 * python3
 * pip3
-* virtualenv
+* virtualenv (or any other virtual environment)
 * git
+* make (optional)
 
 
 ### Installation with Docker
+
+#### Development
 
 1. Clone the repo
    ```sh
    git clone https://github.com/style77/skynotes.git
    ```
+2. Go to the project directory
+   ```sh
+   cd skynotes
+   ```
+3. Build and run the frontend
+   ```sh
+    pnpm install && pnpm run dev
+    ```
+4. Build and run the backend with Makefile
+    ```sh
+      make run-api
+    ```
+    or without Makefile
+    ```sh
+      docker-compose up -d --build
+    ```
+5. Open your browser and go to http://localhost:3000
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Polish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- CONTRIBUTING -->
@@ -165,7 +148,6 @@ Don't forget to give the project a star! Thanks again!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- LICENSE -->
 ## License
 
@@ -174,11 +156,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- CONTACT -->
 ## Contact
 
-Joachim Hodana - stylek777@gmail.com
+Joachim Hodana - me@joachimhodana.com
 Dominik Krakowiak
 
 Project Link: [https://github.com/style77/skynotes](https://github.com/style77/skynotes)
@@ -186,24 +167,29 @@ Project Link: [https://github.com/style77/skynotes](https://github.com/style77/s
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Images
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+### Index page
+![Index page](images/index_no_menu.png)
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+on RMB click you can see the context menu, for easier file/folder management
+![Index page with context menu](images/index.png)
 
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
+### File upload
+![File upload modal](images/file_upload_dropzone.png)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### File preview
 
+Music player
+![Music player](images/music_player.png)
 
+### Sharing
+
+Share modal
+![Share modal](images/share.png)
+
+Share analytics (hover over the ip to see it, unfortunately lightshot removes cursor from screenshot, so mine is not there)
+![Share analytics](images/share_analytics.png)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -217,7 +203,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [issues-url]: https://github.com/style77/skynotes/issues
 [license-shield]: https://img.shields.io/github/license/style77/skynotes.svg?style=for-the-badge
 [license-url]: https://github.com/style77/skynotes/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images/index_no_menu.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
