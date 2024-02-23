@@ -30,5 +30,3 @@ class FileCreateViewTest(FileTestCaseBase):
         self.assertEqual(response.status_code, 202)
         self.assertEqual(response.data["name"], "test_file.txt")
         self.assertEqual(response.data["size"], 445)
-        print(response.data)
-        # self.assertEqual(response.data["file"], "http://testserver/media/test_file.txt") noqa: E501
